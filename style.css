@@ -39,7 +39,7 @@ body {
     linear-gradient(#4fc6f8 0%, #c9f0ff 52%, #1f9ad6 52.3%, #0d5a92 100%);
 }
 
-/* vignette for first-person feel */
+/* vignette for first-person feel, tinted per waypoint */
 .viewport::after {
   content: "";
   position: absolute;
@@ -48,6 +48,17 @@ body {
   background:
     radial-gradient(ellipse at 50% 45%,
       transparent 55%, rgba(6, 22, 44, 0.38));
+}
+#wp-deck:checked ~ .viewport::after {
+  background:
+    radial-gradient(ellipse at 50% 45%,
+      transparent 52%, rgba(52, 26, 6, 0.42));
+}
+#wp-cabin:checked ~ .viewport::after {
+  background:
+    radial-gradient(ellipse at 50% 42%,
+      rgba(255, 190, 90, 0.06) 30%, transparent 46%,
+      rgba(24, 10, 3, 0.55));
 }
 
 .scene {
@@ -93,8 +104,17 @@ body {
 /* dock: bright harbor, clouds, sun, island, anchored ship */
 .dock .backdrop {
   background:
+    conic-gradient(from 180deg at 79% 16%,
+      rgba(255, 236, 159, 0.22) 0 9deg, transparent 9deg 30deg,
+      rgba(255, 236, 159, 0.22) 30deg 39deg, transparent 39deg 60deg,
+      rgba(255, 236, 159, 0.22) 60deg 69deg, transparent 69deg 300deg,
+      rgba(255, 236, 159, 0.22) 300deg 309deg, transparent 309deg 330deg,
+      rgba(255, 236, 159, 0.22) 330deg 339deg, transparent 339deg),
     radial-gradient(circle at 79% 16%, #ffec9f 30px,
       rgba(255, 236, 159, 0.35) 60px, transparent 110px),
+    radial-gradient(circle at 6.1% 44.5%, #fff3c4 5px, transparent 6px),
+    linear-gradient(0deg, #b3402e 0 30%, #f0e6d2 30% 55%, #b3402e 55% 80%,
+      #f0e6d2 80%) 6.05% 47.4% / 17px 52px no-repeat,
     radial-gradient(ellipse 220px 70px at 6% 54%, #2e8f6e 48%, transparent 50%),
     linear-gradient(#5ecdf9 0%, #c9f0ff 54%, #23a5dd 54.3%,
       #1272ae 82%, #0d5a92 100%);
@@ -373,6 +393,75 @@ body {
     #c98e46;
 }
 
+.ropecoil { /* coiled mooring rope on the dock planks */
+  left: -420px;
+  top: 96px;
+  width: 120px;
+  height: 44px;
+  transform: translateZ(190px);
+  border-radius: 50%;
+  background:
+    repeating-radial-gradient(ellipse at 50% 50%,
+      #b98a5a 0 7px, #7a4a20 7px 14px);
+  box-shadow: 0 6px 0 rgba(10, 20, 30, 0.25);
+}
+
+.wheel { /* ship's wheel leaning by the mast */
+  left: 300px;
+  top: -30px;
+  width: 150px;
+  height: 150px;
+  transform: translateZ(150px);
+  border: 12px solid #4a2c10;
+  border-radius: 50%;
+  background:
+    repeating-conic-gradient(#5a3a1c 0 9deg, transparent 9deg 45deg);
+}
+.wheel::before { /* hub */
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 40px;
+  height: 40px;
+  margin: -20px 0 0 -20px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #8a5424, #3c2610);
+}
+.wheel::after { /* handle knobs */
+  content: "";
+  position: absolute;
+  inset: -26px;
+  background:
+    radial-gradient(circle 7px at 50% 4%, #6b421a 90%, transparent),
+    radial-gradient(circle 7px at 82% 17%, #6b421a 90%, transparent),
+    radial-gradient(circle 7px at 96% 50%, #6b421a 90%, transparent),
+    radial-gradient(circle 7px at 82% 83%, #6b421a 90%, transparent),
+    radial-gradient(circle 7px at 50% 96%, #6b421a 90%, transparent),
+    radial-gradient(circle 7px at 18% 83%, #6b421a 90%, transparent),
+    radial-gradient(circle 7px at 4% 50%, #6b421a 90%, transparent),
+    radial-gradient(circle 7px at 18% 17%, #6b421a 90%, transparent);
+}
+
+.lantern { /* lantern hung on the mast, warm pulse */
+  left: 122px;
+  top: -300px;
+  width: 34px;
+  height: 52px;
+  transform: translateZ(102px);
+  border: 3px solid #3c2610;
+  border-radius: 8px 8px 12px 12px;
+  background:
+    radial-gradient(circle at 50% 55%, #fff3c4 6px, #ffbe5a 12px,
+      #b8862a 16px);
+  box-shadow: 0 -8px 0 -4px #3c2610;
+  animation: glow-pulse 2.6s ease-in-out infinite alternate;
+}
+@keyframes glow-pulse {
+  from { filter: drop-shadow(0 0 14px rgba(255, 190, 90, 0.9)); }
+  to   { filter: drop-shadow(0 0 4px rgba(255, 190, 90, 0.45)); }
+}
+
 .hatch { /* open deck hatch */
   left: -160px;
   top: 74px;
@@ -444,6 +533,57 @@ body {
     repeating-linear-gradient(90deg,
       rgba(0, 0, 0, 0.1) 0 3px, transparent 3px 40px),
     linear-gradient(#8a5424, #5a3a1c);
+}
+
+.shelf { /* bookshelf on the cabin wall */
+  left: -430px;
+  top: -230px;
+  width: 210px;
+  height: 160px;
+  transform: translateZ(-40px);
+  border: 8px solid #3c2610;
+  background:
+    linear-gradient(#3c2610, #3c2610) 0 68px / 100% 9px no-repeat,
+    repeating-linear-gradient(90deg, #a5322a 0 15px, #23527a 15px 27px,
+      #b8862a 27px 41px, #2e7f52 41px 53px, #58362a 53px 68px)
+      0 12px / 100% 56px no-repeat,
+    repeating-linear-gradient(90deg, #2e7f52 0 13px, #b8862a 13px 27px,
+      #a5322a 27px 39px, #23527a 39px 55px, #58362a 55px 66px)
+      6px 88px / 100% 56px no-repeat,
+    #241307;
+}
+
+.goldpile { /* spilled treasure beside the chest */
+  left: 330px;
+  top: 90px;
+  width: 110px;
+  height: 46px;
+  transform: translateZ(160px);
+  border-radius: 100% 100% 6% 6%;
+  background:
+    radial-gradient(circle 3px at 26% 30%, #fff3c4 85%, transparent),
+    radial-gradient(circle 3px at 68% 22%, #fff3c4 85%, transparent),
+    repeating-linear-gradient(0deg, #d8a437 0 3px, #ffd447 3px 9px),
+    #ffd447;
+}
+
+.candle { /* candle on the desk, flickering */
+  left: 96px;
+  top: -34px;
+  width: 18px;
+  height: 58px;
+  transform: translateZ(136px);
+  border-radius: 4px;
+  background:
+    radial-gradient(ellipse 5px 9px at 50% 4px, #fff3c4 40%, #ffbe5a 70%,
+      transparent 75%),
+    linear-gradient(0deg, #e8d29b 0 44px, transparent 44px);
+  animation: flicker 0.9s ease-in-out infinite alternate;
+}
+@keyframes flicker {
+  0%   { filter: drop-shadow(0 0 12px rgba(255, 190, 90, 0.95)); }
+  55%  { filter: drop-shadow(0 0 7px rgba(255, 190, 90, 0.6)); }
+  100% { filter: drop-shadow(0 0 16px rgba(255, 210, 110, 1)); }
 }
 
 .chest {
@@ -564,6 +704,53 @@ body {
   background:
     linear-gradient(90deg, #f6c07a 0 20px, #ffd447 20px 30px,
       #e8eef2 30px);
+}
+
+/* --- crew visual variants --- */
+
+/* tricorn hat worn over the bandana */
+.cap {
+  position: absolute;
+  left: 20px;
+  top: -16px;
+  width: 82px;
+  height: 34px;
+  border: 3px solid #14161c;
+  border-radius: 50% 50% 22% 22%;
+  background:
+    radial-gradient(circle at 50% 66%, #ffd447 4px, transparent 5px),
+    linear-gradient(#2b2d38, #14161c);
+  box-shadow: 0 4px 0 -1px #14161c;
+}
+
+/* bald, big-bearded bruiser: no eyepatch, no bandana */
+.v-beard .art::before {
+  background:
+    radial-gradient(ellipse 10px 4px at 32% 42%, #37220f 80%, transparent),
+    radial-gradient(ellipse 10px 4px at 68% 42%, #37220f 80%, transparent),
+    radial-gradient(circle at 34% 54%, #26160a 5px, transparent 6px),
+    radial-gradient(circle at 66% 54%, #26160a 5px, transparent 6px),
+    radial-gradient(ellipse 7px 5px at 50% 66%, #e0a35e 75%, transparent 78%),
+    radial-gradient(ellipse 9px 5px at 50% 82%, #2b1608 70%, transparent 74%),
+    radial-gradient(ellipse 26px 20px at 50% 96%, #4a2c10 66%,
+      transparent 69%),
+    radial-gradient(circle at 14% 58%, #ffd447 4px, transparent 5px),
+    radial-gradient(ellipse 34px 18px at 50% 6%,
+      rgba(0, 0, 0, 0.12) 70%, transparent 74%),
+    #f6c07a;
+}
+
+/* hook hand instead of a cutlass */
+.v-hook .art::after {
+  width: 62px;
+  height: 18px;
+  right: -36px;
+  border-radius: 9px;
+  background:
+    radial-gradient(circle 9px at 48px 9px, transparent 3.5px,
+      #cfd8df 4px 8px, transparent 8.5px),
+    linear-gradient(90deg, #f6c07a 0 26px, #39424e 26px 34px,
+      transparent 34px);
 }
 
 /* crew color variants */
@@ -687,10 +874,52 @@ body {
     opacity: 0;
     pointer-events: none;
   }
-  30%, 88% {
+  /* out of cover, idle sway while taking aim */
+  30% {
     transform: translate3d(var(--pop-x), var(--pop-y), var(--z));
     opacity: 1;
     pointer-events: auto;
+  }
+  44% {
+    transform:
+      translate3d(var(--pop-x), calc(var(--pop-y) + 3px), var(--z))
+      rotate(1.6deg);
+    opacity: 1;
+    pointer-events: auto;
+  }
+  58% {
+    transform: translate3d(var(--pop-x), var(--pop-y), var(--z))
+      rotate(-1.6deg);
+    opacity: 1;
+    pointer-events: auto;
+  }
+  72% {
+    transform:
+      translate3d(var(--pop-x), calc(var(--pop-y) + 3px), var(--z))
+      rotate(1.6deg);
+    opacity: 1;
+    pointer-events: auto;
+  }
+  84% {
+    transform: translate3d(var(--pop-x), var(--pop-y), var(--z));
+    opacity: 1;
+    pointer-events: auto;
+    filter: none;
+  }
+  /* red warning shake: last chance to shoot */
+  88%, 92% {
+    transform:
+      translate3d(calc(var(--pop-x) - 5px), var(--pop-y), var(--z));
+    opacity: 1;
+    pointer-events: auto;
+    filter: brightness(1.4) saturate(2) hue-rotate(-12deg);
+  }
+  90%, 94% {
+    transform:
+      translate3d(calc(var(--pop-x) + 5px), var(--pop-y), var(--z));
+    opacity: 1;
+    pointer-events: auto;
+    filter: brightness(1.15) saturate(1.4);
   }
   96%, 100% {
     transform:
@@ -792,7 +1021,10 @@ body {
   transform: rotate(34deg);
   transform-origin: 22px 20px;
   border-bottom: 9px solid #ffd447;
-  background: linear-gradient(125deg, #a5642a 20%, #5e3610);
+  background:
+    repeating-linear-gradient(35deg, rgba(0, 0, 0, 0.07) 0 3px,
+      transparent 3px 14px),
+    linear-gradient(125deg, #a5642a 20%, #5e3610);
 }
 .guard { /* trigger guard */
   position: absolute;
@@ -813,8 +1045,12 @@ body {
   height: 44px;
   border-radius: 22px 8px 8px 18px;
   background:
+    radial-gradient(circle 2.5px at 70% 30%, #ffd447 90%, transparent),
+    radial-gradient(circle 2.5px at 86% 62%, #ffd447 90%, transparent),
     radial-gradient(ellipse 30px 14px at 78% 45%, #8494a2 65%,
       #4c5a68 70%, transparent 74%),
+    repeating-linear-gradient(100deg, rgba(0, 0, 0, 0.07) 0 3px,
+      transparent 3px 15px),
     linear-gradient(100deg, #a5642a, #6b3d10);
 }
 .flash { /* muzzle flash, positioned at the barrel tip */
@@ -926,6 +1162,12 @@ body {
   display: none;
   z-index: 80;
   background:
+    radial-gradient(circle 2px at 12% 8%, #fff 90%, transparent),
+    radial-gradient(circle 1.5px at 26% 15%, #fff 90%, transparent),
+    radial-gradient(circle 2px at 44% 6%, #fff 90%, transparent),
+    radial-gradient(circle 1.5px at 68% 12%, #fff 90%, transparent),
+    radial-gradient(circle 2px at 85% 7%, #fff 90%, transparent),
+    radial-gradient(circle 1.5px at 93% 18%, #fff 90%, transparent),
     radial-gradient(circle at 50% 80%, rgba(255, 200, 90, 0.45),
       transparent 42%),
     linear-gradient(#1b1240 0%, #5c2160 38%, #c44a35 66%,
@@ -933,7 +1175,21 @@ body {
   color: #ffe9c9;
 }
 #wp-title:checked ~ .title-screen { display: flex; }
-.title-screen h1 { color: #ffd76b; }
+.title-screen h1 { /* shimmering gold lettering */
+  background:
+    linear-gradient(100deg, #ffd76b 32%, #fff7d9 50%, #ffd76b 68%)
+    0 0 / 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: none;
+  filter: drop-shadow(4px 4px 0 rgba(40, 10, 30, 0.45));
+  animation: shine 3.4s ease-in-out infinite;
+}
+@keyframes shine {
+  0%, 20%  { background-position: 0 0; }
+  70%, 100% { background-position: 100% 0; }
+}
 .title-screen::before { /* ship silhouette on the horizon */
   content: "";
   position: absolute;
@@ -1023,8 +1279,32 @@ body {
 .win {
   display: none;
   z-index: 70;
+  overflow: hidden;
   background: radial-gradient(circle at 50% 40%, #ffd76b, #d98f1f 80%);
   color: #3f2812;
+}
+.win::before, .win::after { /* looping coin shower */
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -100%;
+  height: 200%;
+  pointer-events: none;
+  background:
+    radial-gradient(circle 8px at 30px 40px, #ffd447 62%, #b8862a 66% 98%,
+      transparent) 0 0 / 130px 150px;
+  animation: coin-fall 2.8s linear infinite;
+}
+.win::after {
+  background:
+    radial-gradient(circle 6px at 80px 90px, #fff3c4 58%, #d8a437 62% 98%,
+      transparent) 40px 0 / 170px 190px;
+  animation-duration: 3.9s;
+}
+@keyframes coin-fall {
+  from { transform: translateY(0); }
+  to   { transform: translateY(50%); }
 }
 
 #kill-e1:checked ~ #kill-e2:checked ~ #kill-e3:checked

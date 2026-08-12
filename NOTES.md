@@ -42,6 +42,24 @@ Checks: kill registers x4, advance gating, win screen, game over fires when
 e1 ignored, no game over after timely kill, reset from win AND game over.
 Screenshots of title/dock/deck/cabin/win/gameover all eyeballed.
 
+## 2026-08-12 session, round 3 (art v4 — deep pass)
+- Enemy TYPES, not just palette swaps: default bandana crew; .v-hat wears a
+  tricorn (.cap div, e2/e6); .v-beard is bald with brown beard + angry
+  brows, no eyepatch (e3/e7); .v-hook has a hook hand (e4). Boss unchanged.
+  Beard color is FIXED brown — never var(--band) (blue beards look wrong).
+- Living timeline: idle sway keyframes at 44/58/72%, then red warning
+  shake at 88-94% (telegraphs the attack), lunge at 96%. Every keyframe
+  must repeat opacity/pointer-events or the enemy flickers unclickable.
+- New set dressing: rope coil + lighthouse + sun rays (dock); ship's wheel
+  + glowing mast lantern (deck); bookshelf + flickering desk candle +
+  coin-stack gold pile (cabin).
+- Per-waypoint vignette tint via #wp-X:checked ~ .viewport::after
+  (bright blue dock, warm deck, dark amber cabin).
+- Title: starfield + shimmering gold h1 (background-clip: text — Chrome
+  needs -webkit- prefix; drop text-shadow or it shows through).
+- Win screen: looping coin shower via .win::before/::after, 200%-tall
+  layers translating 50% for a seamless loop.
+
 ## 2026-08-12 session, round 2 (art v3)
 - Gun grip kink fixed: .wrist ellipse smooths the stock-to-grip bend; whole
   .gun gets a silhouette outline via 4-way drop-shadow filter (outlines the
