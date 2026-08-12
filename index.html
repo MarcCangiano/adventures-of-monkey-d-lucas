@@ -8,6 +8,540 @@
 </head>
 <body>
 
+<!-- vector asset library: pure markup, no scripts -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<defs>
+
+  <linearGradient id="g-skin" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#f7bd85"/>
+    <stop offset="1" stop-color="#e39a5c"/>
+  </linearGradient>
+  <linearGradient id="g-steel" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#dbe4ea"/>
+    <stop offset="0.5" stop-color="#93a2b0"/>
+    <stop offset="1" stop-color="#4e5b68"/>
+  </linearGradient>
+  <linearGradient id="g-blade" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#f2f7fa"/>
+    <stop offset="1" stop-color="#aebfcc"/>
+  </linearGradient>
+  <linearGradient id="g-wood" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#a86c31"/>
+    <stop offset="1" stop-color="#5e3610"/>
+  </linearGradient>
+  <linearGradient id="g-woodlight" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#c98e46"/>
+    <stop offset="1" stop-color="#8a5424"/>
+  </linearGradient>
+  <linearGradient id="g-brass" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#ffe08a"/>
+    <stop offset="1" stop-color="#b8862a"/>
+  </linearGradient>
+  <linearGradient id="g-sail" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#fdf6e2"/>
+    <stop offset="1" stop-color="#e2d3ac"/>
+  </linearGradient>
+  <linearGradient id="g-hull" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#6d4017"/>
+    <stop offset="1" stop-color="#38200a"/>
+  </linearGradient>
+
+  <!-- ============ pirate: body core (legs, torso, vest, back arm) ============ -->
+  <symbol id="p-body" viewBox="0 0 120 170">
+    <!-- back arm, fist on hip -->
+    <path d="M44 88 C30 94 25 103 30 112" fill="none"
+      stroke="#33200f" stroke-width="17" stroke-linecap="round"/>
+    <path d="M44 88 C30 94 25 103 30 112" fill="none"
+      stroke="#f5ecd8" stroke-width="12" stroke-linecap="round"/>
+    <circle cx="31" cy="114" r="7.5" fill="url(#g-skin)"
+      stroke="#33200f" stroke-width="3"/>
+    <!-- legs -->
+    <rect x="39" y="126" width="18" height="26" rx="4" fill="#3d4e91"
+      stroke="#33200f" stroke-width="3"/>
+    <rect x="63" y="126" width="18" height="26" rx="4" fill="#3d4e91"
+      stroke="#33200f" stroke-width="3"/>
+    <!-- boots with cuffs -->
+    <path d="M37 150 L59 150 L59 162 Q59 167 53 167 L34 167
+      Q29 167 30 161 L31 155 Q32 150 37 150 Z" fill="#2b2f3a"
+      stroke="#33200f" stroke-width="3"/>
+    <path d="M61 150 L83 150 L86 155 Q88 161 87 164 Q86 167 81 167
+      L67 167 Q61 167 61 162 Z" fill="#2b2f3a"
+      stroke="#33200f" stroke-width="3"/>
+    <rect x="37" y="147" width="22" height="7" rx="2" fill="#54331b"
+      stroke="#33200f" stroke-width="2.5"/>
+    <rect x="61" y="147" width="22" height="7" rx="2" fill="#54331b"
+      stroke="#33200f" stroke-width="2.5"/>
+    <!-- torso -->
+    <path id="p-torso" d="M42 76 C36 78 34 86 33 96 L32 118
+      Q32 130 44 130 L76 130 Q88 130 88 118 L87 96
+      C86 86 84 78 78 76 C66 71 54 71 42 76 Z"
+      fill="#f5ecd8" stroke="#33200f" stroke-width="3"/>
+    <clipPath id="p-torso-clip">
+      <path d="M42 76 C36 78 34 86 33 96 L32 118 Q32 130 44 130
+        L76 130 Q88 130 88 118 L87 96 C86 86 84 78 78 76
+        C66 71 54 71 42 76 Z"/>
+    </clipPath>
+    <g clip-path="url(#p-torso-clip)">
+      <rect x="30" y="84" width="60" height="10" fill="var(--shirt, #ff4b3a)"/>
+      <rect x="30" y="102" width="60" height="10" fill="var(--shirt, #ff4b3a)"/>
+      <rect x="76" y="70" width="14" height="62" fill="#000" opacity="0.10"/>
+    </g>
+    <!-- vest panels -->
+    <path d="M45 75 C41 90 41 108 45 126 L54 126 C50 108 50 90 54 77 Z"
+      fill="#6b3a16" stroke="#33200f" stroke-width="3"/>
+    <path d="M75 75 C79 90 79 108 75 126 L66 126 C70 108 70 90 66 77 Z"
+      fill="#6b3a16" stroke="#33200f" stroke-width="3"/>
+    <!-- belt + buckle -->
+    <rect x="33" y="116" width="54" height="13" fill="#4a2a10"
+      stroke="#33200f" stroke-width="3"/>
+    <rect x="53" y="114" width="14" height="17" rx="3" fill="url(#g-brass)"
+      stroke="#33200f" stroke-width="3"/>
+  </symbol>
+
+  <!-- ============ pirate: head with skin, ear, nose, grin ============ -->
+  <symbol id="p-face" viewBox="0 0 120 170">
+    <rect x="52" y="62" width="16" height="14" fill="#e39a5c"
+      stroke="#33200f" stroke-width="3"/>
+    <ellipse cx="89" cy="46" rx="6" ry="8" fill="url(#g-skin)"
+      stroke="#33200f" stroke-width="3"/>
+    <circle cx="90" cy="56" r="4" fill="none" stroke="#d8a437"
+      stroke-width="3"/>
+    <path d="M32 42 C32 22 44 12 60 12 C76 12 88 22 88 42
+      C88 58 76 69 60 69 C44 69 32 58 32 42 Z"
+      fill="url(#g-skin)" stroke="#33200f" stroke-width="3"/>
+    <path d="M56 45 Q60 53 64 45 Q60 41 56 45 Z" fill="#d98a4e"
+      stroke="#33200f" stroke-width="2"/>
+    <path d="M45 52 Q60 67 75 52 Q60 58 45 52 Z" fill="#5e2214"
+      stroke="#33200f" stroke-width="2.5"/>
+    <path d="M48 53.5 Q60 59 72 53.5 L71 56 Q60 61 49 56 Z" fill="#fdf6e4"/>
+  </symbol>
+
+  <!-- eyes: one open, one patched -->
+  <symbol id="p-eyes-patch" viewBox="0 0 120 170">
+    <path d="M33 32 L88 41" stroke="#1c1e26" stroke-width="4"
+      stroke-linecap="round"/>
+    <ellipse cx="72" cy="40" rx="9" ry="10" fill="#1c1e26"/>
+    <ellipse cx="46" cy="41" rx="6" ry="7" fill="#fff"
+      stroke="#33200f" stroke-width="2.5"/>
+    <circle cx="47" cy="42" r="3" fill="#33200f"/>
+    <circle cx="48" cy="40.5" r="1" fill="#fff"/>
+    <path d="M38 31 Q46 27 53 30" fill="none" stroke="#33200f"
+      stroke-width="4" stroke-linecap="round"/>
+  </symbol>
+
+  <!-- eyes: two angry eyes, no patch -->
+  <symbol id="p-eyes-angry" viewBox="0 0 120 170">
+    <ellipse cx="46" cy="41" rx="6" ry="6.5" fill="#fff"
+      stroke="#33200f" stroke-width="2.5"/>
+    <circle cx="47" cy="42" r="3" fill="#33200f"/>
+    <ellipse cx="74" cy="41" rx="6" ry="6.5" fill="#fff"
+      stroke="#33200f" stroke-width="2.5"/>
+    <circle cx="73" cy="42" r="3" fill="#33200f"/>
+    <path d="M38 33 L54 36" stroke="#33200f" stroke-width="4"
+      stroke-linecap="round"/>
+    <path d="M82 33 L66 36" stroke="#33200f" stroke-width="4"
+      stroke-linecap="round"/>
+  </symbol>
+
+  <!-- headwear: bandana with tails and dots -->
+  <symbol id="p-bandana" viewBox="0 0 120 170">
+    <path d="M30 36 C29 16 44 6 60 6 C76 6 91 16 90 36
+      C89 39 87 40 84 38 C70 28 50 28 36 38 C33 40 31 39 30 36 Z"
+      fill="var(--band, #ff4b3a)" stroke="#33200f" stroke-width="3"/>
+    <path d="M87 30 C97 32 104 40 101 50 C99 43 93 37 86 35 Z"
+      fill="var(--band, #ff4b3a)" stroke="#33200f" stroke-width="3"
+      stroke-linejoin="round"/>
+    <path d="M89 36 C96 42 98 50 94 58 C93 51 89 44 84 41 Z"
+      fill="var(--band, #ff4b3a)" stroke="#33200f" stroke-width="3"
+      stroke-linejoin="round"/>
+    <circle cx="46" cy="17" r="2.6" fill="#fdf6e4" opacity="0.9"/>
+    <circle cx="60" cy="12" r="2.6" fill="#fdf6e4" opacity="0.9"/>
+    <circle cx="74" cy="17" r="2.6" fill="#fdf6e4" opacity="0.9"/>
+    <circle cx="53" cy="24" r="2.2" fill="#fdf6e4" opacity="0.9"/>
+    <circle cx="67" cy="24" r="2.2" fill="#fdf6e4" opacity="0.9"/>
+  </symbol>
+
+  <!-- headwear: tricorn hat -->
+  <symbol id="p-tricorn" viewBox="0 0 120 170">
+    <path d="M24 32 C28 12 50 2 60 2 C70 2 92 12 96 32
+      C88 24 80 21 74 23 C70 13 50 13 46 23 C40 21 32 24 24 32 Z"
+      fill="#23252e" stroke="#33200f" stroke-width="3"
+      stroke-linejoin="round"/>
+    <path d="M24 32 C40 22 80 22 96 32 C80 28 40 28 24 32 Z"
+      fill="#14161c" stroke="#33200f" stroke-width="3"
+      stroke-linejoin="round"/>
+    <path d="M26 31 C42 22 78 22 94 31" fill="none"
+      stroke="#d8a437" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="60" cy="14" r="4" fill="#fdf6e4"/>
+  </symbol>
+
+  <!-- headwear: bald with big beard (drawn over the grin) -->
+  <symbol id="p-bald-beard" viewBox="0 0 120 170">
+    <path d="M42 18 Q60 10 78 18" fill="none" stroke="#fff"
+      stroke-width="4" stroke-linecap="round" opacity="0.25"/>
+    <path d="M31 42 C31 66 43 80 60 80 C77 80 89 66 89 42
+      C86 58 76 68 60 68 C44 68 34 58 31 42 Z"
+      fill="#5b3a1e" stroke="#33200f" stroke-width="3"
+      stroke-linejoin="round"/>
+    <path d="M44 55 Q60 46 76 55 Q60 61 44 55 Z" fill="#4a2c10"
+      stroke="#33200f" stroke-width="2.5"/>
+    <ellipse cx="60" cy="63" rx="7" ry="4.5" fill="#2b1608"/>
+  </symbol>
+
+  <!-- front arm holding a curved cutlass -->
+  <symbol id="p-arm-cutlass" viewBox="0 0 120 170">
+    <path d="M76 86 C90 82 98 72 102 60" fill="none"
+      stroke="#33200f" stroke-width="17" stroke-linecap="round"/>
+    <path d="M76 86 C90 82 98 72 102 60" fill="none"
+      stroke="#f5ecd8" stroke-width="12" stroke-linecap="round"/>
+    <path d="M96 68 C99 64 100 62 102 58" fill="none"
+      stroke="var(--shirt, #ff4b3a)" stroke-width="12"/>
+    <path d="M97 44 C100 36 104 26 110 16 C112 12 116 12 116 16
+      C116 30 112 42 106 50 C103 48 99 46 97 44 Z"
+      fill="url(#g-blade)" stroke="#33200f" stroke-width="3"
+      stroke-linejoin="round"/>
+    <path d="M109 20 C109 30 107 38 104 46" fill="none"
+      stroke="#8ea4b5" stroke-width="2"/>
+    <ellipse cx="103" cy="52" rx="9" ry="6" fill="url(#g-brass)"
+      stroke="#33200f" stroke-width="3"
+      transform="rotate(-35 103 52)"/>
+    <circle cx="104" cy="55" r="7" fill="url(#g-skin)"
+      stroke="#33200f" stroke-width="3"/>
+  </symbol>
+
+  <!-- front arm ending in a steel hook -->
+  <symbol id="p-arm-hook" viewBox="0 0 120 170">
+    <path d="M76 86 C90 82 98 72 102 60" fill="none"
+      stroke="#33200f" stroke-width="17" stroke-linecap="round"/>
+    <path d="M76 86 C90 82 98 72 102 60" fill="none"
+      stroke="#f5ecd8" stroke-width="12" stroke-linecap="round"/>
+    <path d="M97 63 C100 59 101 57 103 54" fill="none"
+      stroke="#39424e" stroke-width="13" stroke-linecap="round"/>
+    <path d="M103 52 C112 44 119 46 119 55 C119 62 113 66 108 63
+      C112 61 113 56 110 54 C107 52 104 54 103 52 Z"
+      fill="url(#g-steel)" stroke="#33200f" stroke-width="3"
+      stroke-linejoin="round"/>
+  </symbol>
+
+  <!-- composed pirate types -->
+  <symbol id="pirate-bandana" viewBox="0 0 120 170">
+    <use href="#p-body"/><use href="#p-arm-cutlass"/><use href="#p-face"/>
+    <use href="#p-eyes-patch"/><use href="#p-bandana"/>
+  </symbol>
+  <symbol id="pirate-tricorn" viewBox="0 0 120 170">
+    <use href="#p-body"/><use href="#p-arm-cutlass"/><use href="#p-face"/>
+    <use href="#p-eyes-patch"/><use href="#p-tricorn"/>
+  </symbol>
+  <symbol id="pirate-beard" viewBox="0 0 120 170">
+    <use href="#p-body"/><use href="#p-arm-cutlass"/><use href="#p-face"/>
+    <use href="#p-eyes-angry"/><use href="#p-bald-beard"/>
+  </symbol>
+  <symbol id="pirate-hook" viewBox="0 0 120 170">
+    <use href="#p-body"/><use href="#p-arm-hook"/><use href="#p-face"/>
+    <use href="#p-eyes-patch"/><use href="#p-bandana"/>
+  </symbol>
+
+  <!-- ============ Captain Snagglebeard ============ -->
+  <symbol id="pirate-boss" viewBox="0 0 150 210">
+    <!-- back arm on hip -->
+    <path d="M52 108 C36 114 30 124 36 134" fill="none"
+      stroke="#33200f" stroke-width="19" stroke-linecap="round"/>
+    <path d="M52 108 C36 114 30 124 36 134" fill="none"
+      stroke="#2e2e8f" stroke-width="14" stroke-linecap="round"/>
+    <circle cx="37" cy="137" r="8" fill="url(#g-skin)"
+      stroke="#33200f" stroke-width="3"/>
+    <!-- legs + boots -->
+    <rect x="52" y="158" width="20" height="22" rx="4" fill="#23262e"
+      stroke="#33200f" stroke-width="3"/>
+    <rect x="78" y="158" width="20" height="22" rx="4" fill="#23262e"
+      stroke="#33200f" stroke-width="3"/>
+    <path d="M50 176 L72 176 L72 192 Q72 198 66 198 L46 198
+      Q41 198 42 192 L44 181 Q45 176 50 176 Z" fill="#14161c"
+      stroke="#33200f" stroke-width="3"/>
+    <path d="M78 176 L100 176 L104 181 Q107 190 106 193
+      Q105 198 99 198 L84 198 Q78 198 78 192 Z" fill="#14161c"
+      stroke="#33200f" stroke-width="3"/>
+    <!-- long captain coat -->
+    <path d="M56 92 C46 96 42 106 41 118 L38 158 Q38 166 48 166
+      L102 166 Q112 166 112 158 L109 118 C108 106 104 96 94 92
+      C80 86 70 86 56 92 Z" fill="#2e2e8f"
+      stroke="#33200f" stroke-width="3"/>
+    <!-- white shirt front + gold trim -->
+    <path d="M67 92 L83 92 L81 150 L69 150 Z" fill="#f5ecd8"
+      stroke="#33200f" stroke-width="2.5"/>
+    <path d="M56 92 C50 108 49 138 52 164" fill="none"
+      stroke="#d8a437" stroke-width="4"/>
+    <path d="M94 92 C100 108 101 138 98 164" fill="none"
+      stroke="#d8a437" stroke-width="4"/>
+    <circle cx="63" cy="106" r="2.8" fill="#ffd447"/>
+    <circle cx="63" cy="122" r="2.8" fill="#ffd447"/>
+    <circle cx="63" cy="138" r="2.8" fill="#ffd447"/>
+    <circle cx="87" cy="106" r="2.8" fill="#ffd447"/>
+    <circle cx="87" cy="122" r="2.8" fill="#ffd447"/>
+    <circle cx="87" cy="138" r="2.8" fill="#ffd447"/>
+    <!-- red sash -->
+    <path d="M56 94 L94 132 L94 144 L52 106 Z" fill="#b3402e"
+      stroke="#33200f" stroke-width="2.5" opacity="0.95"/>
+    <!-- epaulettes -->
+    <rect x="42" y="88" width="26" height="11" rx="4" fill="url(#g-brass)"
+      stroke="#33200f" stroke-width="3"/>
+    <rect x="82" y="88" width="26" height="11" rx="4" fill="url(#g-brass)"
+      stroke="#33200f" stroke-width="3"/>
+    <path d="M46 99 L46 106 M52 99 L52 107 M58 99 L58 106" fill="none"
+      stroke="#d8a437" stroke-width="3" stroke-linecap="round"/>
+    <path d="M92 99 L92 106 M98 99 L98 107 M104 99 L104 106" fill="none"
+      stroke="#d8a437" stroke-width="3" stroke-linecap="round"/>
+    <!-- sword arm with heavy cutlass -->
+    <path d="M94 104 C110 98 120 88 124 74" fill="none"
+      stroke="#33200f" stroke-width="19" stroke-linecap="round"/>
+    <path d="M94 104 C110 98 120 88 124 74" fill="none"
+      stroke="#2e2e8f" stroke-width="14" stroke-linecap="round"/>
+    <path d="M119 58 C123 46 129 33 138 20 C141 16 146 17 145 22
+      C143 40 137 55 128 64 C125 62 121 60 119 58 Z"
+      fill="url(#g-blade)" stroke="#33200f" stroke-width="3"
+      stroke-linejoin="round"/>
+    <path d="M138 24 C136 38 132 50 127 60" fill="none"
+      stroke="#8ea4b5" stroke-width="2"/>
+    <ellipse cx="124" cy="67" rx="10" ry="7" fill="url(#g-brass)"
+      stroke="#33200f" stroke-width="3" transform="rotate(-35 124 67)"/>
+    <circle cx="126" cy="70" r="8" fill="url(#g-skin)"
+      stroke="#33200f" stroke-width="3"/>
+    <!-- head -->
+    <rect x="65" y="76" width="20" height="16" fill="#e39a5c"
+      stroke="#33200f" stroke-width="3"/>
+    <path d="M43 52 C43 30 57 18 75 18 C93 18 107 30 107 52
+      C107 70 93 82 75 82 C57 82 43 70 43 52 Z"
+      fill="url(#g-skin)" stroke="#33200f" stroke-width="3"/>
+    <!-- scar -->
+    <path d="M95 34 L102 48 M95 41 L101 39 M97 46 L103 43" fill="none"
+      stroke="#b3402e" stroke-width="2.5" stroke-linecap="round"/>
+    <!-- angry eyes -->
+    <ellipse cx="61" cy="50" rx="6.5" ry="7" fill="#fff"
+      stroke="#33200f" stroke-width="2.5"/>
+    <circle cx="62" cy="51" r="3.2" fill="#33200f"/>
+    <ellipse cx="89" cy="50" rx="6.5" ry="7" fill="#fff"
+      stroke="#33200f" stroke-width="2.5"/>
+    <circle cx="88" cy="51" r="3.2" fill="#33200f"/>
+    <path d="M52 41 L69 45" stroke="#33200f" stroke-width="4.5"
+      stroke-linecap="round"/>
+    <path d="M98 41 L81 45" stroke="#33200f" stroke-width="4.5"
+      stroke-linecap="round"/>
+    <path d="M70 55 Q75 62 80 55 Q75 51 70 55 Z" fill="#d98a4e"
+      stroke="#33200f" stroke-width="2"/>
+    <!-- great beard + mustache -->
+    <path d="M44 54 C44 80 57 94 75 94 C93 94 106 80 106 54
+      C103 72 91 82 75 82 C59 82 47 72 44 54 Z"
+      fill="#4a2c10" stroke="#33200f" stroke-width="3"
+      stroke-linejoin="round"/>
+    <path d="M58 66 Q75 56 92 66 Q75 73 58 66 Z" fill="#3a2312"
+      stroke="#33200f" stroke-width="2.5"/>
+    <ellipse cx="75" cy="76" rx="7" ry="4.5" fill="#2b1608"/>
+    <!-- bicorn hat with skull and crossbones -->
+    <path d="M32 44 C40 10 110 10 118 44 C100 28 50 28 32 44 Z"
+      fill="#1c1e26" stroke="#33200f" stroke-width="3"
+      stroke-linejoin="round"/>
+    <path d="M34 43 C52 30 98 30 116 43" fill="none"
+      stroke="#d8a437" stroke-width="3.5" stroke-linecap="round"/>
+    <circle cx="75" cy="26" r="5.5" fill="#fdf6e4"/>
+    <circle cx="73" cy="25" r="1.3" fill="#1c1e26"/>
+    <circle cx="77" cy="25" r="1.3" fill="#1c1e26"/>
+    <rect x="66" y="30" width="18" height="3.4" rx="1.7" fill="#fdf6e4"
+      transform="rotate(24 75 32)"/>
+    <rect x="66" y="30" width="18" height="3.4" rx="1.7" fill="#fdf6e4"
+      transform="rotate(-24 75 32)"/>
+  </symbol>
+
+  <!-- ============ flintlock pistol (muzzle left) ============ -->
+  <symbol id="flintlock" viewBox="0 0 420 300">
+    <!-- ramrod -->
+    <rect x="36" y="152" width="180" height="7" rx="3.5" fill="#caa04a"
+      stroke="#2a1608" stroke-width="2.5"/>
+    <!-- one continuous stock and grip: smooth wrist, no kink -->
+    <path d="M40 144 L232 144 C256 144 268 150 278 164
+      C290 181 299 202 306 226 C311 245 308 262 295 270
+      C281 278 264 274 258 260 C252 240 246 222 238 208
+      C231 195 222 188 208 184 L96 176 C72 174 50 166 40 154 Z"
+      fill="url(#g-wood)" stroke="#2a1608" stroke-width="3.5"
+      stroke-linejoin="round"/>
+    <path d="M70 158 C130 166 190 170 220 176 M262 200 C272 216 280 234 286 252"
+      fill="none" stroke="#3c2610" stroke-width="2" opacity="0.5"/>
+    <!-- brass butt cap -->
+    <path d="M262 252 C268 264 282 270 294 265 C303 261 308 250 306 240
+      C300 250 288 256 276 252 Z" fill="url(#g-brass)"
+      stroke="#2a1608" stroke-width="3"/>
+    <!-- barrel -->
+    <rect x="10" y="116" width="230" height="32" rx="7"
+      fill="url(#g-steel)" stroke="#2a1608" stroke-width="3.5"/>
+    <path d="M14 124 L236 124" stroke="#eef3f7" stroke-width="3"
+      opacity="0.8"/>
+    <path d="M14 142 L236 142" stroke="#2f3a44" stroke-width="3"
+      opacity="0.6"/>
+    <rect x="10" y="112" width="18" height="40" rx="5" fill="url(#g-brass)"
+      stroke="#2a1608" stroke-width="3"/>
+    <rect x="146" y="114" width="9" height="36" rx="3" fill="url(#g-brass)"
+      stroke="#2a1608" stroke-width="2.5"/>
+    <!-- lock plate with engraving and screws -->
+    <path d="M190 152 C190 143 200 138 216 138 C240 138 256 146 258 160
+      C259 172 250 180 234 180 C212 180 190 168 190 152 Z"
+      fill="#8794a2" stroke="#2a1608" stroke-width="3"/>
+    <path d="M200 154 C206 146 220 145 228 152 C234 158 232 168 224 170"
+      fill="none" stroke="#4c5a68" stroke-width="2"/>
+    <circle cx="199" cy="160" r="3" fill="#4c5a68"
+      stroke="#2a1608" stroke-width="1.5"/>
+    <circle cx="247" cy="164" r="3" fill="#4c5a68"
+      stroke="#2a1608" stroke-width="1.5"/>
+    <!-- frizzen -->
+    <path d="M212 100 C204 108 202 122 208 134" fill="none"
+      stroke="#5d6b78" stroke-width="9" stroke-linecap="round"/>
+    <!-- cocked hammer with flint clamp -->
+    <path d="M238 140 C232 128 233 114 242 104 C247 98 256 95 260 100
+      C264 105 259 110 253 113 C247 117 246 128 250 138 Z"
+      fill="url(#g-steel)" stroke="#2a1608" stroke-width="3"
+      stroke-linejoin="round"/>
+    <rect x="248" y="96" width="14" height="10" rx="2" fill="#54331b"
+      stroke="#2a1608" stroke-width="2.5"
+      transform="rotate(-28 255 101)"/>
+    <circle cx="252" cy="120" r="3.5" fill="url(#g-brass)"
+      stroke="#2a1608" stroke-width="2"/>
+    <!-- trigger + oval guard -->
+    <path d="M224 186 C228 196 227 202 222 208" fill="none"
+      stroke="#2f3a44" stroke-width="5" stroke-linecap="round"/>
+    <path d="M210 184 C206 206 220 222 244 220 C258 218 264 208 262 198"
+      fill="none" stroke="url(#g-brass)" stroke-width="7"
+      stroke-linecap="round"/>
+  </symbol>
+
+  <!-- ============ galleon for the harbor ============ -->
+  <symbol id="galleon" viewBox="0 0 520 340">
+    <!-- rigging -->
+    <path d="M150 60 L48 208 M150 60 L236 200 M310 34 L226 200
+      M310 34 L420 196 M150 60 L310 34" fill="none"
+      stroke="#2a1608" stroke-width="2" opacity="0.55"/>
+    <!-- masts -->
+    <rect x="146" y="52" width="9" height="168" fill="url(#g-woodlight)"
+      stroke="#2a1608" stroke-width="2.5"/>
+    <rect x="306" y="26" width="10" height="194" fill="url(#g-woodlight)"
+      stroke="#2a1608" stroke-width="2.5"/>
+    <!-- yards -->
+    <rect x="96" y="66" width="110" height="7" rx="3.5"
+      fill="url(#g-woodlight)" stroke="#2a1608" stroke-width="2.5"/>
+    <rect x="248" y="44" width="126" height="7" rx="3.5"
+      fill="url(#g-woodlight)" stroke="#2a1608" stroke-width="2.5"/>
+    <!-- sails, billowed -->
+    <path d="M100 76 L202 76 C188 104 188 132 202 158 L100 158
+      C114 132 114 104 100 76 Z" fill="url(#g-sail)"
+      stroke="#2a1608" stroke-width="3"/>
+    <path d="M112 158 C138 166 166 166 190 158" fill="none"
+      stroke="#c9b98c" stroke-width="2.5"/>
+    <path d="M252 54 L370 54 C354 92 354 130 370 170 L252 170
+      C268 130 268 92 252 54 Z" fill="url(#g-sail)"
+      stroke="#2a1608" stroke-width="3"/>
+    <path d="M266 170 C298 180 330 180 358 170" fill="none"
+      stroke="#c9b98c" stroke-width="2.5"/>
+    <!-- pennants + black flag -->
+    <path d="M150 52 L150 40 L178 46 L150 52 Z" fill="#c73b28"
+      stroke="#2a1608" stroke-width="2"/>
+    <path d="M311 26 L311 6 L352 10 L340 16 L352 24 L311 26 Z"
+      fill="#1c1e26" stroke="#2a1608" stroke-width="2"/>
+    <circle cx="326" cy="15" r="4" fill="#fdf6e4"/>
+    <!-- hull -->
+    <path d="M20 208 C80 196 180 190 300 190 C390 190 458 184 500 164
+      C506 190 494 222 466 240 C380 262 150 262 84 244
+      C48 234 26 224 20 208 Z" fill="url(#g-hull)"
+      stroke="#2a1608" stroke-width="3.5"/>
+    <path d="M34 218 C150 236 380 236 462 220 M28 208 C140 224 390 224 478 200"
+      fill="none" stroke="#2a1608" stroke-width="2" opacity="0.45"/>
+    <path d="M24 202 C120 190 340 186 496 168" fill="none"
+      stroke="#d8a437" stroke-width="3.5"/>
+    <!-- gunports -->
+    <rect x="120" y="206" width="18" height="14" rx="3" fill="#14161c"
+      stroke="#d8a437" stroke-width="2"/>
+    <rect x="200" y="208" width="18" height="14" rx="3" fill="#14161c"
+      stroke="#d8a437" stroke-width="2"/>
+    <rect x="280" y="208" width="18" height="14" rx="3" fill="#14161c"
+      stroke="#d8a437" stroke-width="2"/>
+    <rect x="360" y="204" width="18" height="14" rx="3" fill="#14161c"
+      stroke="#d8a437" stroke-width="2"/>
+    <!-- stern castle -->
+    <path d="M420 132 L498 122 L500 164 C470 178 440 184 416 186 Z"
+      fill="#5a3417" stroke="#2a1608" stroke-width="3"/>
+    <circle cx="448" cy="152" r="5" fill="#ffd447"
+      stroke="#2a1608" stroke-width="2"/>
+    <circle cx="472" cy="146" r="5" fill="#ffd447"
+      stroke="#2a1608" stroke-width="2"/>
+    <!-- bowsprit -->
+    <path d="M40 200 L4 168" stroke="url(#g-woodlight)" stroke-width="8"
+      stroke-linecap="round"/>
+  </symbol>
+
+  <!-- ============ props ============ -->
+  <symbol id="barrel" viewBox="0 0 110 140">
+    <path d="M20 12 C8 40 8 100 20 128 C40 136 70 136 90 128
+      C102 100 102 40 90 12 C70 4 40 4 20 12 Z"
+      fill="url(#g-woodlight)" stroke="#3c2610" stroke-width="4"/>
+    <path d="M34 8 C26 40 26 100 34 132 M55 6 C50 40 50 100 55 134
+      M76 8 C84 40 84 100 76 132" fill="none" stroke="#3c2610"
+      stroke-width="2.5" opacity="0.5"/>
+    <path d="M13 34 C40 42 70 42 97 34 L97 46 C70 54 40 54 13 46 Z"
+      fill="#4a2c10" stroke="#3c2610" stroke-width="3"/>
+    <path d="M13 94 C40 102 70 102 97 94 L97 106 C70 114 40 114 13 106 Z"
+      fill="#4a2c10" stroke="#3c2610" stroke-width="3"/>
+    <ellipse cx="38" cy="26" rx="12" ry="18" fill="#fff" opacity="0.12"/>
+  </symbol>
+
+  <symbol id="crate" viewBox="0 0 140 120">
+    <rect x="6" y="6" width="128" height="108" rx="6" fill="url(#g-woodlight)"
+      stroke="#3c2610" stroke-width="5"/>
+    <rect x="18" y="18" width="104" height="84" fill="none"
+      stroke="#8a5424" stroke-width="7"/>
+    <path d="M20 20 L120 100 M120 20 L20 100" stroke="#8a5424"
+      stroke-width="9"/>
+    <path d="M20 20 L120 100 M120 20 L20 100" stroke="#6b421a"
+      stroke-width="4"/>
+  </symbol>
+
+  <symbol id="chest" viewBox="0 0 130 100">
+    <path d="M8 42 C8 20 30 8 65 8 C100 8 122 20 122 42 L122 44
+      L8 44 Z" fill="url(#g-woodlight)" stroke="#3c2610"
+      stroke-width="4"/>
+    <rect x="8" y="44" width="114" height="48" rx="6" fill="#8a4f1e"
+      stroke="#3c2610" stroke-width="4"/>
+    <path d="M30 9 L30 92 M100 9 L100 92" stroke="#3c2610"
+      stroke-width="2.5" opacity="0.5"/>
+    <rect x="24" y="6" width="13" height="90" fill="url(#g-brass)"
+      stroke="#3c2610" stroke-width="3"/>
+    <rect x="94" y="6" width="13" height="90" fill="url(#g-brass)"
+      stroke="#3c2610" stroke-width="3"/>
+    <rect x="55" y="38" width="20" height="26" rx="5" fill="url(#g-brass)"
+      stroke="#3c2610" stroke-width="3.5"/>
+    <circle cx="65" cy="48" r="4" fill="#7a4a12"/>
+    <path d="M65 48 L65 57" stroke="#7a4a12" stroke-width="4"
+      stroke-linecap="round"/>
+  </symbol>
+
+  <symbol id="shipwheel" viewBox="0 0 150 150">
+    <circle cx="75" cy="75" r="56" fill="none" stroke="#3c2610"
+      stroke-width="17"/>
+    <circle cx="75" cy="75" r="56" fill="none" stroke="url(#g-woodlight)"
+      stroke-width="11"/>
+    <g stroke="#4a2c10" stroke-width="8" stroke-linecap="round">
+      <path d="M75 8 L75 142 M8 75 L142 75 M28 28 L122 122 M122 28 L28 122"/>
+    </g>
+    <g fill="#6b421a" stroke="#3c2610" stroke-width="2.5">
+      <circle cx="75" cy="6" r="7"/><circle cx="75" cy="144" r="7"/>
+      <circle cx="6" cy="75" r="7"/><circle cx="144" cy="75" r="7"/>
+      <circle cx="26" cy="26" r="7"/><circle cx="124" cy="124" r="7"/>
+      <circle cx="124" cy="26" r="7"/><circle cx="26" cy="124" r="7"/>
+    </g>
+    <circle cx="75" cy="75" r="17" fill="url(#g-woodlight)"
+      stroke="#3c2610" stroke-width="4"/>
+    <circle cx="75" cy="75" r="6" fill="url(#g-brass)"
+      stroke="#3c2610" stroke-width="2.5"/>
+  </symbol>
+
+</defs>
+</svg>
+
 <form id="game">
 
   <!-- rail waypoints -->
@@ -32,27 +566,31 @@
     <div class="scene">
 
       <div class="area dock">
-        <div class="backdrop"></div>
+        <div class="backdrop">
+          <svg class="ship" viewBox="0 0 520 340"><use href="#galleon"/></svg>
+        </div>
         <div class="fx clouds"></div>
         <div class="fx waves"></div>
         <div class="floor"></div>
         <div class="prop post post-l"></div>
         <div class="prop post post-r"></div>
-        <div class="prop barrel"></div>
-        <div class="prop barrel barrel2"></div>
-        <div class="prop crates"></div>
+        <div class="prop barrel"><svg viewBox="0 0 110 140"><use href="#barrel"/></svg></div>
+        <div class="prop barrel barrel2"><svg viewBox="0 0 110 140"><use href="#barrel"/></svg></div>
+        <div class="prop crates">
+          <svg class="c-b" viewBox="0 0 140 120"><use href="#crate"/></svg>
+          <svg class="c-t" viewBox="0 0 140 120"><use href="#crate"/></svg>
+        </div>
         <div class="prop ropecoil"></div>
         <div class="enemy e1">
-          <div class="art"></div>
+          <div class="art"><svg viewBox="0 0 120 170"><use href="#pirate-bandana"/></svg></div>
           <label class="shoot" for="kill-e1"></label>
         </div>
-        <div class="enemy e2 v-hat">
-          <div class="art"></div>
-          <div class="cap"></div>
+        <div class="enemy e2">
+          <div class="art"><svg viewBox="0 0 120 170"><use href="#pirate-tricorn"/></svg></div>
           <label class="shoot" for="kill-e2"></label>
         </div>
-        <div class="enemy e3 v-beard">
-          <div class="art"></div>
+        <div class="enemy e3">
+          <div class="art"><svg viewBox="0 0 120 170"><use href="#pirate-beard"/></svg></div>
           <label class="shoot" for="kill-e3"></label>
         </div>
       </div>
@@ -63,24 +601,23 @@
         <div class="prop sign">The Gilded Gull</div>
         <div class="prop mast"></div>
         <div class="fx lantern"></div>
-        <div class="prop wheel"></div>
-        <div class="prop crate"></div>
+        <div class="prop wheel"><svg viewBox="0 0 150 150"><use href="#shipwheel"/></svg></div>
+        <div class="prop crate"><svg viewBox="0 0 140 120"><use href="#crate"/></svg></div>
         <div class="prop hatch"></div>
-        <div class="enemy e4 v-hook">
-          <div class="art"></div>
+        <div class="enemy e4">
+          <div class="art"><svg viewBox="0 0 120 170"><use href="#pirate-hook"/></svg></div>
           <label class="shoot" for="kill-e4"></label>
         </div>
         <div class="enemy e5">
-          <div class="art"></div>
+          <div class="art"><svg viewBox="0 0 120 170"><use href="#pirate-bandana"/></svg></div>
           <label class="shoot" for="kill-e5"></label>
         </div>
-        <div class="enemy e6 v-hat">
-          <div class="art"></div>
-          <div class="cap"></div>
+        <div class="enemy e6">
+          <div class="art"><svg viewBox="0 0 120 170"><use href="#pirate-tricorn"/></svg></div>
           <label class="shoot" for="kill-e6"></label>
         </div>
-        <div class="enemy e7 v-beard">
-          <div class="art"></div>
+        <div class="enemy e7">
+          <div class="art"><svg viewBox="0 0 120 170"><use href="#pirate-beard"/></svg></div>
           <label class="shoot" for="kill-e7"></label>
         </div>
       </div>
@@ -90,26 +627,22 @@
         <div class="floor"></div>
         <div class="prop shelf"></div>
         <div class="prop desk"></div>
-        <div class="prop chest"></div>
+        <div class="prop chest"><svg viewBox="0 0 130 100"><use href="#chest"/></svg></div>
         <div class="prop goldpile"></div>
         <div class="fx candle"></div>
         <div class="enemy e8">
-          <div class="art"></div>
+          <div class="art"><svg viewBox="0 0 120 170"><use href="#pirate-bandana"/></svg></div>
           <label class="shoot" for="kill-e8"></label>
         </div>
         <div class="enemy e9 boss">
-          <div class="art"></div>
-          <div class="hat"></div>
+          <div class="art"><svg viewBox="0 0 150 210"><use href="#pirate-boss"/></svg></div>
           <label class="shoot" for="kill-e9"></label>
         </div>
       </div>
 
     </div>
     <div class="gun">
-      <div class="hammer"></div>
-      <div class="wrist"></div>
-      <div class="grip"></div>
-      <div class="guard"></div>
+      <svg viewBox="0 0 420 300"><use href="#flintlock"/></svg>
     </div>
     <div class="flash"></div>
   </div>

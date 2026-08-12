@@ -42,6 +42,27 @@ Checks: kill registers x4, advance gating, win screen, game over fires when
 e1 ignored, no game over after timely kill, reset from win AND game over.
 Screenshots of title/dock/deck/cabin/win/gameover all eyeballed.
 
+## 2026-08-12 session, round 4 (art v5 — INLINE SVG, the big one)
+- Boss hated the gradient-blob art ("Sony/Xbox level"; gun still bent).
+  Answer: inline SVG. It is pure markup — no scripts, no handlers — so the
+  no-JS constraint holds. View-source stays clean.
+- All characters, the gun, the galleon, and hero props (barrel, crate,
+  chest, ship's wheel) are now hand-drawn SVG <symbol>s in a <defs> block
+  at the top of index.html, instanced with <use href="#id">.
+- CSS vars still drive per-enemy colors: fills use var(--band)/var(--shirt)
+  and pierce the <use> shadow DOM.
+- Gun "bent" complaint fixed for real: the stock-into-grip is ONE
+  continuous path — no more assembled rectangles.
+- Muzzle flash repositioned to the SVG barrel tip; verify.js now
+  screenshots mid-mousedown (02b-flash.png) to prove it.
+- Four pirate builds composed from shared part-symbols: bandana, tricorn,
+  bald-beard (angry, no patch), hook-hand; plus the boss (bicorn hat with
+  skull, epaulettes, sash, long coat).
+- Galleon placed at .ship top 16.5% so the hull sits IN the water —
+  at 7% it floated above the horizon.
+- Engine untouched: same inputs, labels, keyframes, chains. All checks
+  green after the rewrite.
+
 ## 2026-08-12 session, round 3 (art v4 — deep pass)
 - Enemy TYPES, not just palette swaps: default bandana crew; .v-hat wears a
   tricorn (.cap div, e2/e6); .v-beard is bald with brown beard + angry

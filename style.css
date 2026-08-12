@@ -1,4 +1,5 @@
-/* Skullwind Cove — pure HTML+CSS rail shooter (no JavaScript) */
+/* Skullwind Cove — pure HTML+CSS rail shooter (no JavaScript).
+   Characters, gun, ship and hero props are inline SVG (still no JS). */
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -101,7 +102,7 @@ body {
 
 .fx { position: absolute; }
 
-/* dock: bright harbor, clouds, sun, island, anchored ship */
+/* dock: bright harbor sky, sun rays, lighthouse island; SVG galleon */
 .dock .backdrop {
   background:
     conic-gradient(from 180deg at 79% 16%,
@@ -119,39 +120,12 @@ body {
     linear-gradient(#5ecdf9 0%, #c9f0ff 54%, #23a5dd 54.3%,
       #1272ae 82%, #0d5a92 100%);
 }
-.dock .backdrop::before { /* ship hull with gunports and railing */
-  content: "";
+.ship {
   position: absolute;
-  left: 58%;
-  top: 46%;
-  width: 460px;
-  height: 130px;
-  background:
-    linear-gradient(0deg, transparent 0 78%, rgba(255, 212, 71, 0.7)
-      78% 82%, transparent 82%),
-    radial-gradient(circle at 25% 45%, #ffd447 8px, transparent 9px),
-    radial-gradient(circle at 50% 45%, #ffd447 8px, transparent 9px),
-    radial-gradient(circle at 75% 45%, #ffd447 8px, transparent 9px),
-    linear-gradient(#5a3a1c, #3c2610);
-  border-radius: 14px 14px 90px 60px / 14px 14px 70px 50px;
-  box-shadow: 0 10px 0 rgba(9, 40, 66, 0.35);
-}
-.dock .backdrop::after { /* masts, billowed sails, pennants */
-  content: "";
-  position: absolute;
-  left: 58%;
-  top: 12%;
-  width: 460px;
-  height: 235px;
-  background:
-    radial-gradient(ellipse 12px 7px at 26% 4%, #b3402e 80%, transparent),
-    radial-gradient(ellipse 12px 7px at 72% 2%, #b3402e 80%, transparent),
-    radial-gradient(ellipse 104px 62px at 26% 34%, #fdf3dc 68%, transparent 70%),
-    radial-gradient(ellipse 88px 52px at 26% 84%, #fdf3dc 68%, transparent 70%),
-    radial-gradient(ellipse 104px 62px at 72% 28%, #fdf3dc 68%, transparent 70%),
-    radial-gradient(ellipse 88px 52px at 72% 80%, #fdf3dc 68%, transparent 70%),
-    linear-gradient(90deg, transparent 0 24.5%, #3c2610 24.5% 27%,
-      transparent 27% 70.5%, #3c2610 70.5% 73%, transparent 73%);
+  left: 56%;
+  top: 16.5%;
+  width: 560px;
+  height: 366px;
 }
 
 /* drifting clouds (background-position animates, plane stays put) */
@@ -322,8 +296,9 @@ body {
     linear-gradient(#8a5a28, #6b421a);
 }
 
-/* --- props (cover the enemies pop from behind) --- */
+/* --- props --- */
 .prop { position: absolute; }
+.prop svg { display: block; width: 100%; height: 100%; }
 
 .post {
   width: 54px;
@@ -343,54 +318,29 @@ body {
   width: 110px;
   height: 140px;
   transform: translateZ(120px);
-  border: 4px solid #56320f;
-  border-radius: 26px / 40px;
-  background:
-    radial-gradient(ellipse 30px 46px at 30% 26%,
-      rgba(255, 255, 255, 0.18) 60%, transparent 65%),
-    linear-gradient(0deg, transparent 0 18px, #4a2c10 18px 30px,
-      transparent 30px 102px, #4a2c10 102px 114px, transparent 114px),
-    repeating-linear-gradient(90deg,
-      rgba(0, 0, 0, 0.12) 0 3px, transparent 3px 18px),
-    linear-gradient(90deg, #8a5424 0 8%, #c98e46 30% 60%, #8a5424 92%);
 }
-
 .barrel2 { left: 30px; top: -10px; transform: translateZ(140px); }
 
 .crates { /* stacked crates, dock right */
   left: 240px;
-  top: -34px;
+  top: -70px;
   width: 150px;
-  height: 164px;
+  height: 200px;
   transform: translateZ(140px);
 }
-.crates::before { /* bottom crate */
-  content: "";
+.crates .c-b {
   position: absolute;
+  bottom: 0;
   left: 0;
-  top: 80px;
   width: 150px;
-  height: 84px;
-  border: 5px solid #6b421a;
-  box-shadow: inset 0 0 0 8px #a06a2e;
-  background:
-    linear-gradient(45deg, transparent 47%, #8a5a2b 47% 53%,
-      transparent 53%),
-    #c98e46;
+  height: 129px;
 }
-.crates::after { /* top crate */
-  content: "";
+.crates .c-t {
   position: absolute;
-  left: 14px;
   top: 0;
-  width: 112px;
-  height: 84px;
-  border: 5px solid #6b421a;
-  box-shadow: inset 0 0 0 8px #a06a2e;
-  background:
-    linear-gradient(-45deg, transparent 47%, #8a5a2b 47% 53%,
-      transparent 53%),
-    #c98e46;
+  left: 20px;
+  width: 110px;
+  height: 94px;
 }
 
 .ropecoil { /* coiled mooring rope on the dock planks */
@@ -412,35 +362,6 @@ body {
   width: 150px;
   height: 150px;
   transform: translateZ(150px);
-  border: 12px solid #4a2c10;
-  border-radius: 50%;
-  background:
-    repeating-conic-gradient(#5a3a1c 0 9deg, transparent 9deg 45deg);
-}
-.wheel::before { /* hub */
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 40px;
-  height: 40px;
-  margin: -20px 0 0 -20px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #8a5424, #3c2610);
-}
-.wheel::after { /* handle knobs */
-  content: "";
-  position: absolute;
-  inset: -26px;
-  background:
-    radial-gradient(circle 7px at 50% 4%, #6b421a 90%, transparent),
-    radial-gradient(circle 7px at 82% 17%, #6b421a 90%, transparent),
-    radial-gradient(circle 7px at 96% 50%, #6b421a 90%, transparent),
-    radial-gradient(circle 7px at 82% 83%, #6b421a 90%, transparent),
-    radial-gradient(circle 7px at 50% 96%, #6b421a 90%, transparent),
-    radial-gradient(circle 7px at 18% 83%, #6b421a 90%, transparent),
-    radial-gradient(circle 7px at 4% 50%, #6b421a 90%, transparent),
-    radial-gradient(circle 7px at 18% 17%, #6b421a 90%, transparent);
 }
 
 .lantern { /* lantern hung on the mast, warm pulse */
@@ -509,14 +430,6 @@ body {
   width: 140px;
   height: 120px;
   transform: translateZ(130px);
-  border: 6px solid #6b421a;
-  box-shadow: inset 0 0 0 10px #a06a2e;
-  background:
-    linear-gradient(45deg, transparent 47%, #8a5a2b 47% 53%,
-      transparent 53%),
-    linear-gradient(-45deg, transparent 47%, #8a5a2b 47% 53%,
-      transparent 53%),
-    #c98e46;
 }
 
 .desk {
@@ -553,6 +466,14 @@ body {
     #241307;
 }
 
+.chest {
+  left: 190px;
+  top: 40px;
+  width: 130px;
+  height: 90px;
+  transform: translateZ(150px);
+}
+
 .goldpile { /* spilled treasure beside the chest */
   left: 330px;
   top: 90px;
@@ -586,23 +507,7 @@ body {
   100% { filter: drop-shadow(0 0 16px rgba(255, 210, 110, 1)); }
 }
 
-.chest {
-  left: 190px;
-  top: 40px;
-  width: 130px;
-  height: 90px;
-  transform: translateZ(150px);
-  border: 4px solid #6b3d10;
-  border-radius: 26px 26px 8px 8px;
-  background:
-    radial-gradient(circle at 50% 55%, #ffd447 9px,
-      #b98a1e 10px 12px, transparent 13px),
-    linear-gradient(90deg, transparent 0 14px, #ffd447 14px 26px,
-      transparent 26px 96px, #ffd447 96px 108px, transparent 108px),
-    linear-gradient(#a5642a 0 40%, #8a4f1e 40%);
-}
-
-/* --- enemies: goofy cartoon pirates, outlined --- */
+/* --- enemies: SVG pirates --- */
 .enemy {
   position: absolute;
   width: 120px;
@@ -611,26 +516,19 @@ body {
   --hide: 130px;
   --pop-x: 0px;
   --pop-y: 0px;
-  --band: #ff4b3a;  /* bandana */
+  --band: #ff4b3a;  /* headwear accent */
   --shirt: #ff4b3a; /* shirt stripes */
   opacity: 0;
   pointer-events: none;
   transform: translate3d(0, var(--hide), var(--z)) scale(0.2);
 }
 
-/* legs: pants, sock cuff, boots */
-.enemy::before {
-  content: "";
-  position: absolute;
-  left: 26px;
-  top: 126px;
-  width: 68px;
-  height: 44px;
-  background:
-    linear-gradient(#3d4b8f 0 42%, #f0e6d2 42% 54%, #23262e 54%)
-      left / 28px 100% no-repeat,
-    linear-gradient(#3d4b8f 0 42%, #f0e6d2 42% 54%, #23262e 54%)
-      right / 28px 100% no-repeat;
+.art { position: absolute; inset: 0; }
+.art svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
 }
 
 /* ground shadow */
@@ -638,119 +536,12 @@ body {
   content: "";
   position: absolute;
   left: 0;
-  bottom: -14px;
-  width: 120px;
+  bottom: -12px;
+  width: 100%;
   height: 26px;
   background:
     radial-gradient(ellipse 50% 50% at 50% 50%,
       rgba(10, 20, 30, 0.35) 60%, transparent 66%);
-}
-
-/* torso: striped shirt, shading, belt with buckle */
-.art {
-  position: absolute;
-  left: 15px;
-  top: 58px;
-  width: 90px;
-  height: 76px;
-  border: 3px solid #37220f;
-  border-radius: 24px 24px 10px 10px;
-  background:
-    radial-gradient(circle at 50% 87%, #ffd447 6px, #8c5a1e 7px,
-      transparent 8px),
-    linear-gradient(0deg, #4a2c10 0 14px, transparent 14px),
-    linear-gradient(90deg, rgba(0, 0, 0, 0.18) 0 11px,
-      transparent 11px 73px, rgba(0, 0, 0, 0.18) 73px),
-    repeating-linear-gradient(0deg, #fdf6e4 0 13px, var(--shirt) 13px 26px);
-}
-
-/* head: bandana with knot, eyepatch, brow, nose, toothy grin */
-.art::before {
-  content: "";
-  position: absolute;
-  left: 12px;
-  top: -62px;
-  width: 62px;
-  height: 62px;
-  border: 3px solid #37220f;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 92% 28%, var(--band) 7px, transparent 8px),
-    radial-gradient(ellipse 9px 3.5px at 33% 45%, #37220f 80%, transparent),
-    radial-gradient(circle at 64% 56%, #14161c 9.5px, transparent 10.5px),
-    linear-gradient(112deg, transparent 0 43%, #14161c 43% 49%,
-      transparent 49%),
-    radial-gradient(circle at 34% 58%, #26160a 4.5px, transparent 5.5px),
-    radial-gradient(ellipse 7px 5px at 49% 70%, #e0a35e 75%, transparent 78%),
-    radial-gradient(ellipse 9px 5px at 50% 83%, #fdf6e4 60%, transparent 63%),
-    radial-gradient(ellipse 13px 8px at 50% 84%, #5e2214 70%, transparent 73%),
-    radial-gradient(circle at 26% 24%, #fdf6e4 3px, transparent 4px),
-    radial-gradient(circle at 48% 14%, #fdf6e4 3px, transparent 4px),
-    radial-gradient(circle at 70% 22%, #fdf6e4 3px, transparent 4px),
-    linear-gradient(var(--band) 0 40%, #f6c07a 40%);
-}
-
-/* raised cutlass arm */
-.art::after {
-  content: "";
-  position: absolute;
-  right: -58px;
-  top: -6px;
-  width: 86px;
-  height: 18px;
-  border: 2px solid #37220f;
-  border-radius: 9px 3px 14px 9px;
-  transform: rotate(-32deg);
-  background:
-    linear-gradient(90deg, #f6c07a 0 20px, #ffd447 20px 30px,
-      #e8eef2 30px);
-}
-
-/* --- crew visual variants --- */
-
-/* tricorn hat worn over the bandana */
-.cap {
-  position: absolute;
-  left: 20px;
-  top: -16px;
-  width: 82px;
-  height: 34px;
-  border: 3px solid #14161c;
-  border-radius: 50% 50% 22% 22%;
-  background:
-    radial-gradient(circle at 50% 66%, #ffd447 4px, transparent 5px),
-    linear-gradient(#2b2d38, #14161c);
-  box-shadow: 0 4px 0 -1px #14161c;
-}
-
-/* bald, big-bearded bruiser: no eyepatch, no bandana */
-.v-beard .art::before {
-  background:
-    radial-gradient(ellipse 10px 4px at 32% 42%, #37220f 80%, transparent),
-    radial-gradient(ellipse 10px 4px at 68% 42%, #37220f 80%, transparent),
-    radial-gradient(circle at 34% 54%, #26160a 5px, transparent 6px),
-    radial-gradient(circle at 66% 54%, #26160a 5px, transparent 6px),
-    radial-gradient(ellipse 7px 5px at 50% 66%, #e0a35e 75%, transparent 78%),
-    radial-gradient(ellipse 9px 5px at 50% 82%, #2b1608 70%, transparent 74%),
-    radial-gradient(ellipse 26px 20px at 50% 96%, #4a2c10 66%,
-      transparent 69%),
-    radial-gradient(circle at 14% 58%, #ffd447 4px, transparent 5px),
-    radial-gradient(ellipse 34px 18px at 50% 6%,
-      rgba(0, 0, 0, 0.12) 70%, transparent 74%),
-    #f6c07a;
-}
-
-/* hook hand instead of a cutlass */
-.v-hook .art::after {
-  width: 62px;
-  height: 18px;
-  right: -36px;
-  border-radius: 9px;
-  background:
-    radial-gradient(circle 9px at 48px 9px, transparent 3.5px,
-      #cfd8df 4px 8px, transparent 8.5px),
-    linear-gradient(90deg, #f6c07a 0 26px, #39424e 26px 34px,
-      transparent 34px);
 }
 
 /* crew color variants */
@@ -762,82 +553,7 @@ body {
 .e7 { --band: #c0396b; --shirt: #c0396b; }
 .e8 { --band: #d4a017; --shirt: #d4a017; }
 
-/* Captain Snagglebeard */
 .boss { width: 150px; height: 210px; }
-.boss::before {
-  left: 36px;
-  top: 160px;
-  width: 78px;
-  height: 50px;
-  background:
-    linear-gradient(#23262e 0 76%, #14161c 76%) left / 32px 100% no-repeat,
-    linear-gradient(#23262e 0 76%, #14161c 76%) right / 32px 100% no-repeat;
-}
-.boss::after { left: 5px; width: 140px; bottom: -10px; }
-.boss .art { /* navy captain coat: gold trim, buttons, epaulettes */
-  left: 20px;
-  top: 78px;
-  width: 110px;
-  height: 92px;
-  border-radius: 20px 20px 12px 12px;
-  background:
-    linear-gradient(#ffd447, #b8862a) left top / 24px 12px no-repeat,
-    linear-gradient(#ffd447, #b8862a) right top / 24px 12px no-repeat,
-    radial-gradient(circle at 38% 30%, #ffd447 4px, transparent 5px),
-    radial-gradient(circle at 38% 54%, #ffd447 4px, transparent 5px),
-    radial-gradient(circle at 38% 78%, #ffd447 4px, transparent 5px),
-    radial-gradient(circle at 62% 30%, #ffd447 4px, transparent 5px),
-    radial-gradient(circle at 62% 54%, #ffd447 4px, transparent 5px),
-    radial-gradient(circle at 62% 78%, #ffd447 4px, transparent 5px),
-    linear-gradient(90deg, #ffd447 0 6px, transparent 6px 98px,
-      #ffd447 98px),
-    linear-gradient(90deg, transparent 0 42px, #fdf6e4 42px 62px,
-      transparent 62px),
-    linear-gradient(#343499, #23235f);
-}
-.boss .art::before { /* scarred, bearded head */
-  left: 17px;
-  top: -68px;
-  width: 72px;
-  height: 72px;
-  background:
-    radial-gradient(ellipse 10px 4px at 32% 40%, #37220f 80%, transparent),
-    radial-gradient(ellipse 10px 4px at 68% 40%, #37220f 80%, transparent),
-    radial-gradient(circle at 34% 52%, #26160a 5px, transparent 6px),
-    radial-gradient(circle at 66% 52%, #26160a 5px, transparent 6px),
-    linear-gradient(115deg, transparent 0 60%, #b3402e 60% 63%,
-      transparent 63%),
-    radial-gradient(ellipse 8px 5px at 50% 68%, #e0a35e 75%, transparent 78%),
-    radial-gradient(ellipse 10px 6px at 50% 84%, #2b1608 70%, transparent 74%),
-    radial-gradient(ellipse 32px 26px at 50% 94%, #4a2c10 68%,
-      transparent 71%),
-    #f6c07a;
-}
-.boss .art::after { /* bigger cutlass */
-  right: -70px;
-  top: -2px;
-  width: 104px;
-  height: 20px;
-  background:
-    linear-gradient(90deg, #f6c07a 0 22px, #ffd447 22px 34px,
-      #e8eef2 34px);
-}
-.hat { /* captain's hat: gold-trimmed, skull and crossbones */
-  position: absolute;
-  left: 22px;
-  top: -8px;
-  width: 106px;
-  height: 44px;
-  border: 3px solid #ffd447;
-  border-radius: 50% 50% 14% 14%;
-  background:
-    linear-gradient(45deg, transparent 0 44%, #fdf6e4 44% 56%,
-      transparent 56%) 50% 68% / 26px 26px no-repeat,
-    linear-gradient(-45deg, transparent 0 44%, #fdf6e4 44% 56%,
-      transparent 56%) 50% 68% / 26px 26px no-repeat,
-    radial-gradient(circle at 50% 52%, #fdf6e4 6px, transparent 7px),
-    linear-gradient(#14161c, #23252e);
-}
 
 /* pop offsets step each pirate out from behind cover */
 .e1 { left: -240px; top: -40px; --z: 70px;  --pop-x: 135px; }
@@ -853,7 +569,7 @@ body {
 .shoot {
   position: absolute;
   inset: -14px;
-  z-index: 5; /* above the pirate art layers */
+  z-index: 5; /* above the pirate art */
   cursor: crosshair;
 }
 
@@ -961,7 +677,7 @@ body {
   }
 }
 
-/* --- flintlock pistol: smooth wrist, outlined silhouette --- */
+/* --- SVG flintlock pistol --- */
 .gun {
   position: absolute;
   right: -46px;
@@ -972,91 +688,17 @@ body {
   pointer-events: none;
   transform: rotate(-18deg);
   transition: transform 0.07s ease-out;
-  filter:
-    drop-shadow(2px 0 0 #2c1a08) drop-shadow(-2px 0 0 #2c1a08)
-    drop-shadow(0 2px 0 #2c1a08) drop-shadow(0 -2px 0 #2c1a08);
+  filter: drop-shadow(0 6px 8px rgba(6, 22, 44, 0.45));
 }
-.gun::before { /* steel barrel, gold muzzle ring */
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 56px;
-  width: 250px;
-  height: 32px;
-  border-radius: 7px 3px 3px 7px;
-  background:
-    linear-gradient(90deg, #ffd447 0 14px, #cfd8df 14px 20px,
-      transparent 20px),
-    linear-gradient(#c3cdd6 0 24%, #8494a2 24% 55%,
-      #5d6b78 55% 80%, #39424e 80%);
+.gun svg {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
-.hammer { /* cocked hammer */
+.flash { /* muzzle flash at the barrel tip */
   position: absolute;
-  left: 212px;
-  top: 24px;
-  width: 24px;
-  height: 46px;
-  border-radius: 11px 13px 4px 4px;
-  transform: rotate(-22deg);
-  background:
-    radial-gradient(circle at 50% 26%, #ffd447 3.5px, transparent 4.5px),
-    linear-gradient(90deg, #6e7c8a, #39424e);
-}
-.wrist { /* rounded mass smoothing the stock-to-grip bend */
-  position: absolute;
-  left: 234px;
-  top: 82px;
-  width: 96px;
-  height: 84px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #a5642a, #6b3d10 75%);
-}
-.grip { /* curved grip sweeping down and back, gold butt cap */
-  position: absolute;
-  left: 272px;
-  top: 112px;
-  width: 72px;
-  height: 136px;
-  border-radius: 34px 46px 60px 46px;
-  transform: rotate(34deg);
-  transform-origin: 22px 20px;
-  border-bottom: 9px solid #ffd447;
-  background:
-    repeating-linear-gradient(35deg, rgba(0, 0, 0, 0.07) 0 3px,
-      transparent 3px 14px),
-    linear-gradient(125deg, #a5642a 20%, #5e3610);
-}
-.guard { /* trigger guard */
-  position: absolute;
-  left: 218px;
-  top: 122px;
-  width: 60px;
-  height: 48px;
-  border: 7px solid #b8862a;
-  border-top-color: transparent;
-  border-radius: 50%;
-}
-.gun::after { /* wooden stock over the joint, steel lock plate */
-  content: "";
-  position: absolute;
-  left: 34px;
-  top: 82px;
-  width: 246px;
-  height: 44px;
-  border-radius: 22px 8px 8px 18px;
-  background:
-    radial-gradient(circle 2.5px at 70% 30%, #ffd447 90%, transparent),
-    radial-gradient(circle 2.5px at 86% 62%, #ffd447 90%, transparent),
-    radial-gradient(ellipse 30px 14px at 78% 45%, #8494a2 65%,
-      #4c5a68 70%, transparent 74%),
-    repeating-linear-gradient(100deg, rgba(0, 0, 0, 0.07) 0 3px,
-      transparent 3px 15px),
-    linear-gradient(100deg, #a5642a, #6b3d10);
-}
-.flash { /* muzzle flash, positioned at the barrel tip */
-  position: absolute;
-  right: 383px;
-  bottom: 49px;
+  right: 257px;
+  bottom: 20px;
   width: 100px;
   height: 100px;
   z-index: 31;
