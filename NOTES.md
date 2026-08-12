@@ -42,6 +42,22 @@ Checks: kill registers x4, advance gating, win screen, game over fires when
 e1 ignored, no game over after timely kill, reset from win AND game over.
 Screenshots of title/dock/deck/cabin/win/gameover all eyeballed.
 
+## 2026-08-12 session, round 2 (art v3)
+- Gun grip kink fixed: .wrist ellipse smooths the stock-to-grip bend; whole
+  .gun gets a silhouette outline via 4-way drop-shadow filter (outlines the
+  UNION, hides seams between overlapping parts — reuse this trick).
+- Pirates v3: 3px outlines, brows/nose/toothy grin, bandana knots, boot
+  cuffs, belt buckles, ground shadows (.enemy::after). Boss: epaulettes,
+  double button row, angry brows, mustache+beard, skull-and-bones hat.
+- Ambience: animated waterline glints (.waves) + drifting clouds (.clouds)
+  at the dock — both animate background-position only, NEVER transform
+  (transform keyframes would fight the translateZ plane placement).
+- Deck: rigging shrouds, brass porthole rims, "The Gilded Gull" plaque
+  (.sign) — plaque must sit at top -302px; higher projects behind the HUD.
+- Cabin: lantern glow, coins by the chest, red X on the map.
+- Title: sunset gradient, ship silhouette, proper skull+crossbones flag.
+- Go screens: big skull glyph via .go::before.
+
 ## 2026-08-12 session
 - Boss feedback: gun didn't read as a gun; wanted many more villains.
 - Rebuilt pistol as proper flintlock (barrel/hammer/grip/trigger guard/

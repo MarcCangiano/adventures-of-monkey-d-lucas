@@ -88,19 +88,18 @@ body {
   transform: translateZ(-60px);
 }
 
+.fx { position: absolute; }
+
 /* dock: bright harbor, clouds, sun, island, anchored ship */
 .dock .backdrop {
   background:
     radial-gradient(circle at 79% 16%, #ffec9f 30px,
       rgba(255, 236, 159, 0.35) 60px, transparent 110px),
-    radial-gradient(ellipse 100px 26px at 16% 24%, #fff 46%, transparent 48%),
-    radial-gradient(ellipse 70px 20px at 27% 17%, #fff 46%, transparent 48%),
-    radial-gradient(ellipse 120px 30px at 55% 10%, #fff 46%, transparent 48%),
     radial-gradient(ellipse 220px 70px at 6% 54%, #2e8f6e 48%, transparent 50%),
     linear-gradient(#5ecdf9 0%, #c9f0ff 54%, #23a5dd 54.3%,
       #1272ae 82%, #0d5a92 100%);
 }
-.dock .backdrop::before { /* ship hull */
+.dock .backdrop::before { /* ship hull with gunports and railing */
   content: "";
   position: absolute;
   left: 58%;
@@ -108,6 +107,8 @@ body {
   width: 460px;
   height: 130px;
   background:
+    linear-gradient(0deg, transparent 0 78%, rgba(255, 212, 71, 0.7)
+      78% 82%, transparent 82%),
     radial-gradient(circle at 25% 45%, #ffd447 8px, transparent 9px),
     radial-gradient(circle at 50% 45%, #ffd447 8px, transparent 9px),
     radial-gradient(circle at 75% 45%, #ffd447 8px, transparent 9px),
@@ -115,7 +116,7 @@ body {
   border-radius: 14px 14px 90px 60px / 14px 14px 70px 50px;
   box-shadow: 0 10px 0 rgba(9, 40, 66, 0.35);
 }
-.dock .backdrop::after { /* masts and billowed sails */
+.dock .backdrop::after { /* masts, billowed sails, pennants */
   content: "";
   position: absolute;
   left: 58%;
@@ -123,6 +124,8 @@ body {
   width: 460px;
   height: 235px;
   background:
+    radial-gradient(ellipse 12px 7px at 26% 4%, #b3402e 80%, transparent),
+    radial-gradient(ellipse 12px 7px at 72% 2%, #b3402e 80%, transparent),
     radial-gradient(ellipse 104px 62px at 26% 34%, #fdf3dc 68%, transparent 70%),
     radial-gradient(ellipse 88px 52px at 26% 84%, #fdf3dc 68%, transparent 70%),
     radial-gradient(ellipse 104px 62px at 72% 28%, #fdf3dc 68%, transparent 70%),
@@ -130,17 +133,67 @@ body {
     linear-gradient(90deg, transparent 0 24.5%, #3c2610 24.5% 27%,
       transparent 27% 70.5%, #3c2610 70.5% 73%, transparent 73%);
 }
+
+/* drifting clouds (background-position animates, plane stays put) */
+.clouds {
+  left: -800px;
+  top: -520px;
+  width: 1600px;
+  height: 240px;
+  transform: translateZ(-58px);
+  background:
+    radial-gradient(ellipse 120px 34px at 50% 55%, #fff 60%,
+      rgba(255, 255, 255, 0.6) 75%, transparent 78%)
+      120px 10px / 340px 130px no-repeat,
+    radial-gradient(ellipse 90px 26px at 50% 45%, #fff 60%,
+      rgba(255, 255, 255, 0.6) 75%, transparent 78%)
+      780px 60px / 300px 110px no-repeat;
+  animation: cloud-drift 26s ease-in-out infinite alternate;
+}
+@keyframes cloud-drift {
+  from { background-position: 120px 10px, 780px 60px; }
+  to   { background-position: 220px 10px, 700px 60px; }
+}
+
+/* glinting water lines drifting at the waterline */
+.waves {
+  left: -800px;
+  top: -168px;
+  width: 1600px;
+  height: 60px;
+  transform: translateZ(-56px);
+  background:
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.4) 0 26px,
+      transparent 26px 52px) 0 6px / 104px 3px repeat-x,
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.28) 0 34px,
+      transparent 34px 68px) 30px 24px / 136px 3px repeat-x,
+    repeating-linear-gradient(90deg, rgba(191, 234, 255, 0.35) 0 20px,
+      transparent 20px 40px) 12px 44px / 80px 3px repeat-x;
+  animation: wave-roll 7s linear infinite;
+}
+@keyframes wave-roll {
+  from { background-position: 0 6px, 30px 24px, 12px 44px; }
+  to   { background-position: 104px 6px, -106px 24px, 92px 44px; }
+}
+
 .dock .floor {
   background:
+    linear-gradient(rgba(0, 0, 0, 0.35), transparent 16%),
+    radial-gradient(circle 3px at 55px 26px, rgba(40, 20, 5, 0.5) 90%,
+      transparent) 0 0 / 110px 230px repeat,
     repeating-linear-gradient(90deg,
       rgba(0, 0, 0, 0.14) 0 4px, transparent 4px 110px),
     linear-gradient(#d99a4e, #b97c35);
 }
 
-/* deck: plank wall, cabin door, portholes */
+/* deck: plank wall, rigging, name plaque, door, portholes */
 .deck .backdrop {
   background:
     linear-gradient(rgba(0, 0, 0, 0.25), transparent 12%),
+    repeating-linear-gradient(62deg, rgba(30, 15, 4, 0.3) 0 4px,
+      transparent 4px 30px) left top / 250px 100% no-repeat,
+    repeating-linear-gradient(-62deg, rgba(30, 15, 4, 0.3) 0 4px,
+      transparent 4px 30px) right top / 250px 100% no-repeat,
     repeating-linear-gradient(90deg,
       rgba(0, 0, 0, 0.15) 0 5px, transparent 5px 120px),
     linear-gradient(#9a6630, #77481c);
@@ -163,32 +216,43 @@ body {
       rgba(0, 0, 0, 0.18) 0 4px, transparent 4px 52px),
     linear-gradient(#6b421a, #56320f);
 }
-.deck .backdrop::after { /* portholes */
+.deck .backdrop::after { /* brass portholes with sky */
   content: "";
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle 46px at 22% 52%, #bfeaff 60%,
-      #8a5a1e 62% 74%, transparent 76%),
-    radial-gradient(circle 46px at 78% 52%, #bfeaff 60%,
-      #8a5a1e 62% 74%, transparent 76%);
+    radial-gradient(circle 8px at calc(22% - 14px) calc(52% - 46px),
+      rgba(255, 255, 255, 0.85) 60%, transparent 70%),
+    radial-gradient(circle 8px at calc(78% - 14px) calc(52% - 46px),
+      rgba(255, 255, 255, 0.85) 60%, transparent 70%),
+    radial-gradient(circle 46px at 22% 52%, #bfeaff 58%, #d8b45a 60% 72%,
+      #8a5a1e 72% 78%, transparent 80%),
+    radial-gradient(circle 46px at 78% 52%, #bfeaff 58%, #d8b45a 60% 72%,
+      #8a5a1e 72% 78%, transparent 80%);
 }
 .deck .floor {
   background:
+    linear-gradient(rgba(0, 0, 0, 0.35), transparent 16%),
+    radial-gradient(circle 3px at 40px 22px, rgba(40, 20, 5, 0.5) 90%,
+      transparent) 0 0 / 95px 190px repeat,
     repeating-linear-gradient(0deg,
       rgba(0, 0, 0, 0.16) 0 5px, transparent 5px 90px),
     linear-gradient(#cf9147, #a86f2d);
 }
 
-/* cabin: dark wood, moonlit stern window, wall map, rug */
+/* cabin: dark wood, lantern glow, stern window, map, rug, coins */
 .cabin .backdrop {
   background:
+    radial-gradient(circle at 10% 56%, rgba(255, 190, 90, 0.3) 0 70px,
+      transparent 170px),
+    radial-gradient(circle at 90% 56%, rgba(255, 190, 90, 0.3) 0 70px,
+      transparent 170px),
     linear-gradient(rgba(0, 0, 0, 0.3), transparent 14%),
     repeating-linear-gradient(90deg,
       rgba(0, 0, 0, 0.16) 0 5px, transparent 5px 100px),
     linear-gradient(#6b421a, #46280d);
 }
-.cabin .backdrop::before { /* stern window */
+.cabin .backdrop::before { /* moonlit stern window */
   content: "";
   position: absolute;
   left: 50%;
@@ -217,12 +281,20 @@ body {
   transform: rotate(-3deg);
   background:
     radial-gradient(circle at 68% 62%, #b3402e 7px, transparent 8px),
+    linear-gradient(45deg, transparent 0 46%, #b3402e 46% 54%,
+      transparent 54%) 62% 55% / 22px 22px no-repeat,
+    linear-gradient(-45deg, transparent 0 46%, #b3402e 46% 54%,
+      transparent 54%) 62% 55% / 22px 22px no-repeat,
     radial-gradient(ellipse 40px 26px at 30% 35%, #2e8f6e 60%,
       transparent 62%),
     #efd9a7;
 }
 .cabin .floor {
   background:
+    linear-gradient(rgba(0, 0, 0, 0.4), transparent 16%),
+    radial-gradient(circle 5px at 985px 150px, #ffd447 88%, transparent),
+    radial-gradient(circle 4px at 1012px 130px, #ffd447 88%, transparent),
+    radial-gradient(circle 4px at 962px 172px, #ffd447 88%, transparent),
     radial-gradient(ellipse 300px 220px at 50% 260px,
       #a5322a 60%, #7c221c 61%, transparent 62%),
     repeating-linear-gradient(90deg,
@@ -254,6 +326,8 @@ body {
   border: 4px solid #56320f;
   border-radius: 26px / 40px;
   background:
+    radial-gradient(ellipse 30px 46px at 30% 26%,
+      rgba(255, 255, 255, 0.18) 60%, transparent 65%),
     linear-gradient(0deg, transparent 0 18px, #4a2c10 18px 30px,
       transparent 30px 102px, #4a2c10 102px 114px, transparent 114px),
     repeating-linear-gradient(90deg,
@@ -308,6 +382,24 @@ body {
   border: 6px solid #56320f;
   border-radius: 6px;
   background: linear-gradient(#1c1006, #2a1708);
+}
+
+.sign { /* ship name plaque mounted on the door arch */
+  left: -110px;
+  top: -302px;
+  width: 220px;
+  height: 46px;
+  transform: translateZ(-50px);
+  border: 3px solid #ffd447;
+  border-radius: 8px;
+  background: linear-gradient(#56320f, #3c2610);
+  color: #ffd447;
+  font-weight: bold;
+  font-size: 19px;
+  letter-spacing: 2px;
+  line-height: 40px;
+  text-align: center;
+  font-variant: small-caps;
 }
 
 .mast {
@@ -370,7 +462,7 @@ body {
     linear-gradient(#a5642a 0 40%, #8a4f1e 40%);
 }
 
-/* --- enemies: goofy cartoon pirates --- */
+/* --- enemies: goofy cartoon pirates, outlined --- */
 .enemy {
   position: absolute;
   width: 120px;
@@ -386,7 +478,7 @@ body {
   transform: translate3d(0, var(--hide), var(--z)) scale(0.2);
 }
 
-/* legs and boots */
+/* legs: pants, sock cuff, boots */
 .enemy::before {
   content: "";
   position: absolute;
@@ -395,46 +487,67 @@ body {
   width: 68px;
   height: 44px;
   background:
-    linear-gradient(#39424e 0 55%, #20232b 55%) left / 28px 100% no-repeat,
-    linear-gradient(#39424e 0 55%, #20232b 55%) right / 28px 100% no-repeat;
+    linear-gradient(#3d4b8f 0 42%, #f0e6d2 42% 54%, #23262e 54%)
+      left / 28px 100% no-repeat,
+    linear-gradient(#3d4b8f 0 42%, #f0e6d2 42% 54%, #23262e 54%)
+      right / 28px 100% no-repeat;
 }
 
-/* torso: striped shirt, vest, belt */
+/* ground shadow */
+.enemy::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -14px;
+  width: 120px;
+  height: 26px;
+  background:
+    radial-gradient(ellipse 50% 50% at 50% 50%,
+      rgba(10, 20, 30, 0.35) 60%, transparent 66%);
+}
+
+/* torso: striped shirt, shading, belt with buckle */
 .art {
   position: absolute;
   left: 15px;
   top: 58px;
   width: 90px;
   height: 76px;
-  border-radius: 18px 18px 10px 10px;
+  border: 3px solid #37220f;
+  border-radius: 24px 24px 10px 10px;
   background:
-    linear-gradient(0deg, #4a2c10 0 12px, transparent 12px),
-    linear-gradient(90deg, #6b421a 0 16px, transparent 16px 74px,
-      #6b421a 74px),
+    radial-gradient(circle at 50% 87%, #ffd447 6px, #8c5a1e 7px,
+      transparent 8px),
+    linear-gradient(0deg, #4a2c10 0 14px, transparent 14px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.18) 0 11px,
+      transparent 11px 73px, rgba(0, 0, 0, 0.18) 73px),
     repeating-linear-gradient(0deg, #fdf6e4 0 13px, var(--shirt) 13px 26px);
 }
 
-/* head: bandana, eyepatch, earring, grin */
+/* head: bandana with knot, eyepatch, brow, nose, toothy grin */
 .art::before {
   content: "";
   position: absolute;
-  left: 14px;
-  top: -60px;
+  left: 12px;
+  top: -62px;
   width: 62px;
   height: 62px;
+  border: 3px solid #37220f;
   border-radius: 50%;
   background:
-    radial-gradient(circle at 12% 62%, #ffd447 4px, transparent 5px),
-    radial-gradient(circle at 64% 56%, #14161c 9px, transparent 10px),
-    linear-gradient(115deg, transparent 0 44%, #14161c 44% 50%,
-      transparent 50%),
+    radial-gradient(circle at 92% 28%, var(--band) 7px, transparent 8px),
+    radial-gradient(ellipse 9px 3.5px at 33% 45%, #37220f 80%, transparent),
+    radial-gradient(circle at 64% 56%, #14161c 9.5px, transparent 10.5px),
+    linear-gradient(112deg, transparent 0 43%, #14161c 43% 49%,
+      transparent 49%),
     radial-gradient(circle at 34% 58%, #26160a 4.5px, transparent 5.5px),
-    radial-gradient(ellipse 12px 7px at 50% 82%, #7c2a1c 70%,
-      transparent 72%),
+    radial-gradient(ellipse 7px 5px at 49% 70%, #e0a35e 75%, transparent 78%),
+    radial-gradient(ellipse 9px 5px at 50% 83%, #fdf6e4 60%, transparent 63%),
+    radial-gradient(ellipse 13px 8px at 50% 84%, #5e2214 70%, transparent 73%),
     radial-gradient(circle at 26% 24%, #fdf6e4 3px, transparent 4px),
     radial-gradient(circle at 48% 14%, #fdf6e4 3px, transparent 4px),
     radial-gradient(circle at 70% 22%, #fdf6e4 3px, transparent 4px),
-    linear-gradient(var(--band) 0 40%, #f2b26f 40%);
+    linear-gradient(var(--band) 0 40%, #f6c07a 40%);
 }
 
 /* raised cutlass arm */
@@ -445,10 +558,11 @@ body {
   top: -6px;
   width: 86px;
   height: 18px;
-  border-radius: 9px;
+  border: 2px solid #37220f;
+  border-radius: 9px 3px 14px 9px;
   transform: rotate(-32deg);
   background:
-    linear-gradient(90deg, #f2b26f 0 20px, #ffd447 20px 30px,
+    linear-gradient(90deg, #f6c07a 0 20px, #ffd447 20px 30px,
       #e8eef2 30px);
 }
 
@@ -469,38 +583,48 @@ body {
   width: 78px;
   height: 50px;
   background:
-    linear-gradient(#20232b, #20232b) left / 32px 100% no-repeat,
-    linear-gradient(#20232b, #20232b) right / 32px 100% no-repeat;
+    linear-gradient(#23262e 0 76%, #14161c 76%) left / 32px 100% no-repeat,
+    linear-gradient(#23262e 0 76%, #14161c 76%) right / 32px 100% no-repeat;
 }
-.boss .art { /* navy captain coat, gold trim */
+.boss::after { left: 5px; width: 140px; bottom: -10px; }
+.boss .art { /* navy captain coat: gold trim, buttons, epaulettes */
   left: 20px;
   top: 78px;
   width: 110px;
   height: 92px;
   border-radius: 20px 20px 12px 12px;
   background:
-    radial-gradient(circle at 50% 22%, #ffd447 4px, transparent 5px),
-    radial-gradient(circle at 50% 46%, #ffd447 4px, transparent 5px),
-    radial-gradient(circle at 50% 70%, #ffd447 4px, transparent 5px),
-    linear-gradient(90deg, #ffd447 0 6px, transparent 6px 104px,
-      #ffd447 104px),
-    linear-gradient(90deg, transparent 0 40px, #fdf6e4 40px 70px,
-      transparent 70px),
+    linear-gradient(#ffd447, #b8862a) left top / 24px 12px no-repeat,
+    linear-gradient(#ffd447, #b8862a) right top / 24px 12px no-repeat,
+    radial-gradient(circle at 38% 30%, #ffd447 4px, transparent 5px),
+    radial-gradient(circle at 38% 54%, #ffd447 4px, transparent 5px),
+    radial-gradient(circle at 38% 78%, #ffd447 4px, transparent 5px),
+    radial-gradient(circle at 62% 30%, #ffd447 4px, transparent 5px),
+    radial-gradient(circle at 62% 54%, #ffd447 4px, transparent 5px),
+    radial-gradient(circle at 62% 78%, #ffd447 4px, transparent 5px),
+    linear-gradient(90deg, #ffd447 0 6px, transparent 6px 98px,
+      #ffd447 98px),
+    linear-gradient(90deg, transparent 0 42px, #fdf6e4 42px 62px,
+      transparent 62px),
     linear-gradient(#343499, #23235f);
 }
 .boss .art::before { /* scarred, bearded head */
-  left: 19px;
-  top: -66px;
+  left: 17px;
+  top: -68px;
   width: 72px;
   height: 72px;
   background:
-    radial-gradient(circle at 34% 50%, #26160a 5px, transparent 6px),
-    radial-gradient(circle at 66% 50%, #26160a 5px, transparent 6px),
+    radial-gradient(ellipse 10px 4px at 32% 40%, #37220f 80%, transparent),
+    radial-gradient(ellipse 10px 4px at 68% 40%, #37220f 80%, transparent),
+    radial-gradient(circle at 34% 52%, #26160a 5px, transparent 6px),
+    radial-gradient(circle at 66% 52%, #26160a 5px, transparent 6px),
     linear-gradient(115deg, transparent 0 60%, #b3402e 60% 63%,
       transparent 63%),
-    radial-gradient(ellipse 30px 24px at 50% 92%, #4a2c10 68%,
-      transparent 70%),
-    #f2b26f;
+    radial-gradient(ellipse 8px 5px at 50% 68%, #e0a35e 75%, transparent 78%),
+    radial-gradient(ellipse 10px 6px at 50% 84%, #2b1608 70%, transparent 74%),
+    radial-gradient(ellipse 32px 26px at 50% 94%, #4a2c10 68%,
+      transparent 71%),
+    #f6c07a;
 }
 .boss .art::after { /* bigger cutlass */
   right: -70px;
@@ -508,19 +632,23 @@ body {
   width: 104px;
   height: 20px;
   background:
-    linear-gradient(90deg, #f2b26f 0 22px, #ffd447 22px 34px,
+    linear-gradient(90deg, #f6c07a 0 22px, #ffd447 22px 34px,
       #e8eef2 34px);
 }
-.hat { /* captain's hat with skull emblem */
+.hat { /* captain's hat: gold-trimmed, skull and crossbones */
   position: absolute;
-  left: 26px;
-  top: -6px;
-  width: 98px;
-  height: 42px;
-  border-radius: 50% 50% 12% 12%;
-  border-bottom: 5px solid #ffd447;
+  left: 22px;
+  top: -8px;
+  width: 106px;
+  height: 44px;
+  border: 3px solid #ffd447;
+  border-radius: 50% 50% 14% 14%;
   background:
-    radial-gradient(circle at 50% 62%, #fdf6e4 7px, transparent 8px),
+    linear-gradient(45deg, transparent 0 44%, #fdf6e4 44% 56%,
+      transparent 56%) 50% 68% / 26px 26px no-repeat,
+    linear-gradient(-45deg, transparent 0 44%, #fdf6e4 44% 56%,
+      transparent 56%) 50% 68% / 26px 26px no-repeat,
+    radial-gradient(circle at 50% 52%, #fdf6e4 6px, transparent 7px),
     linear-gradient(#14161c, #23252e);
 }
 
@@ -604,103 +732,120 @@ body {
   }
 }
 
-/* --- flintlock pistol overlay: recoil + muzzle flash on any shot --- */
+/* --- flintlock pistol: smooth wrist, outlined silhouette --- */
 .gun {
   position: absolute;
-  right: -50px;
-  bottom: -20px;
-  width: 360px;
-  height: 240px;
+  right: -46px;
+  bottom: -18px;
+  width: 380px;
+  height: 250px;
   z-index: 30;
   pointer-events: none;
-  transform: rotate(-21deg);
+  transform: rotate(-18deg);
   transition: transform 0.07s ease-out;
+  filter:
+    drop-shadow(2px 0 0 #2c1a08) drop-shadow(-2px 0 0 #2c1a08)
+    drop-shadow(0 2px 0 #2c1a08) drop-shadow(0 -2px 0 #2c1a08);
 }
-.gun::before { /* octagonal steel barrel, gold muzzle ring */
+.gun::before { /* steel barrel, gold muzzle ring */
   content: "";
   position: absolute;
   left: 0;
-  top: 58px;
-  width: 245px;
-  height: 34px;
-  border-radius: 8px 4px 4px 8px;
+  top: 56px;
+  width: 250px;
+  height: 32px;
+  border-radius: 7px 3px 3px 7px;
   background:
     linear-gradient(90deg, #ffd447 0 14px, #cfd8df 14px 20px,
       transparent 20px),
-    linear-gradient(#c3cdd6 0 22%, #8494a2 22% 55%,
+    linear-gradient(#c3cdd6 0 24%, #8494a2 24% 55%,
       #5d6b78 55% 80%, #39424e 80%);
 }
-.gun::after { /* wooden stock under the barrel */
-  content: "";
+.hammer { /* cocked hammer */
   position: absolute;
-  left: 30px;
-  top: 84px;
-  width: 250px;
-  height: 44px;
-  border-radius: 26px 0 10px 14px;
+  left: 212px;
+  top: 24px;
+  width: 24px;
+  height: 46px;
+  border-radius: 11px 13px 4px 4px;
+  transform: rotate(-22deg);
   background:
-    linear-gradient(90deg, transparent 0 180px, #b8862a 180px 192px,
-      transparent 192px),
-    linear-gradient(#a5642a, #6b3d10);
+    radial-gradient(circle at 50% 26%, #ffd447 3.5px, transparent 4.5px),
+    linear-gradient(90deg, #6e7c8a, #39424e);
 }
-.hammer { /* cocked hammer behind the pan */
+.wrist { /* rounded mass smoothing the stock-to-grip bend */
   position: absolute;
-  left: 208px;
-  top: 22px;
-  width: 22px;
-  height: 48px;
-  border-radius: 10px 12px 3px 3px;
-  transform: rotate(-26deg);
-  background: linear-gradient(90deg, #5d6b78, #39424e);
+  left: 234px;
+  top: 82px;
+  width: 96px;
+  height: 84px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #a5642a, #6b3d10 75%);
 }
-.grip { /* curved grip with gold butt cap */
+.grip { /* curved grip sweeping down and back, gold butt cap */
   position: absolute;
-  left: 262px;
-  top: 106px;
-  width: 86px;
-  height: 138px;
-  border-radius: 14px 48px 60px 34px;
-  transform: rotate(27deg);
-  transform-origin: top left;
+  left: 272px;
+  top: 112px;
+  width: 72px;
+  height: 136px;
+  border-radius: 34px 46px 60px 46px;
+  transform: rotate(34deg);
+  transform-origin: 22px 20px;
   border-bottom: 9px solid #ffd447;
-  background: linear-gradient(115deg, #8a5424, #4a2c10);
+  background: linear-gradient(125deg, #a5642a 20%, #5e3610);
 }
 .guard { /* trigger guard */
   position: absolute;
-  left: 224px;
-  top: 126px;
-  width: 58px;
-  height: 46px;
+  left: 218px;
+  top: 122px;
+  width: 60px;
+  height: 48px;
   border: 7px solid #b8862a;
   border-top-color: transparent;
   border-radius: 50%;
 }
-.flash {
+.gun::after { /* wooden stock over the joint, steel lock plate */
+  content: "";
   position: absolute;
-  left: -62px;
-  top: 26px;
+  left: 34px;
+  top: 82px;
+  width: 246px;
+  height: 44px;
+  border-radius: 22px 8px 8px 18px;
+  background:
+    radial-gradient(ellipse 30px 14px at 78% 45%, #8494a2 65%,
+      #4c5a68 70%, transparent 74%),
+    linear-gradient(100deg, #a5642a, #6b3d10);
+}
+.flash { /* muzzle flash, positioned at the barrel tip */
+  position: absolute;
+  right: 383px;
+  bottom: 49px;
   width: 100px;
   height: 100px;
+  z-index: 31;
+  pointer-events: none;
   opacity: 0;
   background:
     radial-gradient(circle, #fff 18%, #ffd447 40%,
       rgba(255, 122, 34, 0.85) 62%, transparent 72%);
 }
-.viewport:active .gun { transform: translate(12px, 18px) rotate(-15deg); }
+.viewport:active .gun { transform: translate(12px, 18px) rotate(-13deg); }
 .viewport:active .flash { opacity: 1; }
 
-/* --- hud --- */
+/* --- hud: parchment scroll --- */
 .hud {
   position: fixed;
   top: 16px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 40;
-  padding: 10px 22px;
+  padding: 10px 24px;
   border-radius: 999px;
-  background: rgba(16, 28, 44, 0.8);
-  border: 2px solid #ffd76b;
-  color: #ffd76b;
+  background: linear-gradient(#f6e6bb, #e8d29b);
+  border: 3px solid #8c5a1e;
+  box-shadow: 0 3px 0 rgba(60, 30, 5, 0.4);
+  color: #5e3610;
   font-size: 18px;
   font-weight: bold;
   letter-spacing: 1px;
@@ -776,26 +921,54 @@ body {
 .sub { font-size: 20px; max-width: 560px; }
 .fine { font-size: 13px; opacity: 0.75; }
 
-/* title */
+/* title: sunset harbor with ship silhouette */
 .title-screen {
   display: none;
   z-index: 80;
-  background: radial-gradient(circle at 50% 30%, #2f7fb8, #123c60 75%);
+  background:
+    radial-gradient(circle at 50% 80%, rgba(255, 200, 90, 0.45),
+      transparent 42%),
+    linear-gradient(#1b1240 0%, #5c2160 38%, #c44a35 66%,
+      #f7a03c 80%, #2b6f9e 80.3%, #123c60 100%);
   color: #ffe9c9;
 }
 #wp-title:checked ~ .title-screen { display: flex; }
 .title-screen h1 { color: #ffd76b; }
+.title-screen::before { /* ship silhouette on the horizon */
+  content: "";
+  position: absolute;
+  left: calc(50% + 130px);
+  bottom: 16%;
+  width: 340px;
+  height: 190px;
+  opacity: 0.9;
+  background:
+    radial-gradient(ellipse 70px 55px at 30% 42%, #140f28 69%,
+      transparent 71%),
+    radial-gradient(ellipse 70px 55px at 72% 34%, #140f28 69%,
+      transparent 71%),
+    linear-gradient(90deg, transparent 0 28%, #140f28 28% 30.5%,
+      transparent 30.5% 70%, #140f28 70% 72.5%, transparent 72.5%),
+    radial-gradient(ellipse 170px 80px at 50% 102%, #140f28 60%,
+      transparent 62%);
+}
 
-/* original crew flag on the title screen */
+/* original crew flag: skull over crossbones, swallowtail cut */
 .title-screen .crest {
   width: 170px;
   height: 112px;
-  font-size: 56px;
-  line-height: 106px;
+  font-size: 62px;
+  line-height: 104px;
   color: #fdf6e4;
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.9);
   border: 4px solid #ffd447;
   border-radius: 8px;
-  background: linear-gradient(120deg, #23252e, #14161c);
+  background:
+    linear-gradient(45deg, transparent 0 44%, #b9b2a0 44% 56%,
+      transparent 56%) 50% 60% / 56px 56px no-repeat,
+    linear-gradient(-45deg, transparent 0 44%, #b9b2a0 44% 56%,
+      transparent 56%) 50% 60% / 56px 56px no-repeat,
+    linear-gradient(120deg, #23252e, #14161c);
   clip-path: polygon(0 0, 100% 0, 92% 50%, 100% 100%, 0 100%);
   animation: flag-wave 1.8s ease-in-out infinite alternate;
 }
@@ -813,6 +986,12 @@ body {
   opacity: 0;
   background: radial-gradient(circle at 50% 40%, #8f1f14, #4a0d07 80%);
   color: #ffe9c9;
+}
+.go::before {
+  content: "\2620";
+  font-size: 84px;
+  line-height: 1;
+  color: rgba(255, 233, 201, 0.92);
 }
 
 #wp-dock:checked  ~ .go-e1 { animation: doom 7s linear forwards; }
@@ -840,7 +1019,7 @@ body {
   100% { visibility: visible; opacity: 1; }
 }
 
-/* win: all four kill flags checked */
+/* win: all nine kill flags checked */
 .win {
   display: none;
   z-index: 70;
