@@ -701,7 +701,7 @@ body {
   height: 250px;
   z-index: 30;
   pointer-events: none;
-  transform: rotate(-18deg);
+  transform: rotate(16deg); /* muzzle up, aiming into the scene */
   transition: transform 0.07s ease-out;
   filter: drop-shadow(0 6px 8px rgba(6, 22, 44, 0.45));
 }
@@ -712,8 +712,8 @@ body {
 }
 .flash { /* muzzle flash at the barrel tip */
   position: absolute;
-  right: 257px;
-  bottom: 20px;
+  right: 250px;
+  bottom: 117px;
   width: 100px;
   height: 100px;
   z-index: 31;
@@ -723,7 +723,7 @@ body {
     radial-gradient(circle, #fff 18%, #ffd447 40%,
       rgba(255, 122, 34, 0.85) 62%, transparent 72%);
 }
-.viewport:active .gun { transform: translate(12px, 18px) rotate(-13deg); }
+.viewport:active .gun { transform: translate(10px, 14px) rotate(20deg); }
 .viewport:active .flash { opacity: 1; }
 
 /* --- hud: parchment scroll --- */
