@@ -1,8 +1,14 @@
 # Skullwind Cove — pure HTML+CSS rail shooter
 
 ## Current state (2026-08-11)
-Full game loop WORKS end to end, verified with Playwright + screenshots.
-Placeholder art only — no polish yet. Awaiting Boss feedback before polishing.
+Full game loop WORKS end to end AND art pass is done, both verified with
+Playwright + eyeballed screenshots. Playable and presentable.
+
+Art pass shipped: gradient-art pirates (bandana/eyepatch/cutlass, green and
+blue crew variants, captain with hat/coat/beard), dock harbor with anchored
+ship + bollards, deck wall with door + portholes, cabin with stern window,
+wall map, rug + treasure chest, corner pistol with recoil + muzzle flash on
+:active, vignette, waving title flag, bobbing advance buttons.
 
 - Files: index.html + style.css only. No JS anywhere (constraint is the point).
 - Theme: original pirates. Ship "Gilded Gull", villain "Snagglebeard", level
@@ -32,12 +38,11 @@ Checks: kill registers x4, advance gating, win screen, game over fires when
 e1 ignored, no game over after timely kill, reset from win AND game over.
 Screenshots of title/dock/deck/cabin/win/gameover all eyeballed.
 
-## Next steps (blocked on Boss feedback)
-1. Art polish: real pirate characters (arms, cutlass, peg leg), ship
-   silhouette in dock backdrop, cabin door on deck, portholes, water motion.
-2. Muzzle flash / crosshair flourish on shoot.
-3. More enemies per stop + varied timing for difficulty.
-4. Maybe a below-deck 4th combat stop.
+## Possible next steps (all optional, none started)
+1. More enemies per stop + varied timing for difficulty.
+2. A below-deck 4th combat stop.
+3. Water/cloud motion in the dock backdrop.
+4. Sound is impossible without JS — do not chase it.
 
 ## Gotchas learned
 - Pseudo-element art paints over the label -> label needs z-index.
