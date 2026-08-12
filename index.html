@@ -21,6 +21,11 @@
   <input class="state" type="checkbox" id="kill-e2">
   <input class="state" type="checkbox" id="kill-e3">
   <input class="state" type="checkbox" id="kill-e4">
+  <input class="state" type="checkbox" id="kill-e5">
+  <input class="state" type="checkbox" id="kill-e6">
+  <input class="state" type="checkbox" id="kill-e7">
+  <input class="state" type="checkbox" id="kill-e8">
+  <input class="state" type="checkbox" id="kill-e9">
 
   <!-- 3d world -->
   <div class="viewport">
@@ -32,17 +37,12 @@
         <div class="prop post post-l"></div>
         <div class="prop post post-r"></div>
         <div class="prop barrel"></div>
+        <div class="prop barrel barrel2"></div>
+        <div class="prop crates"></div>
         <div class="enemy e1">
           <div class="art"></div>
           <label class="shoot" for="kill-e1"></label>
         </div>
-      </div>
-
-      <div class="area deck">
-        <div class="backdrop"></div>
-        <div class="floor"></div>
-        <div class="prop mast"></div>
-        <div class="prop crate"></div>
         <div class="enemy e2">
           <div class="art"></div>
           <label class="shoot" for="kill-e2"></label>
@@ -53,20 +53,53 @@
         </div>
       </div>
 
+      <div class="area deck">
+        <div class="backdrop"></div>
+        <div class="floor"></div>
+        <div class="prop mast"></div>
+        <div class="prop crate"></div>
+        <div class="prop hatch"></div>
+        <div class="enemy e4">
+          <div class="art"></div>
+          <label class="shoot" for="kill-e4"></label>
+        </div>
+        <div class="enemy e5">
+          <div class="art"></div>
+          <label class="shoot" for="kill-e5"></label>
+        </div>
+        <div class="enemy e6">
+          <div class="art"></div>
+          <label class="shoot" for="kill-e6"></label>
+        </div>
+        <div class="enemy e7">
+          <div class="art"></div>
+          <label class="shoot" for="kill-e7"></label>
+        </div>
+      </div>
+
       <div class="area cabin">
         <div class="backdrop"></div>
         <div class="floor"></div>
         <div class="prop desk"></div>
         <div class="prop chest"></div>
-        <div class="enemy e4 boss">
+        <div class="enemy e8">
+          <div class="art"></div>
+          <label class="shoot" for="kill-e8"></label>
+        </div>
+        <div class="enemy e9 boss">
           <div class="art"></div>
           <div class="hat"></div>
-          <label class="shoot" for="kill-e4"></label>
+          <label class="shoot" for="kill-e9"></label>
         </div>
       </div>
 
     </div>
-    <div class="gun"><div class="flash"></div></div>
+    <div class="gun">
+      <div class="hammer"></div>
+      <div class="grip"></div>
+      <div class="guard"></div>
+      <div class="flash"></div>
+    </div>
   </div>
 
   <!-- hud -->
@@ -95,15 +128,40 @@
   </div>
   <div class="screen go go-e2">
     <h1>You Walked the Plank!</h1>
-    <p>Blindsided from behind the mast.</p>
+    <p>Jumped from the crate stack.</p>
     <button class="btn" type="reset">Try Again</button>
   </div>
   <div class="screen go go-e3">
     <h1>You Walked the Plank!</h1>
-    <p>The crate-lurker got you.</p>
+    <p>The second barrel wasn't empty.</p>
     <button class="btn" type="reset">Try Again</button>
   </div>
   <div class="screen go go-e4">
+    <h1>You Walked the Plank!</h1>
+    <p>Blindsided from behind the mast.</p>
+    <button class="btn" type="reset">Try Again</button>
+  </div>
+  <div class="screen go go-e5">
+    <h1>You Walked the Plank!</h1>
+    <p>The crate-lurker got you.</p>
+    <button class="btn" type="reset">Try Again</button>
+  </div>
+  <div class="screen go go-e6">
+    <h1>You Walked the Plank!</h1>
+    <p>Boarded from below deck through the hatch.</p>
+    <button class="btn" type="reset">Try Again</button>
+  </div>
+  <div class="screen go go-e7">
+    <h1>You Walked the Plank!</h1>
+    <p>Burst right out of the cabin door.</p>
+    <button class="btn" type="reset">Try Again</button>
+  </div>
+  <div class="screen go go-e8">
+    <h1>You Walked the Plank!</h1>
+    <p>Ambushed beside the treasure chest.</p>
+    <button class="btn" type="reset">Try Again</button>
+  </div>
+  <div class="screen go go-e9">
     <h1>You Walked the Plank!</h1>
     <p>Captain Snagglebeard himself ran you through.</p>
     <button class="btn" type="reset">Try Again</button>
@@ -113,7 +171,7 @@
   <div class="screen win">
     <p class="crest">&#127942;</p>
     <h1>Treasure Claimed!</h1>
-    <p class="sub">The Gilded Gull is yours again. All four bounties collected.</p>
+    <p class="sub">The Gilded Gull is yours again. All nine bounties collected.</p>
     <button class="btn" type="reset">Sail Again</button>
   </div>
 

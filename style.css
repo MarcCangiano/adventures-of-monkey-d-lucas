@@ -22,8 +22,11 @@ body {
   pointer-events: none;
 }
 
-#kill-e1:checked, #kill-e2:checked,
-#kill-e3:checked, #kill-e4:checked { counter-increment: kills; }
+#kill-e1:checked, #kill-e2:checked, #kill-e3:checked,
+#kill-e4:checked, #kill-e5:checked, #kill-e6:checked,
+#kill-e7:checked, #kill-e8:checked, #kill-e9:checked {
+  counter-increment: kills;
+}
 
 /* --- viewport & camera rail --- */
 .viewport {
@@ -258,6 +261,55 @@ body {
     linear-gradient(90deg, #8a5424 0 8%, #c98e46 30% 60%, #8a5424 92%);
 }
 
+.barrel2 { left: 30px; top: -10px; transform: translateZ(140px); }
+
+.crates { /* stacked crates, dock right */
+  left: 240px;
+  top: -34px;
+  width: 150px;
+  height: 164px;
+  transform: translateZ(140px);
+}
+.crates::before { /* bottom crate */
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 80px;
+  width: 150px;
+  height: 84px;
+  border: 5px solid #6b421a;
+  box-shadow: inset 0 0 0 8px #a06a2e;
+  background:
+    linear-gradient(45deg, transparent 47%, #8a5a2b 47% 53%,
+      transparent 53%),
+    #c98e46;
+}
+.crates::after { /* top crate */
+  content: "";
+  position: absolute;
+  left: 14px;
+  top: 0;
+  width: 112px;
+  height: 84px;
+  border: 5px solid #6b421a;
+  box-shadow: inset 0 0 0 8px #a06a2e;
+  background:
+    linear-gradient(-45deg, transparent 47%, #8a5a2b 47% 53%,
+      transparent 53%),
+    #c98e46;
+}
+
+.hatch { /* open deck hatch */
+  left: -160px;
+  top: 74px;
+  width: 160px;
+  height: 56px;
+  transform: translateZ(170px);
+  border: 6px solid #56320f;
+  border-radius: 6px;
+  background: linear-gradient(#1c1006, #2a1708);
+}
+
 .mast {
   left: 150px;
   top: -620px;
@@ -271,7 +323,7 @@ body {
 }
 
 .crate {
-  left: -330px;
+  left: -430px;
   top: 10px;
   width: 140px;
   height: 120px;
@@ -403,6 +455,11 @@ body {
 /* crew color variants */
 .e2 { --band: #2fae4f; --shirt: #2fae4f; }
 .e3 { --band: #2f7fe0; --shirt: #2f7fe0; }
+.e4 { --band: #8e44ad; --shirt: #8e44ad; }
+.e5 { --band: #e67e22; --shirt: #e67e22; }
+.e6 { --band: #16a085; --shirt: #16a085; }
+.e7 { --band: #c0396b; --shirt: #c0396b; }
+.e8 { --band: #d4a017; --shirt: #d4a017; }
 
 /* Captain Snagglebeard */
 .boss { width: 150px; height: 210px; }
@@ -468,10 +525,15 @@ body {
 }
 
 /* pop offsets step each pirate out from behind cover */
-.e1 { left: -240px; top: -40px; --z: 70px; --pop-x: 135px; }
-.e2 { left: 110px;  top: -40px; --z: 50px; --pop-x: -115px; }
-.e3 { left: -335px; top: -50px; --z: 80px; --pop-x: 155px; }
-.e4 { left: -75px;  top: -80px; --z: 60px; --pop-y: -45px; }
+.e1 { left: -240px; top: -40px; --z: 70px;  --pop-x: 135px; }
+.e2 { left: 245px;  top: -40px; --z: 60px;  --pop-x: 150px; }
+.e3 { left: 35px;   top: -40px; --z: 70px;  --pop-x: 130px; }
+.e4 { left: 110px;  top: -40px; --z: 50px;  --pop-x: 90px; }
+.e5 { left: -435px; top: -50px; --z: 80px;  --pop-x: 155px; }
+.e6 { left: -145px; top: -20px; --z: 120px; --hide: 150px; --pop-y: -15px; }
+.e7 { left: 20px;   top: -45px; --z: 20px; --pop-x: 45px; }
+.e8 { left: 185px;  top: -40px; --z: 100px; --pop-x: 20px; --pop-y: -25px; }
+.e9 { left: -75px;  top: -80px; --z: 60px;  --pop-y: -45px; }
 
 .shoot {
   position: absolute;
@@ -482,9 +544,14 @@ body {
 
 /* --- enemy timelines: pop out, hold, then attack --- */
 #wp-dock:checked  ~ .viewport .e1 { animation: pop-attack 7s linear forwards; }
-#wp-deck:checked  ~ .viewport .e2 { animation: pop-attack 6.5s linear forwards; }
-#wp-deck:checked  ~ .viewport .e3 { animation: pop-attack 9.5s linear forwards; }
-#wp-cabin:checked ~ .viewport .e4 { animation: pop-attack 8s linear forwards; }
+#wp-dock:checked  ~ .viewport .e2 { animation: pop-attack 9.5s linear forwards; }
+#wp-dock:checked  ~ .viewport .e3 { animation: pop-attack 12s linear forwards; }
+#wp-deck:checked  ~ .viewport .e4 { animation: pop-attack 6.5s linear forwards; }
+#wp-deck:checked  ~ .viewport .e5 { animation: pop-attack 8.5s linear forwards; }
+#wp-deck:checked  ~ .viewport .e6 { animation: pop-attack 10.5s linear forwards; }
+#wp-deck:checked  ~ .viewport .e7 { animation: pop-attack 13s linear forwards; }
+#wp-cabin:checked ~ .viewport .e8 { animation: pop-attack 7.5s linear forwards; }
+#wp-cabin:checked ~ .viewport .e9 { animation: pop-attack 10s linear forwards; }
 
 @keyframes pop-attack {
   0%, 18% {
@@ -512,7 +579,12 @@ body {
 #kill-e1:checked ~ .viewport .e1,
 #kill-e2:checked ~ .viewport .e2,
 #kill-e3:checked ~ .viewport .e3,
-#kill-e4:checked ~ .viewport .e4 {
+#kill-e4:checked ~ .viewport .e4,
+#kill-e5:checked ~ .viewport .e5,
+#kill-e6:checked ~ .viewport .e6,
+#kill-e7:checked ~ .viewport .e7,
+#kill-e8:checked ~ .viewport .e8,
+#kill-e9:checked ~ .viewport .e9 {
   animation: hit 0.5s ease-in forwards;
   pointer-events: none;
 }
@@ -532,52 +604,89 @@ body {
   }
 }
 
-/* --- pistol overlay: recoil + muzzle flash on any shot --- */
+/* --- flintlock pistol overlay: recoil + muzzle flash on any shot --- */
 .gun {
   position: absolute;
-  right: -30px;
-  bottom: -40px;
-  width: 300px;
-  height: 210px;
+  right: -50px;
+  bottom: -20px;
+  width: 360px;
+  height: 240px;
   z-index: 30;
   pointer-events: none;
-  transform: rotate(-16deg);
+  transform: rotate(-21deg);
   transition: transform 0.07s ease-out;
 }
-.gun::before { /* steel barrel with gold band */
+.gun::before { /* octagonal steel barrel, gold muzzle ring */
   content: "";
   position: absolute;
   left: 0;
-  top: 30px;
-  width: 190px;
-  height: 44px;
-  border-radius: 10px 6px 6px 10px;
+  top: 58px;
+  width: 245px;
+  height: 34px;
+  border-radius: 8px 4px 4px 8px;
   background:
-    linear-gradient(90deg, #ffd447 0 16px, transparent 16px),
-    linear-gradient(#9aa7b4 0 30%, #5d6b78 30% 70%, #39424e 70%);
+    linear-gradient(90deg, #ffd447 0 14px, #cfd8df 14px 20px,
+      transparent 20px),
+    linear-gradient(#c3cdd6 0 22%, #8494a2 22% 55%,
+      #5d6b78 55% 80%, #39424e 80%);
 }
-.gun::after { /* wooden grip */
+.gun::after { /* wooden stock under the barrel */
   content: "";
   position: absolute;
-  left: 150px;
-  top: 60px;
-  width: 130px;
-  height: 150px;
-  border-radius: 20px 60px 40px 20px;
-  background: linear-gradient(115deg, #8a5424, #56320f);
+  left: 30px;
+  top: 84px;
+  width: 250px;
+  height: 44px;
+  border-radius: 26px 0 10px 14px;
+  background:
+    linear-gradient(90deg, transparent 0 180px, #b8862a 180px 192px,
+      transparent 192px),
+    linear-gradient(#a5642a, #6b3d10);
+}
+.hammer { /* cocked hammer behind the pan */
+  position: absolute;
+  left: 208px;
+  top: 22px;
+  width: 22px;
+  height: 48px;
+  border-radius: 10px 12px 3px 3px;
+  transform: rotate(-26deg);
+  background: linear-gradient(90deg, #5d6b78, #39424e);
+}
+.grip { /* curved grip with gold butt cap */
+  position: absolute;
+  left: 262px;
+  top: 106px;
+  width: 86px;
+  height: 138px;
+  border-radius: 14px 48px 60px 34px;
+  transform: rotate(27deg);
+  transform-origin: top left;
+  border-bottom: 9px solid #ffd447;
+  background: linear-gradient(115deg, #8a5424, #4a2c10);
+}
+.guard { /* trigger guard */
+  position: absolute;
+  left: 224px;
+  top: 126px;
+  width: 58px;
+  height: 46px;
+  border: 7px solid #b8862a;
+  border-top-color: transparent;
+  border-radius: 50%;
 }
 .flash {
   position: absolute;
-  left: -52px;
-  top: 8px;
-  width: 90px;
-  height: 90px;
+  left: -62px;
+  top: 26px;
+  width: 100px;
+  height: 100px;
   opacity: 0;
   background:
     radial-gradient(circle, #fff 18%, #ffd447 40%,
       rgba(255, 122, 34, 0.85) 62%, transparent 72%);
 }
-.viewport:active .gun { transform: translate(12px, 16px) rotate(-11deg); }
+.viewport:active .gun { transform: translate(12px, 18px) rotate(-15deg); }
 .viewport:active .flash { opacity: 1; }
 
 /* --- hud --- */
@@ -597,7 +706,7 @@ body {
   letter-spacing: 1px;
   pointer-events: none;
 }
-.score::after { content: ": " counter(kills) " / 4 \2620"; }
+.score::after { content: ": " counter(kills) " / 9 \2620"; }
 #wp-title:checked ~ .hud { display: none; }
 
 /* --- buttons --- */
@@ -629,8 +738,12 @@ body {
   z-index: 45;
   animation: bob 1.1s ease-in-out infinite alternate;
 }
-#wp-dock:checked ~ #kill-e1:checked ~ .adv-deck { display: block; }
-#wp-deck:checked ~ #kill-e2:checked ~ #kill-e3:checked ~ .adv-cabin {
+#wp-dock:checked ~ #kill-e1:checked ~ #kill-e2:checked
+  ~ #kill-e3:checked ~ .adv-deck {
+  display: block;
+}
+#wp-deck:checked ~ #kill-e4:checked ~ #kill-e5:checked
+  ~ #kill-e6:checked ~ #kill-e7:checked ~ .adv-cabin {
   display: block;
 }
 
@@ -703,14 +816,24 @@ body {
 }
 
 #wp-dock:checked  ~ .go-e1 { animation: doom 7s linear forwards; }
-#wp-deck:checked  ~ .go-e2 { animation: doom 6.5s linear forwards; }
-#wp-deck:checked  ~ .go-e3 { animation: doom 9.5s linear forwards; }
-#wp-cabin:checked ~ .go-e4 { animation: doom 8s linear forwards; }
+#wp-dock:checked  ~ .go-e2 { animation: doom 9.5s linear forwards; }
+#wp-dock:checked  ~ .go-e3 { animation: doom 12s linear forwards; }
+#wp-deck:checked  ~ .go-e4 { animation: doom 6.5s linear forwards; }
+#wp-deck:checked  ~ .go-e5 { animation: doom 8.5s linear forwards; }
+#wp-deck:checked  ~ .go-e6 { animation: doom 10.5s linear forwards; }
+#wp-deck:checked  ~ .go-e7 { animation: doom 13s linear forwards; }
+#wp-cabin:checked ~ .go-e8 { animation: doom 7.5s linear forwards; }
+#wp-cabin:checked ~ .go-e9 { animation: doom 10s linear forwards; }
 
 #kill-e1:checked ~ .go-e1,
 #kill-e2:checked ~ .go-e2,
 #kill-e3:checked ~ .go-e3,
-#kill-e4:checked ~ .go-e4 { animation: none; }
+#kill-e4:checked ~ .go-e4,
+#kill-e5:checked ~ .go-e5,
+#kill-e6:checked ~ .go-e6,
+#kill-e7:checked ~ .go-e7,
+#kill-e8:checked ~ .go-e8,
+#kill-e9:checked ~ .go-e9 { animation: none; }
 
 @keyframes doom {
   0%, 99.9% { visibility: hidden; opacity: 0; }
@@ -726,6 +849,7 @@ body {
 }
 
 #kill-e1:checked ~ #kill-e2:checked ~ #kill-e3:checked
-  ~ #kill-e4:checked ~ .win {
+  ~ #kill-e4:checked ~ #kill-e5:checked ~ #kill-e6:checked
+  ~ #kill-e7:checked ~ #kill-e8:checked ~ #kill-e9:checked ~ .win {
   display: flex;
 }

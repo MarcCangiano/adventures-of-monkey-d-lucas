@@ -17,9 +17,13 @@ wall map, rug + treasure chest, corner pistol with recoil + muzzle flash on
 ## Engine (all working)
 - Camera rail: radio inputs #wp-title/#wp-dock/#wp-deck/#wp-cabin drive
   .scene translateZ (areas sit at z -600/-1800/-3000, camera transitions 1.6s).
-- Enemies e1 (dock/barrel), e2 (deck/mast), e3 (deck/crate), e4 (cabin/desk,
-  boss). Pop-out via `pop-attack` keyframes with per-enemy --pop-x/--pop-y/--z
-  vars; durations 7 / 6.5 / 9.5 / 8s. Attack lunge at 96%.
+- NINE enemies (2026-08-12 expansion): dock e1 barrel / e2 crate stack /
+  e3 second barrel; deck e4 mast / e5 crate / e6 hatch (climbs out) /
+  e7 cabin door; cabin e8 chest / e9 desk boss. Pop-out via `pop-attack`
+  keyframes with per-enemy --pop-x/--pop-y/--z/--hide vars. Durations:
+  7/9.5/12s dock, 6.5/8.5/10.5/13s deck, 7.5/10s cabin. Attack at 96%.
+  Pop lanes are tuned so no two popped enemies overlap click centers —
+  check screenshots after moving anyone.
 - Shooting: label.shoot (z-index 5 — MUST stay above ::before/::after art or
   clicks hit the pseudo-elements and die) toggles hidden #kill-eN checkbox.
 - Lose: per-enemy .go-eN overlay armed by `doom` animation matching the enemy
@@ -38,10 +42,17 @@ Checks: kill registers x4, advance gating, win screen, game over fires when
 e1 ignored, no game over after timely kill, reset from win AND game over.
 Screenshots of title/dock/deck/cabin/win/gameover all eyeballed.
 
+## 2026-08-12 session
+- Boss feedback: gun didn't read as a gun; wanted many more villains.
+- Rebuilt pistol as proper flintlock (barrel/hammer/grip/trigger guard/
+  muzzle flash divs inside .gun, one rotation on the container).
+- Expanded 4 -> 9 enemies + new cover (crate stack, 2nd barrel, hatch).
+- Score now /9; advance + win chains extended; 9 game-over overlays.
+
 ## Possible next steps (all optional, none started)
-1. More enemies per stop + varied timing for difficulty.
-2. A below-deck 4th combat stop.
-3. Water/cloud motion in the dock backdrop.
+1. A below-deck 4th combat stop.
+2. Water/cloud motion in the dock backdrop.
+3. Difficulty: shorten timers, or a hard mode via a :target variant.
 4. Sound is impossible without JS — do not chase it.
 
 ## Gotchas learned
