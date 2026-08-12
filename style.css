@@ -546,6 +546,48 @@ body {
   pointer-events: none;
 }
 
+/* FPS-style hitmarker, popped by the kill flag */
+.enemy::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 34%;
+  width: 64px;
+  height: 64px;
+  margin: -32px 0 0 -32px;
+  z-index: 6;
+  opacity: 0;
+  pointer-events: none;
+  filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.95));
+  background:
+    linear-gradient(45deg, transparent 0 36%, #ffd447 36% 64%,
+      transparent 64%) left top / 24px 24px no-repeat,
+    linear-gradient(-45deg, transparent 0 36%, #ffd447 36% 64%,
+      transparent 64%) right top / 24px 24px no-repeat,
+    linear-gradient(-45deg, transparent 0 36%, #ffd447 36% 64%,
+      transparent 64%) left bottom / 24px 24px no-repeat,
+    linear-gradient(45deg, transparent 0 36%, #ffd447 36% 64%,
+      transparent 64%) right bottom / 24px 24px no-repeat;
+}
+
+#kill-e1:checked ~ .viewport .e1::before,
+#kill-e2:checked ~ .viewport .e2::before,
+#kill-e3:checked ~ .viewport .e3::before,
+#kill-e4:checked ~ .viewport .e4::before,
+#kill-e5:checked ~ .viewport .e5::before,
+#kill-e6:checked ~ .viewport .e6::before,
+#kill-e7:checked ~ .viewport .e7::before,
+#kill-e8:checked ~ .viewport .e8::before,
+#kill-e9:checked ~ .viewport .e9::before {
+  animation: hitmark 0.35s ease-out forwards;
+}
+
+@keyframes hitmark {
+  0%   { opacity: 1; transform: scale(0.5); }
+  60%  { opacity: 1; transform: scale(1.15); }
+  100% { opacity: 0; transform: scale(1.35); }
+}
+
 /* ground shadow */
 .enemy::after {
   content: "";
@@ -725,6 +767,92 @@ body {
 }
 .viewport:active .gun { transform: translate(10px, 14px) rotate(20deg); }
 .viewport:active .flash { opacity: 1; }
+
+/* musket-ball tracer streaking out of the muzzle on every shot */
+.tracer {
+  position: absolute;
+  right: 276px;
+  bottom: 160px;
+  width: 48px;
+  height: 10px;
+  z-index: 31;
+  pointer-events: none;
+  opacity: 0;
+  border-radius: 5px;
+  transform: rotate(16deg);
+  background:
+    radial-gradient(circle 6px at 8px 5px, #fff 40%, #ffd447 70%,
+      transparent 85%),
+    linear-gradient(90deg, transparent 0 6px, rgba(255, 212, 71, 0.9) 14px,
+      rgba(255, 255, 255, 0.25) 46px);
+}
+.viewport:active .tracer { animation: shoot-ball 0.22s ease-out; }
+@keyframes shoot-ball {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) rotate(16deg) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-265px, -76px) rotate(16deg) scale(0.5);
+  }
+}
+
+/* thrown knife: flies at the camera during each enemy's attack window */
+.missile {
+  position: absolute;
+  left: 50%;
+  top: 40%;
+  width: 54px;
+  height: 12px;
+  margin: -6px 0 0 -27px;
+  opacity: 0;
+  pointer-events: none;
+  border-radius: 6px 3px 3px 6px;
+  background:
+    linear-gradient(90deg, #6b3a16 0 12px, #d8a437 12px 18px,
+      #eef3f7 18px 80%, #b9c7d1 80%);
+  filter: drop-shadow(0 2px 3px rgba(6, 22, 44, 0.5));
+}
+
+#wp-dock:checked  ~ .viewport .e1 .missile { animation: throw 7s linear forwards; }
+#wp-dock:checked  ~ .viewport .e2 .missile { animation: throw 9.5s linear forwards; }
+#wp-dock:checked  ~ .viewport .e3 .missile { animation: throw 12s linear forwards; }
+#wp-deck:checked  ~ .viewport .e4 .missile { animation: throw 6.5s linear forwards; }
+#wp-deck:checked  ~ .viewport .e5 .missile { animation: throw 8.5s linear forwards; }
+#wp-deck:checked  ~ .viewport .e6 .missile { animation: throw 10.5s linear forwards; }
+#wp-deck:checked  ~ .viewport .e7 .missile { animation: throw 13s linear forwards; }
+#wp-cabin:checked ~ .viewport .e8 .missile { animation: throw 7.5s linear forwards; }
+#wp-cabin:checked ~ .viewport .e9 .missile { animation: throw 10s linear forwards; }
+
+/* a dead pirate's knife never flies */
+#kill-e1:checked ~ .viewport .e1 .missile,
+#kill-e2:checked ~ .viewport .e2 .missile,
+#kill-e3:checked ~ .viewport .e3 .missile,
+#kill-e4:checked ~ .viewport .e4 .missile,
+#kill-e5:checked ~ .viewport .e5 .missile,
+#kill-e6:checked ~ .viewport .e6 .missile,
+#kill-e7:checked ~ .viewport .e7 .missile,
+#kill-e8:checked ~ .viewport .e8 .missile,
+#kill-e9:checked ~ .viewport .e9 .missile {
+  animation: none;
+  opacity: 0;
+}
+
+@keyframes throw {
+  0%, 95.5% {
+    opacity: 0;
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+  96% {
+    opacity: 1;
+    transform: translate(4px, 8px) rotate(120deg) scale(1.3);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(30px, 130px) rotate(700deg) scale(6.5);
+  }
+}
 
 /* --- hud: parchment scroll --- */
 .hud {
@@ -907,15 +1035,39 @@ body {
   color: rgba(255, 233, 201, 0.92);
 }
 
-#wp-dock:checked  ~ .go-e1 { animation: doom 7s linear forwards; }
-#wp-dock:checked  ~ .go-e2 { animation: doom 9.5s linear forwards; }
-#wp-dock:checked  ~ .go-e3 { animation: doom 12s linear forwards; }
-#wp-deck:checked  ~ .go-e4 { animation: doom 6.5s linear forwards; }
-#wp-deck:checked  ~ .go-e5 { animation: doom 8.5s linear forwards; }
-#wp-deck:checked  ~ .go-e6 { animation: doom 10.5s linear forwards; }
-#wp-deck:checked  ~ .go-e7 { animation: doom 13s linear forwards; }
-#wp-cabin:checked ~ .go-e8 { animation: doom 7.5s linear forwards; }
-#wp-cabin:checked ~ .go-e9 { animation: doom 10s linear forwards; }
+#wp-dock:checked  ~ .go-e1 {
+  animation: doom 7s linear forwards, go-flash 0.8s ease-out 7s both;
+}
+#wp-dock:checked  ~ .go-e2 {
+  animation: doom 9.5s linear forwards, go-flash 0.8s ease-out 9.5s both;
+}
+#wp-dock:checked  ~ .go-e3 {
+  animation: doom 12s linear forwards, go-flash 0.8s ease-out 12s both;
+}
+#wp-deck:checked  ~ .go-e4 {
+  animation: doom 6.5s linear forwards, go-flash 0.8s ease-out 6.5s both;
+}
+#wp-deck:checked  ~ .go-e5 {
+  animation: doom 8.5s linear forwards, go-flash 0.8s ease-out 8.5s both;
+}
+#wp-deck:checked  ~ .go-e6 {
+  animation: doom 10.5s linear forwards, go-flash 0.8s ease-out 10.5s both;
+}
+#wp-deck:checked  ~ .go-e7 {
+  animation: doom 13s linear forwards, go-flash 0.8s ease-out 13s both;
+}
+#wp-cabin:checked ~ .go-e8 {
+  animation: doom 7.5s linear forwards, go-flash 0.8s ease-out 7.5s both;
+}
+#wp-cabin:checked ~ .go-e9 {
+  animation: doom 10s linear forwards, go-flash 0.8s ease-out 10s both;
+}
+
+/* the moment you're hit, the whole screen blazes red then settles */
+@keyframes go-flash {
+  from { filter: brightness(3) saturate(1.6); }
+  to   { filter: none; }
+}
 
 #kill-e1:checked ~ .go-e1,
 #kill-e2:checked ~ .go-e2,

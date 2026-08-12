@@ -42,6 +42,23 @@ Checks: kill registers x4, advance gating, win screen, game over fires when
 e1 ignored, no game over after timely kill, reset from win AND game over.
 Screenshots of title/dock/deck/cabin/win/gameover all eyeballed.
 
+## 2026-08-12 session, round 6 (combat feedback)
+- Player tracer: .tracer div animates on .viewport:active (0.22s streak
+  from the muzzle along the barrel angle). :active-driven, so it plays
+  per click; a released mouse cuts it — fine at this duration.
+- Enemy projectiles: .missile div in every .enemy; `throw` keyframes run
+  the SAME duration as that enemy's pop-attack so the knife launches at
+  96% and fills the screen at 100%. Fake the fly-at-camera with
+  translate+scale(6.5), NOT translateZ — the enemy's filter animation
+  flattens preserve-3d, so child translateZ does nothing.
+- Killed enemies must cancel their missile (9-selector animation:none
+  rule) or dead pirates still throw.
+- Hitmarkers: .enemy::before, gold X (white was invisible against the
+  brightness-flashed sprite), triggered per kill flag.
+- Red hit flash: second animation on .go — `go-flash 0.8s ease-out Ns
+  both` where N = that enemy's doom duration; brightness(3) -> none.
+  The kill cancel rule (animation: none) kills both animations.
+
 ## 2026-08-12 session, round 5 (art v6 — anime-style character pass)
 - Boss wants "One Piece level." Pushed the SVG characters a full tier:
   cel shading (per-figure shadow overlay + highlight strokes), variable
