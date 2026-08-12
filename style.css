@@ -117,6 +117,15 @@ body {
     linear-gradient(0deg, #b3402e 0 30%, #f0e6d2 30% 55%, #b3402e 55% 80%,
       #f0e6d2 80%) 6.05% 47.4% / 17px 52px no-repeat,
     radial-gradient(ellipse 220px 70px at 6% 54%, #2e8f6e 48%, transparent 50%),
+    radial-gradient(ellipse 280px 36px at 28% 51%,
+      rgba(255, 255, 255, 0.75) 55%, transparent 62%),
+    radial-gradient(ellipse 200px 30px at 52% 49%,
+      rgba(255, 255, 255, 0.55) 55%, transparent 62%),
+    linear-gradient(rgba(255, 255, 255, 0) 50%,
+      rgba(255, 255, 255, 0.5) 54%, rgba(255, 255, 255, 0) 57%),
+    linear-gradient(180deg, transparent 62%, rgba(9, 48, 79, 0.22) 62.5%,
+      transparent 63.5% 74%, rgba(9, 48, 79, 0.28) 74.5%,
+      transparent 76% 87%, rgba(9, 48, 79, 0.32) 87.5%, transparent 89.5%),
     linear-gradient(#5ecdf9 0%, #c9f0ff 54%, #23a5dd 54.3%,
       #1272ae 82%, #0d5a92 100%);
 }
@@ -173,6 +182,10 @@ body {
 .dock .floor {
   background:
     linear-gradient(rgba(0, 0, 0, 0.35), transparent 16%),
+    radial-gradient(ellipse 30px 12px at 340px 180px,
+      rgba(60, 30, 8, 0.45) 40%, transparent 72%),
+    radial-gradient(ellipse 24px 9px at 1050px 420px,
+      rgba(60, 30, 8, 0.4) 40%, transparent 72%),
     radial-gradient(circle 3px at 55px 26px, rgba(40, 20, 5, 0.5) 90%,
       transparent) 0 0 / 110px 230px repeat,
     repeating-linear-gradient(90deg,
@@ -227,6 +240,8 @@ body {
 .deck .floor {
   background:
     linear-gradient(rgba(0, 0, 0, 0.35), transparent 16%),
+    radial-gradient(ellipse 28px 11px at 620px 300px,
+      rgba(60, 30, 8, 0.42) 40%, transparent 72%),
     radial-gradient(circle 3px at 40px 22px, rgba(40, 20, 5, 0.5) 90%,
       transparent) 0 0 / 95px 190px repeat,
     repeating-linear-gradient(0deg,

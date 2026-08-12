@@ -42,6 +42,24 @@ Checks: kill registers x4, advance gating, win screen, game over fires when
 e1 ignored, no game over after timely kill, reset from win AND game over.
 Screenshots of title/dock/deck/cabin/win/gameover all eyeballed.
 
+## 2026-08-12 session, round 5 (art v6 — anime-style character pass)
+- Boss wants "One Piece level." Pushed the SVG characters a full tier:
+  cel shading (per-figure shadow overlay + highlight strokes), variable
+  line weight (4px silhouettes / 2.25px interior), big toothy grins with
+  tooth lines, almond eyes with iris+glint, filled tapered brows, hair
+  tufts, whipping bandana tails, red tricorn plumes, jagged zigzag beards,
+  rolled sleeves with bare forearms, shell-guard cutlasses with blade
+  shine, sash tails, boot heels/cuffs/shine.
+- Captain: flared split-hem coat, cel shadow, braid trim, fringed
+  epaulettes, X scar, growl teeth inside the beard, tilted plumed bicorn,
+  pistol tucked in the sash.
+- Galleon: waterline foam scallops + reflection so it sits IN the sea.
+- Atmosphere: horizon haze line, flat cloud bank ellipses, 3 sea depth
+  bands (dock backdrop); wood knots on dock/deck floors.
+- Honest ceiling: hand-authored SVG won't literally match pro anime
+  illustration; next big lever would be real painted textures, which
+  means raster images — still no JS, but no longer "all code."
+
 ## 2026-08-12 session, round 4 (art v5 — INLINE SVG, the big one)
 - Boss hated the gradient-blob art ("Sony/Xbox level"; gun still bent).
   Answer: inline SVG. It is pure markup — no scripts, no handlers — so the
