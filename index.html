@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Skullwind Cove</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<form id="game">
+
+  <!-- rail waypoints -->
+  <input class="state" type="radio" name="wp" id="wp-title" checked>
+  <input class="state" type="radio" name="wp" id="wp-dock">
+  <input class="state" type="radio" name="wp" id="wp-deck">
+  <input class="state" type="radio" name="wp" id="wp-cabin">
+
+  <!-- kill flags -->
+  <input class="state" type="checkbox" id="kill-e1">
+  <input class="state" type="checkbox" id="kill-e2">
+  <input class="state" type="checkbox" id="kill-e3">
+  <input class="state" type="checkbox" id="kill-e4">
+
+  <!-- 3d world -->
+  <div class="viewport">
+    <div class="scene">
+
+      <div class="area dock">
+        <div class="backdrop"></div>
+        <div class="floor"></div>
+        <div class="prop barrel"></div>
+        <div class="enemy e1"><label class="shoot" for="kill-e1"></label></div>
+      </div>
+
+      <div class="area deck">
+        <div class="backdrop"></div>
+        <div class="floor"></div>
+        <div class="prop mast"></div>
+        <div class="prop crate"></div>
+        <div class="enemy e2"><label class="shoot" for="kill-e2"></label></div>
+        <div class="enemy e3"><label class="shoot" for="kill-e3"></label></div>
+      </div>
+
+      <div class="area cabin">
+        <div class="backdrop"></div>
+        <div class="floor"></div>
+        <div class="prop desk"></div>
+        <div class="enemy e4 boss"><label class="shoot" for="kill-e4"></label></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- hud -->
+  <div class="hud"><span class="score">Bounties</span></div>
+
+  <!-- rail advance buttons -->
+  <label class="btn advance adv-deck" for="wp-deck">Board the Gilded Gull &raquo;</label>
+  <label class="btn advance adv-cabin" for="wp-cabin">Storm the captain's cabin &raquo;</label>
+
+  <!-- title screen -->
+  <div class="screen title-screen">
+    <p class="crest">&#9760;</p>
+    <h1>Skullwind Cove</h1>
+    <p class="sub">Snagglebeard's crew stole your ship, the Gilded Gull.
+    Fight down the dock and take her back.</p>
+    <label class="btn" for="wp-dock">Set Sail</label>
+    <p class="fine">Pure HTML + CSS &mdash; no JavaScript.
+    Shoot pirates before they strike.</p>
+  </div>
+
+  <!-- game over screens, one armed per enemy -->
+  <div class="screen go go-e1">
+    <h1>You Walked the Plank!</h1>
+    <p>A deckhand got the drop on you at the dock.</p>
+    <button class="btn" type="reset">Try Again</button>
+  </div>
+  <div class="screen go go-e2">
+    <h1>You Walked the Plank!</h1>
+    <p>Blindsided from behind the mast.</p>
+    <button class="btn" type="reset">Try Again</button>
+  </div>
+  <div class="screen go go-e3">
+    <h1>You Walked the Plank!</h1>
+    <p>The crate-lurker got you.</p>
+    <button class="btn" type="reset">Try Again</button>
+  </div>
+  <div class="screen go go-e4">
+    <h1>You Walked the Plank!</h1>
+    <p>Captain Snagglebeard himself ran you through.</p>
+    <button class="btn" type="reset">Try Again</button>
+  </div>
+
+  <!-- win screen -->
+  <div class="screen win">
+    <p class="crest">&#127942;</p>
+    <h1>Treasure Claimed!</h1>
+    <p class="sub">The Gilded Gull is yours again. All four bounties collected.</p>
+    <button class="btn" type="reset">Sail Again</button>
+  </div>
+
+</form>
+
+</body>
+</html>

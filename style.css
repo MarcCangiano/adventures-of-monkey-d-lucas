@@ -1,0 +1,396 @@
+/* Skullwind Cove — pure HTML+CSS rail shooter (no JavaScript) */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body { height: 100%; overflow: hidden; }
+
+body {
+  font-family: "Trebuchet MS", Verdana, sans-serif;
+  background: #0b2740;
+}
+
+#game { height: 100%; counter-reset: kills; }
+
+/* --- hidden state inputs (kept renderable so counters work) --- */
+.state {
+  position: fixed;
+  top: -20px;
+  left: -20px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+#kill-e1:checked, #kill-e2:checked,
+#kill-e3:checked, #kill-e4:checked { counter-increment: kills; }
+
+/* --- viewport & camera rail --- */
+.viewport {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  perspective: 700px;
+  cursor: crosshair;
+  background:
+    linear-gradient(#6ecdf5 0%, #cdeffb 52%, #2f7fb8 52.3%, #14486e 100%);
+}
+
+.scene {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform-style: preserve-3d;
+  transform: translateZ(250px);
+  transition: transform 1.6s ease-in-out;
+}
+
+#wp-dock:checked  ~ .viewport .scene { transform: translateZ(600px); }
+#wp-deck:checked  ~ .viewport .scene { transform: translateZ(1800px); }
+#wp-cabin:checked ~ .viewport .scene { transform: translateZ(3000px); }
+
+/* --- areas along the rail --- */
+.area { position: absolute; transform-style: preserve-3d; }
+.dock  { transform: translateZ(-600px); }
+.deck  { transform: translateZ(-1800px); }
+.cabin { transform: translateZ(-3000px); }
+
+.floor {
+  position: absolute;
+  left: -800px;
+  top: 130px;
+  width: 1600px;
+  height: 1100px;
+  transform-origin: top center;
+  transform: rotateX(90deg);
+}
+
+.backdrop {
+  position: absolute;
+  left: -800px;
+  top: -520px;
+  width: 1600px;
+  height: 660px;
+  transform: translateZ(-60px);
+}
+
+.dock .backdrop {
+  background:
+    linear-gradient(#79d2f2 0%, #d6f2fc 55%, #2f7fb8 55.4%, #1d5c8a 100%);
+}
+.dock .floor {
+  background:
+    repeating-linear-gradient(90deg,
+      #b8813f 0 100px, #97682c 100px 110px);
+}
+
+.deck .backdrop { background: linear-gradient(#8a5a2b, #6d4520); }
+.deck .floor {
+  background:
+    repeating-linear-gradient(0deg,
+      #c08a45 0 80px, #a8742f 80px 90px);
+}
+
+.cabin .backdrop { background: linear-gradient(#5a3a1c, #3f2812); }
+.cabin .floor {
+  background:
+    repeating-linear-gradient(90deg,
+      #7a5223 0 90px, #64411a 90px 100px);
+}
+
+/* --- props (cover the enemies pop from behind) --- */
+.prop { position: absolute; }
+
+.barrel {
+  left: -235px;
+  top: -10px;
+  width: 110px;
+  height: 140px;
+  transform: translateZ(120px);
+  background:
+    linear-gradient(90deg, #8a5a2b, #b8813f 50%, #8a5a2b);
+  border: 4px solid #5e3a17;
+  border-radius: 24px / 34px;
+}
+
+.mast {
+  left: 150px;
+  top: -620px;
+  width: 46px;
+  height: 750px;
+  transform: translateZ(100px);
+  background: linear-gradient(90deg, #6d4520, #a8742f 50%, #6d4520);
+}
+
+.crate {
+  left: -330px;
+  top: 10px;
+  width: 140px;
+  height: 120px;
+  transform: translateZ(130px);
+  background: #a8742f;
+  border: 5px solid #6d4520;
+  box-shadow: inset 0 0 0 14px #8a5a2b;
+}
+
+.desk {
+  left: -140px;
+  top: 20px;
+  width: 280px;
+  height: 110px;
+  transform: translateZ(130px);
+  background: linear-gradient(#7a5223, #5a3a1c);
+  border: 4px solid #3f2812;
+  border-radius: 10px;
+}
+
+/* --- enemies (placeholder pirates) --- */
+.enemy {
+  position: absolute;
+  width: 120px;
+  height: 170px;
+  --z: 60px;
+  --hide: 130px;
+  --pop-x: 0px;
+  --pop-y: 0px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate3d(0, var(--hide), var(--z)) scale(0.2);
+}
+
+/* bandana head */
+.enemy::before {
+  content: "";
+  position: absolute;
+  left: 30px;
+  top: 0;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 58%, #222 6px, transparent 7px),
+    radial-gradient(circle at 65% 58%, #222 6px, transparent 7px),
+    linear-gradient(#d43a2f 0 40%, #e8b06a 40%);
+}
+
+/* striped shirt body */
+.enemy::after {
+  content: "";
+  position: absolute;
+  left: 15px;
+  top: 62px;
+  width: 90px;
+  height: 108px;
+  border-radius: 18px 18px 10px 10px;
+  background:
+    repeating-linear-gradient(0deg,
+      #f2f2e9 0 14px, #d43a2f 14px 28px);
+}
+
+.boss { width: 150px; height: 210px; }
+.boss::before {
+  left: 40px;
+  width: 70px;
+  height: 70px;
+  background:
+    radial-gradient(circle at 35% 58%, #222 7px, transparent 8px),
+    radial-gradient(circle at 65% 58%, #222 7px, transparent 8px),
+    linear-gradient(#3d2f8f 0 40%, #e8b06a 40%);
+}
+.boss::after {
+  left: 20px;
+  top: 72px;
+  width: 110px;
+  height: 132px;
+  background: linear-gradient(#3d2f8f, #2b2066);
+}
+
+/* pop offsets step each pirate out from behind cover */
+.e1 { left: -240px; top: -40px; --z: 70px; --pop-x: 135px; }
+.e2 { left: 110px;  top: -40px; --z: 50px; --pop-x: -115px; }
+.e3 { left: -335px; top: -50px; --z: 80px; --pop-x: 155px; }
+.e4 { left: -75px;  top: -80px; --z: 60px; --pop-y: -45px; }
+
+.shoot {
+  position: absolute;
+  inset: -14px;
+  z-index: 5; /* above the ::before / ::after pirate art */
+  cursor: crosshair;
+}
+
+/* --- enemy timelines: pop out, hold, then attack --- */
+#wp-dock:checked  ~ .viewport .e1 { animation: pop-attack 7s linear forwards; }
+#wp-deck:checked  ~ .viewport .e2 { animation: pop-attack 6.5s linear forwards; }
+#wp-deck:checked  ~ .viewport .e3 { animation: pop-attack 9.5s linear forwards; }
+#wp-cabin:checked ~ .viewport .e4 { animation: pop-attack 8s linear forwards; }
+
+@keyframes pop-attack {
+  0%, 18% {
+    transform: translate3d(0, var(--hide), var(--z)) scale(0.2);
+    opacity: 0;
+    pointer-events: none;
+  }
+  30%, 88% {
+    transform: translate3d(var(--pop-x), var(--pop-y), var(--z));
+    opacity: 1;
+    pointer-events: auto;
+  }
+  96%, 100% {
+    transform:
+      translate3d(var(--pop-x), calc(var(--pop-y) - 30px),
+        calc(var(--z) + 180px))
+      scale(1.15);
+    opacity: 1;
+    pointer-events: auto;
+    filter: brightness(1.25) saturate(1.6);
+  }
+}
+
+/* --- kill reaction (must come after the pop rules to win the cascade) --- */
+#kill-e1:checked ~ .viewport .e1,
+#kill-e2:checked ~ .viewport .e2,
+#kill-e3:checked ~ .viewport .e3,
+#kill-e4:checked ~ .viewport .e4 {
+  animation: hit 0.5s ease-in forwards;
+  pointer-events: none;
+}
+
+@keyframes hit {
+  0% {
+    transform:
+      translate3d(var(--pop-x), var(--pop-y), calc(var(--z) + 40px))
+      scale(1.1);
+    opacity: 1;
+    filter: brightness(2.4);
+  }
+  100% {
+    transform:
+      translate3d(var(--pop-x), 150px, var(--z)) rotate(90deg) scale(0.6);
+    opacity: 0;
+  }
+}
+
+/* --- hud --- */
+.hud {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 40;
+  padding: 10px 22px;
+  border-radius: 999px;
+  background: rgba(16, 28, 44, 0.8);
+  border: 2px solid #ffd76b;
+  color: #ffd76b;
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  pointer-events: none;
+}
+.score::after { content: ": " counter(kills) " / 4 \2620"; }
+#wp-title:checked ~ .hud { display: none; }
+
+/* --- buttons --- */
+.btn {
+  display: inline-block;
+  padding: 14px 36px;
+  border: 0;
+  border-radius: 999px;
+  background: #ffd76b;
+  color: #3f2812;
+  font-size: 22px;
+  font-weight: bold;
+  font-family: inherit;
+  letter-spacing: 1px;
+  cursor: pointer;
+  box-shadow: 0 5px 0 #b8862a;
+}
+.btn:hover { transform: translateY(2px); box-shadow: 0 3px 0 #b8862a; }
+
+/* --- rail advance buttons (appear once the stop is cleared) --- */
+.advance {
+  display: none;
+  position: fixed;
+  bottom: 34px;
+  left: 0;
+  right: 0;
+  width: max-content;
+  margin: 0 auto;
+  z-index: 45;
+}
+#wp-dock:checked ~ #kill-e1:checked ~ .adv-deck { display: block; }
+#wp-deck:checked ~ #kill-e2:checked ~ #kill-e3:checked ~ .adv-cabin {
+  display: block;
+}
+
+/* --- full-screen overlays --- */
+.screen {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  text-align: center;
+  padding: 24px;
+}
+
+.screen h1 {
+  font-size: 60px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-shadow: 4px 4px 0 rgba(0, 0, 0, 0.25);
+}
+
+.crest { font-size: 72px; line-height: 1; }
+.sub { font-size: 20px; max-width: 560px; }
+.fine { font-size: 13px; opacity: 0.75; }
+
+/* title */
+.title-screen {
+  display: none;
+  z-index: 80;
+  background: radial-gradient(circle at 50% 30%, #2f7fb8, #123c60 75%);
+  color: #ffe9c9;
+}
+#wp-title:checked ~ .title-screen { display: flex; }
+.title-screen h1 { color: #ffd76b; }
+
+/* game over: each enemy arms a timer that reveals its overlay
+   at the attack moment, unless its kill flag is checked first */
+.go {
+  z-index: 60;
+  visibility: hidden;
+  opacity: 0;
+  background: radial-gradient(circle at 50% 40%, #8f1f14, #4a0d07 80%);
+  color: #ffe9c9;
+}
+
+#wp-dock:checked  ~ .go-e1 { animation: doom 7s linear forwards; }
+#wp-deck:checked  ~ .go-e2 { animation: doom 6.5s linear forwards; }
+#wp-deck:checked  ~ .go-e3 { animation: doom 9.5s linear forwards; }
+#wp-cabin:checked ~ .go-e4 { animation: doom 8s linear forwards; }
+
+#kill-e1:checked ~ .go-e1,
+#kill-e2:checked ~ .go-e2,
+#kill-e3:checked ~ .go-e3,
+#kill-e4:checked ~ .go-e4 { animation: none; }
+
+@keyframes doom {
+  0%, 99.9% { visibility: hidden; opacity: 0; }
+  100% { visibility: visible; opacity: 1; }
+}
+
+/* win: all four kill flags checked */
+.win {
+  display: none;
+  z-index: 70;
+  background: radial-gradient(circle at 50% 40%, #ffd76b, #d98f1f 80%);
+  color: #3f2812;
+}
+
+#kill-e1:checked ~ #kill-e2:checked ~ #kill-e3:checked
+  ~ #kill-e4:checked ~ .win {
+  display: flex;
+}
