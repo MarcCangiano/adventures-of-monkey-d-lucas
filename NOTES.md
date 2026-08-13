@@ -73,9 +73,14 @@ marccangiano.com linking OUT to the Pages URLs (site stays lightweight —
 Boss's rule; shrimpy thumb already in WP media, id 93).
 
 ## High scores (2026-08-13)
-IN-GAME ONLY, localStorage (mdl-scores top 25, mdl-name remembered). Board
-renders on the title screen (compact top-10) and the win screen; a run only
-lands on the board after finishing all ten seas; rank = kills, tie = acc.
+GLOBAL via Supabase (uaprljmhdbjymqlxaezo.supabase.co, publishable key in
+game.js — public read+insert only, no update/delete policies, DB trigger
+trims each board to 10; setup SQL: supabase-setup.sql; creds ALSO in
+~/.openclaw/master.env, refreshed 2026-08-13 — the old baghmu... project is
+DEAD/NXDOMAIN). TWO boards: kills (value=run kills, extra=acc) and boss
+(value=avg tracking pct). Shown on title + win screens; carve on the win
+screen submits to both; only finished 10-sea runs count; mdl-name
+remembered locally. Seed entry: Capt Lucas.
 Boss REJECTED storing scores on marccangiano.com (a working WP snippet
 endpoint was built, tested and fully DELETED same hour — code kept at
 marccangiano-backup/snippet-scores.php if a shared board is ever wanted;

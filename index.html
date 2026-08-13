@@ -24,7 +24,10 @@
     <p class="keys"><span>mouse</span> aim &nbsp; <span>click</span> shoot
     &nbsp; <span>hold aim</span> on a moving boss to take him down</p>
     <button id="start">Set sail</button>
-    <ol class="hs-board compact" id="hs-board-lobby"></ol>
+    <div class="hs-boards compact">
+      <div><p class="hs-h">Cutthroat board</p><ol class="hs-board" id="hs-kills-lobby"></ol></div>
+      <div><p class="hs-h">Captain trackers</p><ol class="hs-board" id="hs-boss-lobby"></ol></div>
+    </div>
   </div>
 
   <div class="overlay hidden" id="levelup">
@@ -56,7 +59,10 @@
         placeholder="your pirate name">
       <button id="hs-save">Carve it in</button>
     </div>
-    <ol class="hs-board" id="hs-board-win"></ol>
+    <div class="hs-boards">
+      <div><p class="hs-h">Cutthroat board</p><ol class="hs-board" id="hs-kills-win"></ol></div>
+      <div><p class="hs-h">Captain trackers</p><ol class="hs-board" id="hs-boss-win"></ol></div>
+    </div>
     <button class="retry">Sail again</button>
   </div>
 </div>

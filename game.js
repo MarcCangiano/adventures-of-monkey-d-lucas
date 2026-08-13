@@ -285,7 +285,7 @@
           const hsBtn = document.getElementById('hs-save');
           hsBtn.disabled = false;
           hsBtn.textContent = 'Carve it in';
-          hsRender(document.getElementById('hs-board-win'), hsLoad());
+          hsRefresh('win');
           showOverlay('win');
         }
         return;
@@ -874,48 +874,89 @@
   requestAnimationFrame(frame);
   startLobby();   // instant where the browser allows; else first gesture
 
-  // ---- high scores: kept in this browser (no server, Boss's call).
-  // A run only lands on the board when all ten seas are finished.
-  function hsLoad() {
-    try { return JSON.parse(localStorage.getItem('mdl-scores')) || []; }
-    catch (e) { return []; }
+  // ---- high scores: GLOBAL, two boards, via Supabase (public read +
+  // insert only; a DB trigger keeps just the top 10 per board).
+  //   'kills' board: total cutthroats in a finished run (tie: accuracy)
+  //   'boss'  board: average captain-tracking % across the run
+  const SB_URL = 'https://uaprljmhdbjymqlxaezo.supabase.co';
+  const SB_KEY = 'sb_publishable_ejanCO8WYDc07AOJf5Jklg_BZ1ULs3I';
+  async function hsFetch(board) {
+    const r = await fetch(SB_URL + '/rest/v1/scores?board=eq.' + board +
+      '&select=name,value,extra&order=value.desc,extra.desc,created_at.asc&limit=10',
+      { headers: { apikey: SB_KEY } });
+    if (!r.ok) throw new Error('fetch ' + r.status);
+    return r.json();
   }
-  function hsRender(el, list, mine) {
+  async function hsSubmit(board, row) {
+    const r = await fetch(SB_URL + '/rest/v1/scores', {
+      method: 'POST',
+      headers: { apikey: SB_KEY, 'Content-Type': 'application/json',
+                 Prefer: 'return=minimal' },
+      body: JSON.stringify(Object.assign({ board }, row)),
+    });
+    if (!r.ok) throw new Error('submit ' + r.status);
+  }
+  function hsRender(el, list, board, mine) {
     if (!el) return;
     el.innerHTML = '';
-    for (const s of list.slice(0, 10)) {
+    if (!list.length) {
       const li = document.createElement('li');
-      if (mine && s === mine) li.className = 'me';
+      li.textContent = 'no scores carved yet';
+      el.appendChild(li);
+      return;
+    }
+    for (const s of list) {
+      const li = document.createElement('li');
+      if (mine && s.name === mine.name && s.value === mine.value) li.className = 'me';
       const n = document.createElement('span');
       n.className = 'n';
       n.textContent = s.name;
       const v = document.createElement('span');
-      v.textContent = `${s.kills} kills · ${s.acc}% · ${s.track}% tracked`;
+      v.textContent = board === 'kills'
+        ? s.value + ' kills · ' + s.extra + '%'
+        : s.value + '% tracked';
       li.append(n, v);
       el.appendChild(li);
     }
   }
+  async function hsRefresh(where, mine) {
+    for (const board of ['kills', 'boss']) {
+      const el = document.getElementById('hs-' + board + '-' + where);
+      try {
+        hsRender(el, await hsFetch(board), board,
+          mine && (board === 'kills' ? mine.kills : mine.boss));
+      } catch (e) {
+        if (el) el.innerHTML = '<li>the board is unreachable</li>';
+      }
+    }
+  }
   const hsInput = document.getElementById('hs-name');
   try { hsInput.value = localStorage.getItem('mdl-name') || ''; } catch (e) {}
-  hsRender(document.getElementById('hs-board-lobby'), hsLoad());
-  document.getElementById('hs-save').addEventListener('click', () => {
+  hsRefresh('lobby');
+  document.getElementById('hs-save').addEventListener('click', async () => {
     const name = hsInput.value.replace(/[^A-Za-z0-9 _\-\.]/g, '').trim().slice(0, 16);
     if (!name) { hsInput.focus(); return; }
     try { localStorage.setItem('mdl-name', name); } catch (e) {}
+    const btn = document.getElementById('hs-save');
+    btn.disabled = true;
+    btn.textContent = 'Carving…';
     const acc = TOT.shots ? Math.round(100 * TOT.hits / TOT.shots) : 100;
-    const entry = { name, kills: TOT.kills, acc,
-                    track: Math.round((TOT.onPct || 0) / LEVELS.length), t: Date.now() };
-    const list = hsLoad();
-    list.push(entry);
-    list.sort((a, b) => (b.kills - a.kills) || (b.acc - a.acc));
-    try { localStorage.setItem('mdl-scores', JSON.stringify(list.slice(0, 25))); } catch (e) {}
-    hsRender(document.getElementById('hs-board-win'), hsLoad(), entry);
-    hsRender(document.getElementById('hs-board-lobby'), hsLoad());
-    document.getElementById('hs-save').disabled = true;
-    document.getElementById('hs-save').textContent = 'Carved';
+    const track = Math.max(1, Math.round((TOT.onPct || 0) / LEVELS.length));
+    const mine = { kills: { name, value: Math.max(1, TOT.kills), extra: acc },
+                   boss: { name, value: track } };
+    try {
+      await hsSubmit('kills', mine.kills);
+      await hsSubmit('boss', mine.boss);
+      btn.textContent = 'Carved';
+    } catch (e) {
+      btn.textContent = 'Board unreachable';
+      btn.disabled = false;
+    }
+    await hsRefresh('win', mine);
+    hsRefresh('lobby');
   });
 
-  // test hooks
+  // test hooks  // test hooks
   window.__pirate = {
     get state() { return S; },
     get levels() { return LEVELS.length; },
