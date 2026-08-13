@@ -43,7 +43,7 @@
   function diff(i) {
     return {
       phaseTime: 60,               // the pop-up gauntlet: one minute
-      bossTime: 30,                // then 30 seconds to pin the captain
+      bossTime: 60,                // then a full minute tracking the captain
       killWindow: 2.4 - i * 0.09,
       bossSpeed: 1.5 + i * 0.42,      // path-speed multiplier
       trackNeed: 2.8 + i * 0.35,
@@ -168,10 +168,10 @@
   function makeBoss() {
     S.bossPhase = true;
     S.bossT = S.d.bossTime;
-    S.boss = { tt: Math.random() * 10, x: 640, y: 400, track: 0,
-               spd: 1, spdTarget: 1, spdT: 0,
-               volleyT: S.d.volleyEvery, dead: false, deadT: 0, ticks: 0 };
-    S.cap = 'the captain shows himself — hold your aim on him';
+    S.boss = { tt: Math.random() * 10, x: 640, y: 400, onT: 0,
+               spd: 1, spdTarget: 1, spdT: 0, laughT: 4 + Math.random() * 5,
+               hop: 0 };
+    S.cap = 'the captain shows himself — stay on him for the minute';
     S.capT = 3;
     SFX.bossShow();
   }
@@ -235,54 +235,22 @@
 
       }
       S.foes = S.foes.filter(f => f.alive || f.deadT < 0.32);
-    } else if (S.boss && !S.boss.dead) {
+    } else if (S.boss) {
       const B = S.boss;
       S.bossT -= dt;
       if (S.bossT <= 0) {
-        S.over = true; stopMusic(); SFX.over();
-        document.getElementById('go-line').textContent =
-          'The captain slipped away — thirty seconds is all you get.';
-        showOverlay('gameover');
-        return;
-      }
-      // he sails a weaving course, quicker each sea and quicker still
-      // the closer you are to pinning him — and his pace lurches at
-      // random between dead-slow drifts and sudden sprints
-      B.spdT -= dt;
-      if (B.spdT <= 0) {
-        B.spdTarget = 0.35 + Math.random() * 2.15;
-        B.spdT = 0.5 + Math.random() * 1.2;
-      }
-      B.spd += (B.spdTarget - B.spd) * Math.min(1, dt * 4);
-      B.tt += dt * d.bossSpeed * B.spd * (1 + B.track * 0.9);
-      B.x = 640 + Math.sin(B.tt * 0.9) * 320 + Math.sin(B.tt * 0.37 + 2) * 140;
-      B.y = 390 + Math.sin(B.tt * 0.7 + 1) * 110 + Math.sin(B.tt * 1.31) * 40;
-      B.x = Math.max(130, Math.min(1150, B.x));
-      B.y = Math.max(285, Math.min(535, B.y));
-      const on = Math.hypot(S.aim.x - B.x, S.aim.y - B.y) < d.bossR;
-      if (on) B.track = Math.min(1, B.track + dt / d.trackNeed);
-      else B.track = Math.max(0, B.track - dt * 0.45);
-      const q = (B.track * 4) | 0;
-      if (q > B.ticks && q < 4) { B.ticks = q; SFX.tick(q); }
-      if (B.track >= 1) {
-        B.dead = true;
-        B.deadT = 0;
-        TOT.bosses++;
-        S.shake = 0.7;
-        SFX.bossDown();
-      }
-    } else if (S.boss && S.boss.dead) {
-      S.boss.deadT += dt;
-      if (S.boss.deadT > 1.1) {
+        // the bell rings — level done, scored on time-on-target
         TOT.hits += S.hits; TOT.shots += S.shots; TOT.kills += S.kills;
+        const acc = S.shots ? Math.round(100 * S.hits / S.shots) : 100;
+        const onPct = Math.round(100 * B.onT / S.d.bossTime);
+        TOT.onPct = ((TOT.onPct || 0) + onPct);
         if (S.level < LEVELS.length - 1) {
           S.levelDone = true;
           document.getElementById('lv-kicker').textContent =
             S.pal.name.toLowerCase() + ' — cleared';
-          const acc = S.shots ? Math.round(100 * S.hits / S.shots) : 100;
           document.getElementById('lv-line').textContent =
-            `${S.kills} cutthroats in the minute at ${acc}% accuracy, ` +
-            `captain taken. Next: ${LEVELS[S.level + 1].name}.`;
+            `${S.kills} cutthroats at ${acc}% accuracy, and you held the ` +
+            `captain ${onPct}% of his minute. Next: ${LEVELS[S.level + 1].name}.`;
           stopMusic();
           SFX.levelup();
           showOverlay('levelup');
@@ -290,13 +258,43 @@
           S.won = true;
           stopMusic();
           SFX.win();
-          const acc = TOT.shots ? Math.round(100 * TOT.hits / TOT.shots) : 100;
+          const tacc = TOT.shots ? Math.round(100 * TOT.hits / TOT.shots) : 100;
           document.getElementById('win-line').textContent =
-            `${TOT.kills} cutthroats and ${TOT.bosses} captains across ten seas · ` +
-            `${acc}% accuracy.`;
+            `${TOT.kills} cutthroats across ten seas · ${tacc}% accuracy · ` +
+            `average captain-tracking ${Math.round(TOT.onPct / LEVELS.length)}%.`;
           showOverlay('win');
         }
+        return;
       }
+      // he sails a weaving course, quicker as his minute burns down —
+      // and his pace lurches at random between drifts and sprints
+      B.spdT -= dt;
+      if (B.spdT <= 0) {
+        B.spdTarget = 0.35 + Math.random() * 2.15;
+        B.spdT = 0.5 + Math.random() * 1.2;
+      }
+      B.spd += (B.spdTarget - B.spd) * Math.min(1, dt * 4);
+      const ramp = 1 + (1 - S.bossT / S.d.bossTime) * 0.9;
+      B.tt += dt * d.bossSpeed * B.spd * ramp;
+      B.x = 640 + Math.sin(B.tt * 0.9) * 320 + Math.sin(B.tt * 0.37 + 2) * 140;
+      B.y = 390 + Math.sin(B.tt * 0.7 + 1) * 110 + Math.sin(B.tt * 1.31) * 40;
+      B.x = Math.max(130, Math.min(1150, B.x));
+      B.y = Math.max(285, Math.min(535, B.y));
+      const on = Math.hypot(S.aim.x - B.x, S.aim.y - B.y) < d.bossR;
+      if (on) B.onT += dt;
+      // the old sea dog has a laugh at your expense now and then
+      B.laughT -= dt;
+      if (B.laughT <= 0) {
+        B.laughT = 7 + Math.random() * 6;
+        B.hop = 1;
+        try {
+          const la = new Audio('music/boss-laugh.mp3');
+          la.volume = 0.5;
+          const lp = la.play();
+          if (lp && lp.catch) lp.catch(() => {});
+        } catch (e) { /* no audio */ }
+      }
+      B.hop = Math.max(0, B.hop - dt * 0.8);
     }
 
     // fx timers
@@ -654,19 +652,13 @@
     const SP = window.PSPRITES;
     const d = S.d;
     cx.save();
-    cx.translate(B.x, B.y);
-    if (B.dead) {
-      const k = Math.min(1, B.deadT / 1.1);
-      cx.globalAlpha = 1 - k;
-      cx.translate(0, k * 60);
-      cx.rotate(k * 0.6);
-    }
+    cx.translate(B.x, B.y - Math.sin(B.hop * Math.PI) * 16);
     const sc = d.bossR / 66;
     cx.scale(sc, sc);
-    cx.rotate(Math.sin(B.tt * 2) * 0.06);
+    cx.rotate(Math.sin(B.tt * 2) * 0.06 + Math.sin(B.hop * Math.PI * 3) * 0.08);
 
     // hover = lock: gold aura says "just hold it here"
-    if (!B.dead && Math.hypot(S.aim.x - B.x, S.aim.y - B.y) < d.bossR * sc * (66 / d.bossR)) {
+    if (Math.hypot(S.aim.x - B.x, S.aim.y - B.y) < d.bossR * sc * (66 / d.bossR)) {
       if (!GR.bossLock) {
         GR.bossLock = cx.createRadialGradient(0, -10, 20, 0, -10, 130);
         GR.bossLock.addColorStop(0, 'rgba(255,201,77,.32)');
@@ -718,23 +710,6 @@
     }
     cx.restore();
 
-    if (!B.dead) {
-      // track meter: a bar over his mast, not a circle
-      const bw = 96, bx = B.x - bw / 2, by = B.y + d.bossR + 26;
-      cx.save();
-      cx.fillStyle = 'rgba(20,12,6,.72)';
-      if (cx.roundRect) { cx.beginPath(); cx.roundRect(bx, by, bw, 10, 5); cx.fill(); }
-      cx.fillStyle = '#ffc94d';
-      if (cx.roundRect) { cx.beginPath(); cx.roundRect(bx, by, bw * B.track, 10, 5); cx.fill(); }
-      cx.restore();
-    } else if (B.deadT < 0.5) {
-      cx.save();
-      cx.globalAlpha = 1 - B.deadT * 2;
-      cx.strokeStyle = '#ffc94d';
-      cx.lineWidth = 4;
-      cx.beginPath(); cx.arc(B.x, B.y, d.bossR + B.deadT * 160, 0, 7); cx.stroke();
-      cx.restore();
-    }
   }
 
   function drawGun() {
@@ -777,7 +752,7 @@
 
   function drawCrosshair() {
     const a = S.aim;
-    const onBoss = S.bossPhase && S.boss && !S.boss.dead &&
+    const onBoss = S.bossPhase && S.boss &&
       Math.hypot(a.x - S.boss.x, a.y - S.boss.y) < S.d.bossR;
     cx.save();
     cx.strokeStyle = onBoss ? '#ffc94d' : 'rgba(255,255,255,.9)';
@@ -812,8 +787,11 @@
     const secs = Math.max(0, Math.ceil(tLeft));
     const clock = `${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}`;
     const acc = S.shots ? Math.round(100 * S.hits / S.shots) : 100;
+    const onPctLive = S.bossPhase && S.boss
+      ? Math.round(100 * S.boss.onT / Math.max(0.001, S.d.bossTime - S.bossT))
+      : 0;
     cx.fillText(S.bossPhase
-      ? `TRACK THE CAPTAIN · ${clock}`
+      ? `TRACK THE CAPTAIN · ${clock} · on him ${onPctLive}%`
       : `${clock} · ${S.kills} down · ${acc}%`, W / 2, 34);
     cx.restore();
     // caption
