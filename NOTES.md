@@ -78,7 +78,7 @@ game.js — public read+insert only, no update/delete policies, DB trigger
 trims each board to 10; setup SQL: supabase-setup.sql; creds ALSO in
 ~/.openclaw/master.env, refreshed 2026-08-13 — the old baghmu... project is
 DEAD/NXDOMAIN). TWO boards: kills (value=run kills, extra=acc) and boss
-(value=avg tracking pct). NAME IS REQUIRED UP FRONT: title-screen input gates Set sail (disabled until non-empty; mdl-name remembered); a finished 10-sea run AUTO-SUBMITS to both boards under that name (hs-status line reports carved/unreachable). No carve button anymore. Seed entry: Capt Lucas.
+(value=avg tracking pct). NAME IS REQUIRED UP FRONT: title-screen input gates Set sail (disabled until non-empty; mdl-name remembered); a finished 10-sea run AUTO-SUBMITS to both boards under that name (hs-status line reports carved/unreachable). No carve button anymore. QUIT: Esc or the strike-colors control (bottom-left, click rect x<210 y>H-40) ends the run on the results screen and carves partial stats (kills always; boss board only if at least one boss fight has 3s+ elapsed; TOT.seas counts completed seas for the tracking average). Seed entry: Capt Lucas.
 Boss REJECTED storing scores on marccangiano.com (a working WP snippet
 endpoint was built, tested and fully DELETED same hour — code kept at
 marccangiano-backup/snippet-scores.php if a shared board is ever wanted;

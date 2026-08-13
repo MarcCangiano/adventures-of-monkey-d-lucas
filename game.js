@@ -134,7 +134,7 @@
   let S;
   const TOT = { hits: 0, shots: 0, kills: 0, bosses: 0 };
   function reset(levelIdx) {
-    if (levelIdx === 0) { TOT.hits = 0; TOT.shots = 0; TOT.kills = 0; TOT.bosses = 0; }
+    if (levelIdx === 0) { TOT.hits = 0; TOT.shots = 0; TOT.kills = 0; TOT.bosses = 0; TOT.onPct = 0; TOT.seas = 0; }
     const L = LEVELS[levelIdx];
     S = {
       t: 0, level: levelIdx, pal: L, d: diff(levelIdx),
@@ -204,6 +204,7 @@
   cv.addEventListener('mousedown', (e) => {
     if (S.over || S.won || S.levelDone) return;
     const p = canvasPos(e);
+    if (p.x < 210 && p.y > H - 40) { quitRun(); return; }
     S.aim.x = p.x; S.aim.y = p.y;
     shoot(p.x, p.y);
   });
@@ -264,6 +265,7 @@
         const acc = S.shots ? Math.round(100 * S.hits / S.shots) : 100;
         const onPct = Math.round(100 * B.onT / S.d.bossTime);
         TOT.onPct = ((TOT.onPct || 0) + onPct);
+        TOT.seas = (TOT.seas || 0) + 1;
         if (S.level < LEVELS.length - 1) {
           S.levelDone = true;
           document.getElementById('lv-kicker').textContent =
@@ -279,10 +281,12 @@
           stopMusic();
           SFX.win();
           const tacc = TOT.shots ? Math.round(100 * TOT.hits / TOT.shots) : 100;
+          document.querySelector('#win .kicker').textContent = 'ten seas, crossed';
+          document.querySelector('#win h1').textContent = 'Pirate King of the Meridian';
           document.getElementById('win-line').textContent =
             `${TOT.kills} cutthroats across ten seas · ${tacc}% accuracy · ` +
-            `average captain-tracking ${Math.round(TOT.onPct / LEVELS.length)}%.`;
-          hsAutoSubmit();
+            `average captain-tracking ${Math.round(TOT.onPct / Math.max(1, TOT.seas))}%.`;
+          hsAutoSubmit(TOT.seas);
           showOverlay('win');
         }
         return;
@@ -807,6 +811,14 @@
       ? `TRACK THE CAPTAIN · ${clock} · on him ${onPctLive}%`
       : `${clock} · ${S.kills} down · ${acc}%`, W / 2, 34);
     cx.restore();
+    // quit control, bottom-left
+    cx.save();
+    cx.font = '600 13px ui-monospace, Menlo, monospace';
+    cx.fillStyle = 'rgba(243,230,207,.55)';
+    cx.textAlign = 'left';
+    cx.fillText('\u2691 strike colors (Esc)', 22, H - 18);
+    cx.restore();
+
     // caption
     if (S.capT > 0) {
       cx.save();
@@ -818,6 +830,34 @@
       cx.restore();
     }
   }
+
+  // strike your colors: end the run early and take your score to the board
+  function quitRun() {
+    if (!running || S.won || S.over || S.levelDone || S.bossWait) return;
+    TOT.hits += S.hits; TOT.shots += S.shots; TOT.kills += S.kills;
+    let seas = TOT.seas || 0;
+    if (S.bossPhase && S.boss) {
+      const elapsed = S.d.bossTime - S.bossT;
+      if (elapsed > 3) {
+        TOT.onPct = (TOT.onPct || 0) + Math.round(100 * S.boss.onT / elapsed);
+        seas += 1;
+      }
+    }
+    S.won = true;
+    stopMusic();
+    SFX.over();
+    const tacc = TOT.shots ? Math.round(100 * TOT.hits / TOT.shots) : 100;
+    document.querySelector('#win .kicker').textContent = 'colors struck';
+    document.querySelector('#win h1').textContent = 'The Run Ends';
+    document.getElementById('win-line').textContent =
+      `${TOT.kills} cutthroats across ${TOT.seas || 0} of ten seas · ` +
+      `${tacc}% accuracy · captain-tracking ${Math.round((TOT.onPct || 0) / Math.max(1, seas))}%.`;
+    hsAutoSubmit(seas);
+    showOverlay('win');
+  }
+  addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') quitRun();
+  });
 
   // ------------------------------------------------------------- loop
   function showOverlay(id) { document.getElementById(id).classList.remove('hidden'); }
@@ -939,25 +979,32 @@
   hsRefresh('lobby');
 
   // a finished run carves itself onto both boards under the entered name
-  async function hsAutoSubmit() {
+  async function hsAutoSubmit(seas) {
     const name = cleanName() || 'Nameless Pirate';
     try { localStorage.setItem('mdl-name', name); } catch (e) {}
     const st = document.getElementById('hs-status');
-    st.textContent = 'carving your score into the board…';
     const acc = TOT.shots ? Math.round(100 * TOT.hits / TOT.shots) : 100;
-    const track = Math.max(1, Math.round((TOT.onPct || 0) / LEVELS.length));
-    const mine = { kills: { name, value: Math.max(1, TOT.kills), extra: acc },
-                   boss: { name, value: track } };
+    const track = Math.round((TOT.onPct || 0) / Math.max(1, seas || 0));
+    const mine = {};
+    if (TOT.kills > 0) mine.kills = { name, value: TOT.kills, extra: acc };
+    if (seas > 0 && track > 0) mine.boss = { name, value: track };
+    if (!mine.kills && !mine.boss) {
+      st.textContent = 'nothing to carve this time';
+      hsRefresh('win');
+      return;
+    }
+    st.textContent = 'carving your score into the board\u2026';
     try {
-      await hsSubmit('kills', mine.kills);
-      await hsSubmit('boss', mine.boss);
+      if (mine.kills) await hsSubmit('kills', mine.kills);
+      if (mine.boss) await hsSubmit('boss', mine.boss);
       st.textContent = 'carved in as ' + name;
     } catch (e) {
-      st.textContent = 'the board is unreachable — score not saved';
+      st.textContent = 'the board is unreachable \u2014 score not saved';
     }
     await hsRefresh('win', mine);
     hsRefresh('lobby');
   }
+
 
   // test hooks  // test hooks
   window.__pirate = {
