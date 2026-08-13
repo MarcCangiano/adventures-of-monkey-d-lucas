@@ -12,7 +12,9 @@ html, body {
 
 .stage {
   position: relative;
-  width: min(1280px, 100vw);
+  /* never larger than the viewport in EITHER direction */
+  width: min(1280px, 100vw, calc(100vh * 16 / 9));
+  width: min(1280px, 100vw, calc(100dvh * 16 / 9));
   aspect-ratio: 16 / 9;
 }
 
@@ -190,4 +192,13 @@ canvas { touch-action: none; }
   .hs-board { min-width: 0; font-size: 11px; }
   .hs-boards.compact .hs-board { min-width: 0; }
   button { font-size: 16px; padding: 10px 28px; }
+}
+
+/* short screens: overlays scroll instead of clipping */
+@media (max-height: 520px) {
+  .overlay { overflow-y: auto; justify-content: flex-start; padding: 14px; gap: 8px; }
+  .overlay h1 { font-size: 24px; }
+  .sub { font-size: 13px; }
+  .keys { display: none; }
+  .hs-board { max-height: 90px; }
 }
