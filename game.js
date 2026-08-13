@@ -6,6 +6,7 @@
 (() => {
   'use strict';
 
+  const COARSE = window.matchMedia && matchMedia('(pointer: coarse)').matches;
   const cv = document.getElementById('game');
   const cx = cv.getContext('2d', { alpha: false, desynchronized: true });
   const W = cv.width, H = cv.height;
@@ -47,7 +48,7 @@
       killWindow: 2.4 - i * 0.09,
       bossSpeed: (1.5 + i * 0.42) * 1.25,  // path-speed multiplier, +25%
       trackNeed: 2.8 + i * 0.35,
-      bossR: 54 - i * 1.6,
+      bossR: (54 - i * 1.6) * (COARSE ? 1.2 : 1),
       volleyEvery: 6.5 - i * 0.35,
     };
   }
@@ -186,7 +187,8 @@
     S.bossT = S.d.bossTime;
     S.boss = { tt: Math.random() * 10, x: 640, y: 400, onT: 0,
                spd: 1, spdTarget: 1, spdT: 0, laughT: 5 + Math.random() * 5 };
-    S.cap = 'the captain shows himself — stay on him for the minute';
+    S.cap = COARSE ? 'the captain shows himself — keep your finger on him'
+      : 'the captain shows himself — stay on him for the minute';
     S.capT = 3;
     SFX.bossShow();
   }
@@ -208,6 +210,24 @@
     S.aim.x = p.x; S.aim.y = p.y;
     shoot(p.x, p.y);
   });
+  function touchPos(t) {
+    const r = cv.getBoundingClientRect();
+    return { x: (t.clientX - r.left) * (W / r.width),
+             y: (t.clientY - r.top) * (H / r.height) };
+  }
+  cv.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    if (S.over || S.won || S.levelDone) return;
+    const p = touchPos(e.changedTouches[0]);
+    if (p.x < 210 && p.y > H - 40) { quitRun(); return; }
+    S.aim.x = p.x; S.aim.y = p.y;
+    if (!S.bossPhase) shoot(p.x, p.y);
+  }, { passive: false });
+  cv.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+    const p = touchPos(e.changedTouches[0]);
+    S.aim.x = p.x; S.aim.y = p.y;
+  }, { passive: false });
 
   function shoot(x, y) {
     S.recoil = 1;

@@ -84,3 +84,13 @@ endpoint was built, tested and fully DELETED same hour — code kept at
 marccangiano-backup/snippet-scores.php if a shared board is ever wanted;
 cross-player scores would need that or an external store, impossible from
 static Pages alone).
+
+## Mobile (2026-08-13)
+Touch = COARSE pointer check. Pirate: tap aims+shoots, touchmove drags aim
+(boss tracking = hold finger on him; bossR +20 pct on touch), quit zone
+tappable, portrait shows a rotate hint. Shrimpy: canvas-drawn buttons
+(left/right bottom-left, flick bottom-right, multi-touch via e.touches),
+typing via #kb-catch hidden input — #kb-btn appears at first lock, tap
+focuses it so the phone keyboard opens (iOS needs the gesture). Both:
+touch-action none + overlay font media queries. Assets cache-busted ?v=N —
+bump on every js/css change or phones replay stale builds for 10 min.
