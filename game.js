@@ -840,6 +840,7 @@
   }
   addEventListener('pointerdown', armLobby);
   addEventListener('keydown', armLobby);
+  addEventListener('mousemove', armLobby);   // free retry; some browsers allow
 
   document.getElementById('start').addEventListener('click', () => {
     ac();
