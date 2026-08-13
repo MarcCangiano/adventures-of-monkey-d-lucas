@@ -848,6 +848,7 @@
     hideOverlays();
     S.bossWait = false;
     makeBoss();
+    playTrack('music/boss.mp3');   // the duel gets its own theme
   });
   document.getElementById('next').addEventListener('click', () => {
     reset(S.level + 1); hideOverlays(); running = true;
