@@ -188,11 +188,18 @@ canvas { touch-action: none; }
   .hs-board { max-height: 90px; }
 }
 
-/* portrait phones: rotate the whole game to play landscape */
+/* portrait phones: rotate the whole game to play landscape.
+   position:fixed keeps the oversized layout box OUT of page flow — if it
+   overflows, mobile browsers inflate the layout viewport and every vw/vh
+   size goes wrong. */
 @media (orientation: portrait) and (pointer: coarse) {
+  html, body { overflow: hidden; }
   .stage {
+    position: fixed;
+    top: 50%;
+    left: 50%;
     width: min(1280px, 100vh, calc(100vw * 16 / 9));
     width: min(1280px, 100dvh, calc(100vw * 16 / 9));
-    transform: rotate(90deg);
+    transform: translate(-50%, -50%) rotate(90deg);
   }
 }
