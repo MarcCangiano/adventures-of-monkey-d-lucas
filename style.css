@@ -107,3 +107,42 @@ button:hover { background: transparent; color: #ffc94d; transform: translateY(-2
   from { transform: translateX(0); }
   to   { transform: translateX(175vw); }
 }
+
+/* high scores */
+.hs { display: flex; gap: 10px; }
+.hs input {
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 16px;
+  padding: 10px 14px;
+  width: 240px;
+  border: 1px solid #7a5a33;
+  border-radius: 8px;
+  background: #2b1c10;
+  color: #f3e6cf;
+}
+.hs input:focus { outline: 2px solid #ffc94d; }
+.hs button {
+  font-size: 16px;
+  padding: 10px 22px;
+}
+.hs-board {
+  list-style: none;
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 14px;
+  color: #e7d2ac;
+  min-width: 380px;
+  max-height: 180px;
+  overflow-y: auto;
+}
+.hs-board li {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 3px 10px;
+  border-radius: 6px;
+}
+.hs-board li.me { background: rgba(255, 201, 77, .15); color: #ffc94d; }
+.hs-board li .n::before { content: counter(hs) ". "; }
+.hs-board li { counter-increment: hs; }
+.hs-board { counter-reset: hs; }
+.hs-board.compact { font-size: 12.5px; max-height: 120px; min-width: 330px; }

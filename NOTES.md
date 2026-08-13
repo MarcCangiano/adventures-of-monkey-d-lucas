@@ -71,3 +71,13 @@ adventures-of-monkey-d-lucas, shrimpys-ocean-odyssey (snapclaw origin
 already preset). After push + Pages: add both thumbnails to
 marccangiano.com linking OUT to the Pages URLs (site stays lightweight —
 Boss's rule; shrimpy thumb already in WP media, id 93).
+
+## High scores (2026-08-13)
+IN-GAME ONLY, localStorage (mdl-scores top 25, mdl-name remembered). Board
+renders on the title screen (compact top-10) and the win screen; a run only
+lands on the board after finishing all ten seas; rank = kills, tie = acc.
+Boss REJECTED storing scores on marccangiano.com (a working WP snippet
+endpoint was built, tested and fully DELETED same hour — code kept at
+marccangiano-backup/snippet-scores.php if a shared board is ever wanted;
+cross-player scores would need that or an external store, impossible from
+static Pages alone).

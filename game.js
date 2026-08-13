@@ -282,6 +282,10 @@
           document.getElementById('win-line').textContent =
             `${TOT.kills} cutthroats across ten seas · ${tacc}% accuracy · ` +
             `average captain-tracking ${Math.round(TOT.onPct / LEVELS.length)}%.`;
+          const hsBtn = document.getElementById('hs-save');
+          hsBtn.disabled = false;
+          hsBtn.textContent = 'Carve it in';
+          hsRender(document.getElementById('hs-board-win'), hsLoad());
           showOverlay('win');
         }
         return;
@@ -869,6 +873,47 @@
   reset(0);
   requestAnimationFrame(frame);
   startLobby();   // instant where the browser allows; else first gesture
+
+  // ---- high scores: kept in this browser (no server, Boss's call).
+  // A run only lands on the board when all ten seas are finished.
+  function hsLoad() {
+    try { return JSON.parse(localStorage.getItem('mdl-scores')) || []; }
+    catch (e) { return []; }
+  }
+  function hsRender(el, list, mine) {
+    if (!el) return;
+    el.innerHTML = '';
+    for (const s of list.slice(0, 10)) {
+      const li = document.createElement('li');
+      if (mine && s === mine) li.className = 'me';
+      const n = document.createElement('span');
+      n.className = 'n';
+      n.textContent = s.name;
+      const v = document.createElement('span');
+      v.textContent = `${s.kills} kills · ${s.acc}% · ${s.track}% tracked`;
+      li.append(n, v);
+      el.appendChild(li);
+    }
+  }
+  const hsInput = document.getElementById('hs-name');
+  try { hsInput.value = localStorage.getItem('mdl-name') || ''; } catch (e) {}
+  hsRender(document.getElementById('hs-board-lobby'), hsLoad());
+  document.getElementById('hs-save').addEventListener('click', () => {
+    const name = hsInput.value.replace(/[^A-Za-z0-9 _\-\.]/g, '').trim().slice(0, 16);
+    if (!name) { hsInput.focus(); return; }
+    try { localStorage.setItem('mdl-name', name); } catch (e) {}
+    const acc = TOT.shots ? Math.round(100 * TOT.hits / TOT.shots) : 100;
+    const entry = { name, kills: TOT.kills, acc,
+                    track: Math.round((TOT.onPct || 0) / LEVELS.length), t: Date.now() };
+    const list = hsLoad();
+    list.push(entry);
+    list.sort((a, b) => (b.kills - a.kills) || (b.acc - a.acc));
+    try { localStorage.setItem('mdl-scores', JSON.stringify(list.slice(0, 25))); } catch (e) {}
+    hsRender(document.getElementById('hs-board-win'), hsLoad(), entry);
+    hsRender(document.getElementById('hs-board-lobby'), hsLoad());
+    document.getElementById('hs-save').disabled = true;
+    document.getElementById('hs-save').textContent = 'Carved';
+  });
 
   // test hooks
   window.__pirate = {

@@ -24,6 +24,7 @@
     <p class="keys"><span>mouse</span> aim &nbsp; <span>click</span> shoot
     &nbsp; <span>hold aim</span> on a moving boss to take him down</p>
     <button id="start">Set sail</button>
+    <ol class="hs-board compact" id="hs-board-lobby"></ol>
   </div>
 
   <div class="overlay hidden" id="levelup">
@@ -50,6 +51,12 @@
     <p class="kicker">ten seas, crossed</p>
     <h1>Pirate King of the Meridian</h1>
     <p class="sub" id="win-line"></p>
+    <div class="hs">
+      <input id="hs-name" maxlength="16" autocomplete="off"
+        placeholder="your pirate name">
+      <button id="hs-save">Carve it in</button>
+    </div>
+    <ol class="hs-board" id="hs-board-win"></ol>
     <button class="retry">Sail again</button>
   </div>
 </div>
