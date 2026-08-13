@@ -1,153 +1,58 @@
-# Skullwind Cove — pure HTML+CSS rail shooter
+# The Adventures of Monkey D. Lucas — notes
 
-## Current state (2026-08-11)
-Full game loop WORKS end to end AND art pass is done, both verified with
-Playwright + eyeballed screenshots. Playable and presentable.
+Pirate AIM TRAINER (canvas/JS). Renamed + rebuilt 2026-08-13 on Boss's
+overnight order; JS explicitly allowed now ("no restrictions").
+The ORIGINAL pure-CSS rail shooter lives in css-version/ — untouched, its
+own NOTES history is in git. Do not delete it; it is a portfolio piece.
 
-Art pass shipped: gradient-art pirates (bandana/eyepatch/cutlass, green and
-blue crew variants, captain with hat/coat/beard), dock harbor with anchored
-ship + bollards, deck wall with door + portholes, cabin with stern window,
-wall map, rug + treasure chest, corner pistol with recoil + muzzle flash on
-:active, vignette, waving title flag, bobbing advance buttons.
+## Game
+- Flick training: cutthroats pop up in rowboats on a big perspective sea
+  (horizon y=230, far foes draw smaller — f.sc). Each has a shrinking
+  timer ring; ring closes -> he fires -> -1 heart. Click (radius 56*sc)
+  to drop him.
+- Boss per sea: tracked, not clicked. He weaves (dual-sine path, tt
+  advanced by speedMul * (1 + track*0.9) — faster each sea AND faster as
+  you pin him). Hold aim inside his ring to fill track; off-aim decays
+  at 0.45/s. Quarter-fill ticks; volley timer costs a heart if you are
+  slow. track=1 -> down.
+- diff(i): kills 10+2i, spawn 1.45-0.085i, maxAlive 2+i/2, window
+  3.2-0.15i, bossSpeed 1+0.33i, trackNeed 2.8+0.35i, bossR 66-2i,
+  volley 6.5-0.35i.
+- 3 hearts; gameover retries the same sea; win after 10 with TOT stats
+  (kills, captains, accuracy). Boss-phase clicks don't count vs accuracy.
 
-- Files: index.html + style.css only. No JS anywhere (constraint is the point).
-- Theme: original pirates. Ship "Gilded Gull", villain "Snagglebeard", level
-  "Skullwind Cove". No franchise references.
+## Ten seas (LEVELS array: palette + prop + weather)
+1 Sunrise Harbor (docks) / 2 The Azure Run (ships) / 3 Squall's Teeth
+(rain + lightning flashes) / 4 The White Veil (fog) / 5 Parrot Cay
+(island+palms) / 6 Ember Reef (volcano + embers) / 7 The Glass Sea
+(icebergs + snow) / 8 Gallows Fleet (ghost ships + fog) / 9 The Devil's
+Gullet (maelstrom + spray) / 10 The Last Meridian (gold isle + god rays).
 
-## Engine (all working)
-- Camera rail: radio inputs #wp-title/#wp-dock/#wp-deck/#wp-cabin drive
-  .scene translateZ (areas sit at z -600/-1800/-3000, camera transitions 1.6s).
-- NINE enemies (2026-08-12 expansion): dock e1 barrel / e2 crate stack /
-  e3 second barrel; deck e4 mast / e5 crate / e6 hatch (climbs out) /
-  e7 cabin door; cabin e8 chest / e9 desk boss. Pop-out via `pop-attack`
-  keyframes with per-enemy --pop-x/--pop-y/--z/--hide vars. Durations:
-  7/9.5/12s dock, 6.5/8.5/10.5/13s deck, 7.5/10s cabin. Attack at 96%.
-  Pop lanes are tuned so no two popped enemies overlap click centers —
-  check screenshots after moving anyone.
-- Shooting: label.shoot (z-index 5 — MUST stay above ::before/::after art or
-  clicks hit the pseudo-elements and die) toggles hidden #kill-eN checkbox.
-- Lose: per-enemy .go-eN overlay armed by `doom` animation matching the enemy
-  duration; canceled by #kill-eN:checked ~ (animation: none). Keyframes hold
-  `visibility: hidden` 0-99.9% so the overlay can't eat clicks early.
-- Score: #kill-eN:checked counter-increment; inputs stay renderable (1px,
-  opacity 0, NOT display:none) or counters break.
-- Advance gating: .adv-deck / .adv-cabin labels shown by chained
-  #wp-X:checked ~ #kill-Y:checked selectors.
-- Win: 4-way :checked chain shows .win. Restart: button type=reset.
+## Sound
+SFX synthesized (shot/hit/volley/tick/bossShow/bossDown/levelup/win/over).
+MUSIC: 11 produced LOFI tracks via elevenlabs-music skill
+(music/level01..10.mp3 + lobby.mp3, regen: music/gen_tracks.sh). Prompts
+are original "nautical adventure lofi" — deliberately NO franchise names
+(the API rejects copyrighted references and we stay clean). Lobby cues on
+first gesture (armLobby), volume 0.12 everywhere.
 
-## Verified (all green)
-Script: scratchpad verify.js (session temp — recreate if gone; run with
-`cd ~/Documents/wp-e2e-kit && NODE_PATH=$PWD/node_modules node verify.js`).
-Checks: kill registers x4, advance gating, win screen, game over fires when
-e1 ignored, no game over after timely kill, reset from win AND game over.
-Screenshots of title/dock/deck/cabin/win/gameover all eyeballed.
+## Art/perf notes
+- Deck rail + foreshortened flintlock drawn AFTER deck (was hidden);
+  gun anchored W/2,H-26, scale 1.5, rotates to aim, star muzzle flash.
+- Gradients cached in GR; sky/sea cached per level (S.skyG/S.seaG);
+  ctx {alpha:false,desynchronized:true}; weather particles reuse pools.
+- Custom crosshair (cursor:none), gold + larger when locked on boss.
 
-## 2026-08-12 session, round 6 (combat feedback)
-- Player tracer: .tracer div animates on .viewport:active (0.22s streak
-  from the muzzle along the barrel angle). :active-driven, so it plays
-  per click; a released mouse cuts it — fine at this duration.
-- Enemy projectiles: .missile div in every .enemy; `throw` keyframes run
-  the SAME duration as that enemy's pop-attack so the knife launches at
-  96% and fills the screen at 100%. Fake the fly-at-camera with
-  translate+scale(6.5), NOT translateZ — the enemy's filter animation
-  flattens preserve-3d, so child translateZ does nothing.
-- Killed enemies must cancel their missile (9-selector animation:none
-  rule) or dead pirates still throw.
-- Hitmarkers: .enemy::before, gold X (white was invisible against the
-  brightness-flashed sprite), triggered per kill flag.
-- Red hit flash: second animation on .go — `go-flash 0.8s ease-out Ns
-  both` where N = that enemy's doom duration; brightness(3) -> none.
-  The kill cancel rule (animation: none) kills both animations.
+## Verify
+scratchpad/pirate-verify.js via wp-e2e-kit NODE_PATH. Hooks:
+window.__pirate {state, levels, music, aim(x,y), shoot(x,y), level(i),
+start()}. Checks: spawn, click-kill, expiry damage, boss appear/track/
+decay/death, levelup flow, all-10-seas screenshots.
 
-## 2026-08-12 session, round 5 (art v6 — anime-style character pass)
-- Boss wants "One Piece level." Pushed the SVG characters a full tier:
-  cel shading (per-figure shadow overlay + highlight strokes), variable
-  line weight (4px silhouettes / 2.25px interior), big toothy grins with
-  tooth lines, almond eyes with iris+glint, filled tapered brows, hair
-  tufts, whipping bandana tails, red tricorn plumes, jagged zigzag beards,
-  rolled sleeves with bare forearms, shell-guard cutlasses with blade
-  shine, sash tails, boot heels/cuffs/shine.
-- Captain: flared split-hem coat, cel shadow, braid trim, fringed
-  epaulettes, X scar, growl teeth inside the beard, tilted plumed bicorn,
-  pistol tucked in the sash.
-- Galleon: waterline foam scallops + reflection so it sits IN the sea.
-- Atmosphere: horizon haze line, flat cloud bank ellipses, 3 sea depth
-  bands (dock backdrop); wood knots on dock/deck floors.
-- Honest ceiling: hand-authored SVG won't literally match pro anime
-  illustration; next big lever would be real painted textures, which
-  means raster images — still no JS, but no longer "all code."
-
-## 2026-08-12 session, round 4 (art v5 — INLINE SVG, the big one)
-- Boss hated the gradient-blob art ("Sony/Xbox level"; gun still bent).
-  Answer: inline SVG. It is pure markup — no scripts, no handlers — so the
-  no-JS constraint holds. View-source stays clean.
-- All characters, the gun, the galleon, and hero props (barrel, crate,
-  chest, ship's wheel) are now hand-drawn SVG <symbol>s in a <defs> block
-  at the top of index.html, instanced with <use href="#id">.
-- CSS vars still drive per-enemy colors: fills use var(--band)/var(--shirt)
-  and pierce the <use> shadow DOM.
-- Gun "bent" complaint fixed for real: the stock-into-grip is ONE
-  continuous path — no more assembled rectangles.
-- Muzzle flash repositioned to the SVG barrel tip; verify.js now
-  screenshots mid-mousedown (02b-flash.png) to prove it.
-- Four pirate builds composed from shared part-symbols: bandana, tricorn,
-  bald-beard (angry, no patch), hook-hand; plus the boss (bicorn hat with
-  skull, epaulettes, sash, long coat).
-- Galleon placed at .ship top 16.5% so the hull sits IN the water —
-  at 7% it floated above the horizon.
-- Engine untouched: same inputs, labels, keyframes, chains. All checks
-  green after the rewrite.
-
-## 2026-08-12 session, round 3 (art v4 — deep pass)
-- Enemy TYPES, not just palette swaps: default bandana crew; .v-hat wears a
-  tricorn (.cap div, e2/e6); .v-beard is bald with brown beard + angry
-  brows, no eyepatch (e3/e7); .v-hook has a hook hand (e4). Boss unchanged.
-  Beard color is FIXED brown — never var(--band) (blue beards look wrong).
-- Living timeline: idle sway keyframes at 44/58/72%, then red warning
-  shake at 88-94% (telegraphs the attack), lunge at 96%. Every keyframe
-  must repeat opacity/pointer-events or the enemy flickers unclickable.
-- New set dressing: rope coil + lighthouse + sun rays (dock); ship's wheel
-  + glowing mast lantern (deck); bookshelf + flickering desk candle +
-  coin-stack gold pile (cabin).
-- Per-waypoint vignette tint via #wp-X:checked ~ .viewport::after
-  (bright blue dock, warm deck, dark amber cabin).
-- Title: starfield + shimmering gold h1 (background-clip: text — Chrome
-  needs -webkit- prefix; drop text-shadow or it shows through).
-- Win screen: looping coin shower via .win::before/::after, 200%-tall
-  layers translating 50% for a seamless loop.
-
-## 2026-08-12 session, round 2 (art v3)
-- Gun grip kink fixed: .wrist ellipse smooths the stock-to-grip bend; whole
-  .gun gets a silhouette outline via 4-way drop-shadow filter (outlines the
-  UNION, hides seams between overlapping parts — reuse this trick).
-- Pirates v3: 3px outlines, brows/nose/toothy grin, bandana knots, boot
-  cuffs, belt buckles, ground shadows (.enemy::after). Boss: epaulettes,
-  double button row, angry brows, mustache+beard, skull-and-bones hat.
-- Ambience: animated waterline glints (.waves) + drifting clouds (.clouds)
-  at the dock — both animate background-position only, NEVER transform
-  (transform keyframes would fight the translateZ plane placement).
-- Deck: rigging shrouds, brass porthole rims, "The Gilded Gull" plaque
-  (.sign) — plaque must sit at top -302px; higher projects behind the HUD.
-- Cabin: lantern glow, coins by the chest, red X on the map.
-- Title: sunset gradient, ship silhouette, proper skull+crossbones flag.
-- Go screens: big skull glyph via .go::before.
-
-## 2026-08-12 session
-- Boss feedback: gun didn't read as a gun; wanted many more villains.
-- Rebuilt pistol as proper flintlock (barrel/hammer/grip/trigger guard/
-  muzzle flash divs inside .gun, one rotation on the container).
-- Expanded 4 -> 9 enemies + new cover (crate stack, 2nd barrel, hatch).
-- Score now /9; advance + win chains extended; 9 game-over overlays.
-
-## Possible next steps (all optional, none started)
-1. A below-deck 4th combat stop.
-2. Water/cloud motion in the dock backdrop.
-3. Difficulty: shorten timers, or a hard mode via a :target variant.
-4. Sound is impossible without JS — do not chase it.
-
-## Gotchas learned
-- Pseudo-element art paints over the label -> label needs z-index.
-- Enemies must step OUT from cover (--pop-x), not rise behind it; cover
-  planes are closer on z and swallow clicks.
-- visibility animates "visible during interpolation" — keep both keyframe
-  endpoints hidden until the final frame or the overlay blocks input.
+## Status / pending
+All checks pass 2026-08-13, committed. NOT pushed: Boss creates GitHub
+repos for BOTH games tomorrow (this one + snapclaw). Suggested names:
+adventures-of-monkey-d-lucas, shrimpys-ocean-odyssey (snapclaw origin
+already preset). After push + Pages: add both thumbnails to
+marccangiano.com linking OUT to the Pages URLs (site stays lightweight —
+Boss's rule; shrimpy thumb already in WP media, id 93).
