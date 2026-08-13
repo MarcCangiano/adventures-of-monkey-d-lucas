@@ -45,9 +45,9 @@
       phaseTime: 60,               // the pop-up gauntlet: one minute
       bossTime: 60,                // then a full minute tracking the captain
       killWindow: 2.4 - i * 0.09,
-      bossSpeed: 1.5 + i * 0.42,      // path-speed multiplier
+      bossSpeed: (1.5 + i * 0.42) * 1.25,  // path-speed multiplier, +25%
       trackNeed: 2.8 + i * 0.35,
-      bossR: 66 - i * 2,
+      bossR: 54 - i * 1.6,
       volleyEvery: 6.5 - i * 0.35,
     };
   }
