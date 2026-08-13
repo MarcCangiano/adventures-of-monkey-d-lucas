@@ -10,8 +10,9 @@ own NOTES history is in git. Do not delete it; it is a portfolio piece.
   (horizon y=230, far foes draw smaller — f.sc). NO timer circles (Boss
   removed them): the telegraph is an ember glow + blink in the last 35%
   of the window; window expires -> he fires -> -1 heart. Click (radius
-  56*sc) to drop him. Fast pace: window 2.4-0.09i, spawn 1.05-0.05i,
-  pop-in dt*9, corpse gone in 0.32s.
+  56*sc) to drop him. GRIDSHOT rule: the target pool is always full —
+  the frame one drops (kill or expiry), the next spawns. Pace: window
+  2.4-0.09i, pop-in dt*9, corpse gone in 0.32s.
 - Boss per sea: tracked, not clicked. He weaves (dual-sine path, tt
   advanced by speedMul * (1 + track*0.9) — faster each sea AND faster as
   you pin him). Hold aim inside his ring to fill track; off-aim decays
@@ -48,7 +49,11 @@ first gesture (armLobby), volume 0.12 everywhere.
   deck barrel+crate all use it. Boss track meter is a BAR under his
   sloop (no circles). Flintlock sprite barrel points LEFT in-image:
   drawn with scale(-1,1) inside the rotate(ang) frame, grip anchor
-  (0.76,0.66), muzzle (0.66w,-0.28h).
+  (0.76,0.66), muzzle (0.66w,-0.28h). Anchored BOTTOM-RIGHT (W-245,
+  H-40) like the css version; scale(1,-1) inside the rotate when
+  cos(ang)<0 or the pistol renders upside down aiming left.
+- Boss is HOVER-ONLY (never was click) — gold aura + gold crosshair
+  while locked make that legible.
 - Gradients cached in GR; sky/sea cached per level (S.skyG/S.seaG);
   ctx {alpha:false,desynchronized:true}; weather particles reuse pools.
 - Custom crosshair (cursor:none), gold + larger when locked on boss.

@@ -215,13 +215,13 @@
     S.t += dt;
     const d = S.d;
 
-    // pop-up phase
+    // pop-up phase — gridshot style: a full pool of targets at all times,
+    // and the moment one drops the next appears
     if (!S.bossPhase) {
-      S.spawnT -= dt;
-      const alive = S.foes.filter(f => f.alive).length;
-      if (S.spawnT <= 0 && alive < d.maxAlive && S.kills + alive < d.killsNeeded) {
+      let alive = S.foes.filter(f => f.alive).length;
+      while (alive < d.maxAlive && S.kills + alive < d.killsNeeded) {
         spawnFoe();
-        S.spawnT = d.spawnEvery * (0.7 + Math.random() * 0.6);
+        alive++;
       }
       for (const f of S.foes) {
         if (!f.alive) { f.deadT += dt; continue; }
@@ -697,6 +697,16 @@
     cx.scale(sc, sc);
     cx.rotate(Math.sin(B.tt * 2) * 0.06);
 
+    // hover = lock: gold aura says "just hold it here"
+    if (!B.dead && Math.hypot(S.aim.x - B.x, S.aim.y - B.y) < d.bossR * sc * (66 / d.bossR)) {
+      if (!GR.bossLock) {
+        GR.bossLock = cx.createRadialGradient(0, -10, 20, 0, -10, 130);
+        GR.bossLock.addColorStop(0, 'rgba(255,201,77,.32)');
+        GR.bossLock.addColorStop(1, 'rgba(255,201,77,0)');
+      }
+      cx.fillStyle = GR.bossLock;
+      cx.beginPath(); cx.arc(0, -10, 130, 0, 7); cx.fill();
+    }
     // volley warning: the whole sloop glows hot
     if (!B.dead) {
       const vfrac = B.volleyT / d.volleyEvery;
@@ -778,15 +788,17 @@
   function drawGun() {
     const SP = window.PSPRITES;
     const a = S.aim;
-    const gx = W / 2, gy = H - 30;
+    const gx = W - 245, gy = H - 40;
     const ang = Math.atan2(a.y - gy, a.x - gx);
+    const left = Math.cos(ang) < 0;   // aiming into the left half-plane
     const rec = S.recoil * 11;
-    const gw = 225, gh = 161;      // drawn size of the flintlock sprite
+    const gw = 240, gh = 172;      // drawn size of the flintlock sprite
     const gripX = 0.76, gripY = 0.66;
     const muzX = gw * 0.66, muzY = -gh * 0.28;
     cx.save();
     cx.translate(gx - Math.cos(ang) * rec, gy - Math.sin(ang) * rec);
     cx.rotate(ang);
+    if (left) cx.scale(1, -1);     // keep the pistol right side up
     if (SP && SP.flintlock.ready) {
       cx.save();
       cx.scale(-1, 1);             // sprite barrel points left; flip to aim
@@ -811,8 +823,9 @@
     cx.restore();
     // tracer from the muzzle
     if (S.tracer) {
-      const mx = gx + Math.cos(ang) * muzX - Math.sin(ang) * muzY;
-      const my = gy + Math.sin(ang) * muzX + Math.cos(ang) * muzY;
+      const mY = left ? -muzY : muzY;
+      const mx = gx + Math.cos(ang) * muzX - Math.sin(ang) * mY;
+      const my = gy + Math.sin(ang) * muzX + Math.cos(ang) * mY;
       cx.save();
       cx.globalAlpha = 1 - S.tracer.t;
       cx.strokeStyle = 'rgba(255,230,150,.9)';
