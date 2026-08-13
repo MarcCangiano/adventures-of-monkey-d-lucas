@@ -7,9 +7,11 @@ own NOTES history is in git. Do not delete it; it is a portfolio piece.
 
 ## Game
 - Flick training: cutthroats pop up in rowboats on a big perspective sea
-  (horizon y=230, far foes draw smaller — f.sc). Each has a shrinking
-  timer ring; ring closes -> he fires -> -1 heart. Click (radius 56*sc)
-  to drop him.
+  (horizon y=230, far foes draw smaller — f.sc). NO timer circles (Boss
+  removed them): the telegraph is an ember glow + blink in the last 35%
+  of the window; window expires -> he fires -> -1 heart. Click (radius
+  56*sc) to drop him. Fast pace: window 2.4-0.09i, spawn 1.05-0.05i,
+  pop-in dt*9, corpse gone in 0.32s.
 - Boss per sea: tracked, not clicked. He weaves (dual-sine path, tt
   advanced by speedMul * (1 + track*0.9) — faster each sea AND faster as
   you pin him). Hold aim inside his ring to fill track; off-aim decays
@@ -30,15 +32,23 @@ Gullet (maelstrom + spray) / 10 The Last Meridian (gold isle + god rays).
 
 ## Sound
 SFX synthesized (shot/hit/volley/tick/bossShow/bossDown/levelup/win/over).
-MUSIC: 11 produced LOFI tracks via elevenlabs-music skill
+MUSIC: 11 produced SEA SHANTY instrumentals via elevenlabs-music skill
+(Boss switched from lofi 2026-08-13; prompts in gen_tracks.sh are
+accordion/fiddle/concertina work-song briefs, one mood per sea)
 (music/level01..10.mp3 + lobby.mp3, regen: music/gen_tracks.sh). Prompts
 are original "nautical adventure lofi" — deliberately NO franchise names
 (the API rejects copyrighted references and we stay clean). Lobby cues on
 first gesture (armLobby), volume 0.12 everywhere.
 
 ## Art/perf notes
-- Deck rail + foreshortened flintlock drawn AFTER deck (was hidden);
-  gun anchored W/2,H-26, scale 1.5, rotates to aim, star muzzle flash.
+- ART = the ORIGINAL SVG pirates from css-version, rasterized at 2x by
+  sprites.js (extracts nothing — assets-src.svg holds the defs block
+  copied from css-version/index.html; window.PSPRITES.{pirates[4], boss,
+  flintlock, galleon, barrel, crate}). Enemies/boss/gun/prop galleons/
+  deck barrel+crate all use it. Boss track meter is a BAR under his
+  sloop (no circles). Flintlock sprite barrel points LEFT in-image:
+  drawn with scale(-1,1) inside the rotate(ang) frame, grip anchor
+  (0.76,0.66), muzzle (0.66w,-0.28h).
 - Gradients cached in GR; sky/sea cached per level (S.skyG/S.seaG);
   ctx {alpha:false,desynchronized:true}; weather particles reuse pools.
 - Custom crosshair (cursor:none), gold + larger when locked on boss.

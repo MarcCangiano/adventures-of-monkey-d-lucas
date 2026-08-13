@@ -43,9 +43,9 @@
   function diff(i) {
     return {
       killsNeeded: 10 + i * 2,
-      spawnEvery: 1.45 - i * 0.085,
+      spawnEvery: 1.05 - i * 0.05,
       maxAlive: 2 + ((i / 2) | 0),
-      killWindow: 3.2 - i * 0.15,
+      killWindow: 2.4 - i * 0.09,
       bossSpeed: 1 + i * 0.33,        // path-speed multiplier
       trackNeed: 2.8 + i * 0.35,
       bossR: 66 - i * 2,
@@ -158,7 +158,7 @@
       S.foes.some(f => Math.abs(f.x - x) < 130 && Math.abs(f.y - y) < 110));
     S.foes.push({
       x, y, t: 0, window: S.d.killWindow, alive: true,
-      kind: (Math.random() * 3) | 0, flip: Math.random() < 0.5 ? -1 : 1,
+      kind: (Math.random() * 4) | 0, flip: Math.random() < 0.5 ? -1 : 1,
       pop: 0, sc: 0.55 + ((y - 160) / 400) * 0.6,
     });
   }
@@ -225,7 +225,7 @@
       }
       for (const f of S.foes) {
         if (!f.alive) { f.deadT += dt; continue; }
-        f.pop = Math.min(1, f.pop + dt * 5);
+        f.pop = Math.min(1, f.pop + dt * 9);
         f.t += dt;
         if (f.t >= f.window) {
           // he draws first
@@ -241,7 +241,7 @@
           }
         }
       }
-      S.foes = S.foes.filter(f => f.alive || f.deadT < 0.5);
+      S.foes = S.foes.filter(f => f.alive || f.deadT < 0.32);
       if (S.kills >= d.killsNeeded && !S.foes.some(f => f.alive)) makeBoss();
     } else if (S.boss && !S.boss.dead) {
       const B = S.boss;
@@ -407,6 +407,9 @@
     }
     cx.strokeStyle = 'rgba(255,220,170,.12)';
     cx.beginPath(); cx.moveTo(-20, H - 62); cx.lineTo(W + 20, H - 62); cx.stroke();
+    const SPd = window.PSPRITES;
+    if (SPd && SPd.barrel.ready) cx.drawImage(SPd.barrel.img, 44, H - 128, 66, 84);
+    if (SPd && SPd.crate.ready) cx.drawImage(SPd.crate.img, 1140, H - 116, 86, 74);
 
     drawGun();
 
@@ -452,20 +455,16 @@
       cx.moveTo(1125, HOR - 92); cx.lineTo(1178, HOR - 60); cx.lineTo(1125, HOR - 42);
       cx.closePath(); cx.fill();
     } else if (p === 'ships') {
-      cx.fillStyle = 'rgba(15,28,40,.7)';
-      for (const [sx, sc] of [[240, 1], [900, 0.7], [560, 0.45]]) {
-        cx.save();
-        cx.translate(sx, HOR + Math.sin(S.t * 0.8 + sx) * 2);
-        cx.scale(sc, sc);
-        cx.beginPath();
-        cx.moveTo(-70, 0); cx.quadraticCurveTo(0, 18, 80, -4);
-        cx.lineTo(64, -16); cx.lineTo(-58, -14);
-        cx.closePath(); cx.fill();
-        cx.fillRect(-6, -85, 4, 70);
-        cx.beginPath();
-        cx.moveTo(-2, -83); cx.lineTo(40, -55); cx.lineTo(-2, -36);
-        cx.closePath(); cx.fill();
-        cx.restore();
+      const SPg = window.PSPRITES;
+      if (SPg && SPg.galleon.ready) {
+        for (const [sx, sc, fl] of [[230, 0.42, 1], [890, 0.3, -1], [560, 0.2, 1]]) {
+          cx.save();
+          cx.translate(sx, HOR + 6 + Math.sin(S.t * 0.8 + sx) * 2);
+          cx.scale(sc * fl, sc);
+          cx.globalAlpha = 0.55 + sc;
+          cx.drawImage(SPg.galleon.img, -260, -320, 520, 340);
+          cx.restore();
+        }
       }
     } else if (p === 'island') {
       cx.fillStyle = 'rgba(20,60,42,.85)';
@@ -509,18 +508,16 @@
         cx.lineTo(bx + bw, HOR); cx.closePath(); cx.fill();
       }
     } else if (p === 'ghosts') {
-      cx.fillStyle = 'rgba(110,220,160,.16)';
-      for (const [sx, sc] of [[300, 1], [760, 0.8], [1080, 0.6]]) {
-        cx.save();
-        cx.translate(sx, HOR);
-        cx.scale(sc, sc);
-        cx.beginPath();
-        cx.moveTo(-80, 0); cx.quadraticCurveTo(0, 20, 90, -6); cx.lineTo(70, -22); cx.lineTo(-64, -18);
-        cx.closePath(); cx.fill();
-        cx.fillRect(-4, -100, 4, 80);
-        cx.beginPath();
-        cx.moveTo(0, -98); cx.lineTo(48, -60); cx.lineTo(0, -34); cx.closePath(); cx.fill();
-        cx.restore();
+      const SPh = window.PSPRITES;
+      if (SPh && SPh.galleon.ready) {
+        for (const [sx, sc, fl] of [[290, 0.36, 1], [760, 0.28, -1], [1080, 0.2, 1]]) {
+          cx.save();
+          cx.translate(sx, HOR + 6);
+          cx.scale(sc * fl, sc);
+          cx.globalAlpha = 0.16;
+          cx.drawImage(SPh.galleon.img, -260, -320, 520, 340);
+          cx.restore();
+        }
       }
     } else if (p === 'maelstrom') {
       cx.strokeStyle = 'rgba(160,210,230,.2)';
@@ -609,117 +606,75 @@
     }
   }
 
-  // a cutthroat popping up in his rowboat, timer ring closing around him
+  // a cutthroat popping up in his rowboat — the ORIGINAL SVG pirates,
+  // rasterized. No timer circle: he blinks red-hot just before he fires.
   function drawFoe(f) {
+    const SP = window.PSPRITES;
+    const frac = f.alive ? 1 - f.t / f.window : 0;
     cx.save();
     cx.translate(f.x, f.y);
     if (!f.alive) {
-      // sinks with a slash of powder smoke
-      const k = f.deadT / 0.5;
+      const k = f.deadT / 0.32;
       cx.globalAlpha = Math.max(0, 1 - k);
-      cx.translate(0, k * 34);
+      cx.translate(0, k * 40);
       cx.rotate(f.flip * k * 0.5);
     } else {
       const pop = 1 - Math.pow(1 - f.pop, 3);
       cx.scale(pop, pop);
     }
-    cx.scale(f.flip * f.sc, f.sc);
+    cx.scale(f.sc, f.sc);
+
+    // about to fire: an ember glow builds behind him and he blinks
+    if (f.alive && frac < 0.35) {
+      if (!GR.danger) {
+        GR.danger = cx.createRadialGradient(0, -20, 6, 0, -20, 78);
+        GR.danger.addColorStop(0, 'rgba(255,90,40,.5)');
+        GR.danger.addColorStop(1, 'rgba(255,90,40,0)');
+      }
+      cx.save();
+      cx.globalAlpha = 0.5 + 0.5 * Math.abs(Math.sin(S.t * 14));
+      cx.fillStyle = GR.danger;
+      cx.beginPath(); cx.arc(0, -20, 78, 0, 7); cx.fill();
+      cx.restore();
+      if (Math.floor(S.t * 12) % 2) cx.globalAlpha *= 0.6;
+    }
 
     // rowboat
     if (!GR.boat) {
-      GR.boat = cx.createLinearGradient(0, 26, 0, 46);
+      GR.boat = cx.createLinearGradient(0, 26, 0, 50);
       GR.boat.addColorStop(0, '#7a4d28'); GR.boat.addColorStop(1, '#4a2c14');
     }
     cx.fillStyle = GR.boat;
     cx.beginPath();
-    cx.moveTo(-46, 28);
-    cx.quadraticCurveTo(0, 48, 46, 28);
-    cx.lineTo(36, 40); cx.quadraticCurveTo(0, 52, -36, 40);
+    cx.moveTo(-52, 30);
+    cx.quadraticCurveTo(0, 52, 52, 30);
+    cx.lineTo(41, 44); cx.quadraticCurveTo(0, 58, -41, 44);
     cx.closePath(); cx.fill();
-
-    // torso + jacket
-    const jack = ['#7a2f2f', '#2f4d7a', '#3d6b3a'][f.kind];
-    cx.fillStyle = jack;
-    cx.beginPath();
-    cx.moveTo(-20, 30);
-    cx.quadraticCurveTo(-22, 2, 0, -2);
-    cx.quadraticCurveTo(22, 2, 20, 30);
-    cx.closePath(); cx.fill();
-    // sash
-    cx.fillStyle = '#d8b04a';
-    cx.fillRect(-19, 18, 38, 5);
-    // arm raising a pistol toward you
-    cx.strokeStyle = jack;
-    cx.lineWidth = 8;
-    cx.lineCap = 'round';
-    const raise = f.alive ? Math.min(1, f.t / f.window) : 1;
-    cx.beginPath();
-    cx.moveTo(14, 12);
-    cx.lineTo(26, 12 - raise * 16);
-    cx.stroke();
-    cx.fillStyle = '#20160c';
-    cx.save();
-    cx.translate(26, 12 - raise * 16);
-    cx.rotate(-0.5 * raise);
-    cx.fillRect(0, -3, 13, 5);
-    cx.restore();
-
-    // head
-    cx.fillStyle = '#e0a878';
-    cx.beginPath(); cx.arc(0, -16, 13, 0, 7); cx.fill();
-    // bandana or tricorn
-    if (f.kind === 2) {
-      cx.fillStyle = '#241a10';
-      cx.beginPath();
-      cx.ellipse(0, -26, 17, 5, 0, 0, 7);
-      cx.fill();
-      cx.beginPath(); cx.arc(0, -28, 10, Math.PI, 0); cx.fill();
-    } else {
-      cx.fillStyle = f.kind ? '#b03535' : '#2a4a78';
-      cx.beginPath(); cx.arc(0, -19, 13.5, Math.PI * 0.95, Math.PI * 2.05); cx.fill();
-      cx.beginPath();
-      cx.moveTo(11, -22); cx.lineTo(20, -16); cx.lineTo(12, -14);
-      cx.closePath(); cx.fill();
-    }
-    // face: eye / patch + scowl
-    cx.fillStyle = '#20140c';
-    if (f.kind === 1) {
-      cx.fillRect(-8, -20, 9, 5);
-      cx.strokeStyle = '#20140c';
-      cx.lineWidth = 1.5;
-      cx.beginPath(); cx.moveTo(-11, -23); cx.lineTo(6, -13); cx.stroke();
-    } else {
-      cx.beginPath(); cx.arc(-4, -17, 2, 0, 7); cx.fill();
-    }
-    cx.beginPath(); cx.arc(5, -17, 2, 0, 7); cx.fill();
-    cx.strokeStyle = '#20140c';
+    cx.strokeStyle = 'rgba(30,17,8,.6)';
     cx.lineWidth = 2;
-    cx.beginPath(); cx.moveTo(-4, -8); cx.quadraticCurveTo(0, -10, 5, -8); cx.stroke();
+    cx.beginPath();
+    cx.moveTo(-52, 30); cx.quadraticCurveTo(0, 52, 52, 30);
+    cx.stroke();
 
-    cx.restore();
-
-    // shrinking timer ring — the aim-trainer clock
-    if (f.alive) {
-      const frac = 1 - f.t / f.window;
+    // the pirate himself (bob with the boat)
+    const spr = SP && SP.pirates[f.kind];
+    if (spr && spr.ready) {
+      const hgt = 104, w = hgt * (120 / 170);
       cx.save();
-      cx.lineWidth = 3.5;
-      cx.strokeStyle = frac > 0.4 ? 'rgba(255,220,120,.85)' : 'rgba(255,80,60,.95)';
-      cx.beginPath();
-      cx.arc(f.x, f.y, 58 * f.sc, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * frac);
-      cx.stroke();
-      if (frac <= 0.4 && Math.floor(S.t * 8) % 2) {
-        cx.strokeStyle = 'rgba(255,80,60,.5)';
-        cx.beginPath(); cx.arc(f.x, f.y, 64 * f.sc, 0, 7); cx.stroke();
-      }
+      cx.scale(f.flip, 1);
+      cx.translate(0, Math.sin(S.t * 2.2 + f.x) * 2);
+      cx.drawImage(spr.img, -w / 2, -hgt + 34, w, hgt);
       cx.restore();
     }
+    cx.restore();
+
     // muzzle flash toward you when he fires
-    if (!f.alive && f.fired && f.deadT < 0.18) {
+    if (!f.alive && f.fired && f.deadT < 0.15) {
       cx.save();
       cx.strokeStyle = 'rgba(255,200,90,.8)';
       cx.lineWidth = 5;
       cx.beginPath();
-      cx.moveTo(f.x + f.flip * 30, f.y - 6);
+      cx.moveTo(f.x + f.flip * 26 * f.sc, f.y - 10);
       cx.lineTo(W / 2 + (f.x - W / 2) * 0.2, H - 90);
       cx.stroke();
       cx.restore();
@@ -728,6 +683,7 @@
 
   // the enemy captain — bigger, in a sloop, always on the move
   function drawBoss(B) {
+    const SP = window.PSPRITES;
     const d = S.d;
     cx.save();
     cx.translate(B.x, B.y);
@@ -739,99 +695,75 @@
     }
     const sc = d.bossR / 66;
     cx.scale(sc, sc);
-    const lean = Math.sin(B.tt * 2) * 0.06;
-    cx.rotate(lean);
+    cx.rotate(Math.sin(B.tt * 2) * 0.06);
+
+    // volley warning: the whole sloop glows hot
+    if (!B.dead) {
+      const vfrac = B.volleyT / d.volleyEvery;
+      if (vfrac < 0.25) {
+        if (!GR.bossHot) {
+          GR.bossHot = cx.createRadialGradient(0, -20, 10, 0, -20, 120);
+          GR.bossHot.addColorStop(0, 'rgba(255,90,40,.45)');
+          GR.bossHot.addColorStop(1, 'rgba(255,90,40,0)');
+        }
+        cx.save();
+        cx.globalAlpha = 0.5 + 0.5 * Math.abs(Math.sin(S.t * 12));
+        cx.fillStyle = GR.bossHot;
+        cx.beginPath(); cx.arc(0, -20, 120, 0, 7); cx.fill();
+        cx.restore();
+      }
+    }
 
     // sloop
     if (!GR.sloop) {
-      GR.sloop = cx.createLinearGradient(0, 40, 0, 74);
+      GR.sloop = cx.createLinearGradient(0, 40, 0, 82);
       GR.sloop.addColorStop(0, '#5e3a1e'); GR.sloop.addColorStop(1, '#33200f');
     }
     cx.fillStyle = GR.sloop;
     cx.beginPath();
-    cx.moveTo(-72, 44);
-    cx.quadraticCurveTo(0, 74, 72, 44);
-    cx.lineTo(58, 62); cx.quadraticCurveTo(0, 82, -58, 62);
+    cx.moveTo(-78, 46);
+    cx.quadraticCurveTo(0, 78, 78, 46);
+    cx.lineTo(62, 66); cx.quadraticCurveTo(0, 88, -62, 66);
     cx.closePath(); cx.fill();
-    // mast + black colors
+    // mast + black colors behind him
     cx.fillStyle = '#2b1c10';
-    cx.fillRect(-3, -86, 6, 130);
+    cx.fillRect(-44, -100, 5, 148);
     cx.fillStyle = '#151013';
     cx.beginPath();
-    cx.moveTo(3, -84); cx.lineTo(58, -58); cx.lineTo(3, -34);
+    cx.moveTo(-39, -98); cx.lineTo(18, -70); cx.lineTo(-39, -44);
     cx.closePath(); cx.fill();
-    // jolly roger — original mark: skull with crossed cutlasses
     cx.fillStyle = '#e8e2d4';
-    cx.beginPath(); cx.arc(27, -58, 7, 0, 7); cx.fill();
+    cx.beginPath(); cx.arc(-16, -70, 7, 0, 7); cx.fill();
     cx.fillStyle = '#151013';
-    cx.beginPath(); cx.arc(24.5, -59, 1.6, 0, 7); cx.fill();
-    cx.beginPath(); cx.arc(29.5, -59, 1.6, 0, 7); cx.fill();
+    cx.beginPath(); cx.arc(-18.5, -71, 1.6, 0, 7); cx.fill();
+    cx.beginPath(); cx.arc(-13.5, -71, 1.6, 0, 7); cx.fill();
     cx.strokeStyle = '#e8e2d4';
     cx.lineWidth = 1.8;
     cx.beginPath();
-    cx.moveTo(18, -50); cx.lineTo(36, -66);
-    cx.moveTo(18, -66); cx.lineTo(36, -50);
+    cx.moveTo(-25, -62); cx.lineTo(-7, -78);
+    cx.moveTo(-25, -78); cx.lineTo(-7, -62);
     cx.stroke();
 
-    // the captain himself
-    cx.fillStyle = '#3a2338';
-    cx.beginPath();
-    cx.moveTo(-26, 46);
-    cx.quadraticCurveTo(-28, 2, 0, -4);
-    cx.quadraticCurveTo(28, 2, 26, 46);
-    cx.closePath(); cx.fill();
-    cx.fillStyle = '#d8b04a';
-    cx.fillRect(-24, 26, 48, 6);
-    // cutlass waving
-    cx.strokeStyle = '#c9ccd4';
-    cx.lineWidth = 4;
-    cx.beginPath();
-    cx.moveTo(26, 14);
-    cx.quadraticCurveTo(48, 4 - Math.sin(S.t * 6) * 8, 58, -12 - Math.sin(S.t * 6) * 10);
-    cx.stroke();
-    // head + big tricorn + beard
-    cx.fillStyle = '#dda276';
-    cx.beginPath(); cx.arc(0, -22, 16, 0, 7); cx.fill();
-    cx.fillStyle = '#402818';
-    cx.beginPath(); cx.arc(0, -14, 12, 0, Math.PI); cx.fill();
-    cx.fillStyle = '#1c1410';
-    cx.beginPath(); cx.ellipse(0, -34, 24, 7, 0, Math.PI, 0); cx.fill();
-    cx.beginPath();
-    cx.moveTo(-24, -34); cx.quadraticCurveTo(0, -48, 24, -34);
-    cx.quadraticCurveTo(0, -40, -24, -34);
-    cx.closePath(); cx.fill();
-    cx.fillStyle = '#d8b04a';
-    cx.beginPath(); cx.arc(0, -40, 3, 0, 7); cx.fill();
-    // scowling eyes
-    cx.fillStyle = '#170e08';
-    cx.beginPath(); cx.arc(-6, -24, 2.2, 0, 7); cx.fill();
-    cx.beginPath(); cx.arc(6, -24, 2.2, 0, 7); cx.fill();
-    cx.strokeStyle = '#170e08';
-    cx.lineWidth = 2;
-    cx.beginPath(); cx.moveTo(-10, -29); cx.lineTo(-3, -27); cx.stroke();
-    cx.beginPath(); cx.moveTo(10, -29); cx.lineTo(3, -27); cx.stroke();
-
+    // the captain himself — the original SVG boss art
+    if (SP && SP.boss.ready) {
+      const hgt = 150, w = hgt * (150 / 210);
+      const face = Math.sign(S.aim.x - B.x) || 1;
+      cx.save();
+      cx.scale(face, 1);
+      cx.translate(0, Math.sin(B.tt * 3) * 2.5);
+      cx.drawImage(SP.boss.img, -w / 2, -hgt + 52, w, hgt);
+      cx.restore();
+    }
     cx.restore();
 
     if (!B.dead) {
-      // tracking ring: gold fill = your lock progress
-      const on = Math.hypot(S.aim.x - B.x, S.aim.y - B.y) < d.bossR;
+      // track meter: a bar over his mast, not a circle
+      const bw = 96, bx = B.x - bw / 2, by = B.y + d.bossR + 26;
       cx.save();
-      cx.lineWidth = 3;
-      cx.strokeStyle = on ? 'rgba(255,201,77,.5)' : 'rgba(255,255,255,.25)';
-      cx.beginPath(); cx.arc(B.x, B.y, d.bossR, 0, 7); cx.stroke();
-      cx.lineWidth = 5;
-      cx.strokeStyle = '#ffc94d';
-      cx.beginPath();
-      cx.arc(B.x, B.y, d.bossR, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * B.track);
-      cx.stroke();
-      // volley warning pip
-      const vfrac = B.volleyT / d.volleyEvery;
-      if (vfrac < 0.25 && Math.floor(S.t * 8) % 2) {
-        cx.strokeStyle = 'rgba(255,80,60,.7)';
-        cx.lineWidth = 3;
-        cx.beginPath(); cx.arc(B.x, B.y, d.bossR + 10, 0, 7); cx.stroke();
-      }
+      cx.fillStyle = 'rgba(20,12,6,.72)';
+      if (cx.roundRect) { cx.beginPath(); cx.roundRect(bx, by, bw, 10, 5); cx.fill(); }
+      cx.fillStyle = '#ffc94d';
+      if (cx.roundRect) { cx.beginPath(); cx.roundRect(bx, by, bw * B.track, 10, 5); cx.fill(); }
       cx.restore();
     } else if (B.deadT < 0.5) {
       cx.save();
@@ -844,79 +776,49 @@
   }
 
   function drawGun() {
+    const SP = window.PSPRITES;
     const a = S.aim;
-    const gx = W / 2, gy = H - 26;
+    const gx = W / 2, gy = H - 30;
     const ang = Math.atan2(a.y - gy, a.x - gx);
-    const rec = S.recoil * 10;
+    const rec = S.recoil * 11;
+    const gw = 225, gh = 161;      // drawn size of the flintlock sprite
+    const gripX = 0.76, gripY = 0.66;
+    const muzX = gw * 0.66, muzY = -gh * 0.28;
     cx.save();
     cx.translate(gx - Math.cos(ang) * rec, gy - Math.sin(ang) * rec);
     cx.rotate(ang);
-    cx.scale(1.5, 1.5);
-    cx.lineJoin = 'round';
-    // gripping hand behind the lock
-    cx.fillStyle = '#e0a878';
-    cx.beginPath(); cx.ellipse(-4, 6, 11, 9, -0.4, 0, 7); cx.fill();
-    // walnut stock curving down into the hand
-    cx.fillStyle = '#5e3a1e';
-    cx.beginPath();
-    cx.moveTo(-2, -5);
-    cx.quadraticCurveTo(16, -7, 22, -4);
-    cx.lineTo(22, 5);
-    cx.quadraticCurveTo(4, 8, -6, 16);
-    cx.quadraticCurveTo(-14, 10, -8, 0);
-    cx.closePath(); cx.fill();
-    cx.strokeStyle = 'rgba(30,17,8,.5)';
-    cx.lineWidth = 1.2;
-    cx.stroke();
-    // barrel — short and stout so it reads at any angle
-    if (!GR.barrel) {
-      GR.barrel = cx.createLinearGradient(0, -6, 0, 7);
-      GR.barrel.addColorStop(0, '#b8bdc5');
-      GR.barrel.addColorStop(0.5, '#878c94');
-      GR.barrel.addColorStop(1, '#54585e');
+    if (SP && SP.flintlock.ready) {
+      cx.save();
+      cx.scale(-1, 1);             // sprite barrel points left; flip to aim
+      cx.drawImage(SP.flintlock.img, -gw * gripX, -gh * gripY, gw, gh);
+      cx.restore();
     }
-    cx.fillStyle = GR.barrel;
-    cx.beginPath();
-    if (cx.roundRect) cx.roundRect(20, -6, 62, 12, 3); else cx.rect(20, -6, 62, 12);
-    cx.fill();
-    // brass bands + flared muzzle
-    cx.fillStyle = '#d8b04a';
-    cx.fillRect(38, -7, 5, 14);
-    cx.fillRect(60, -7, 5, 14);
-    cx.fillStyle = '#c3c8d0';
-    cx.beginPath(); cx.ellipse(84, 0, 5, 8, 0, 0, 7); cx.fill();
-    cx.fillStyle = '#2a2e33';
-    cx.beginPath(); cx.ellipse(84, 0, 2.6, 5, 0, 0, 7); cx.fill();
-    // flint hammer
-    cx.strokeStyle = '#54585e';
-    cx.lineWidth = 3.5;
-    cx.beginPath();
-    cx.moveTo(16, -6); cx.quadraticCurveTo(12, -14, 18, -15);
-    cx.stroke();
     // muzzle flash
     if (S.recoil > 0.55) {
       cx.fillStyle = 'rgba(255,214,110,.92)';
       cx.beginPath();
       for (let i = 0; i < 10; i++) {
         const aa = i / 10 * 6.28;
-        const rr = i % 2 ? 9 : 26;
-        const px = 90 + Math.cos(aa) * rr * S.recoil;
-        const py = Math.sin(aa) * rr * S.recoil;
+        const rr = i % 2 ? 10 : 30;
+        const px = muzX + Math.cos(aa) * rr * S.recoil;
+        const py = muzY + Math.sin(aa) * rr * S.recoil;
         i ? cx.lineTo(px, py) : cx.moveTo(px, py);
       }
       cx.closePath(); cx.fill();
       cx.fillStyle = 'rgba(255,245,200,.95)';
-      cx.beginPath(); cx.arc(90, 0, 8 * S.recoil, 0, 7); cx.fill();
+      cx.beginPath(); cx.arc(muzX, muzY, 9 * S.recoil, 0, 7); cx.fill();
     }
     cx.restore();
-    // tracer
+    // tracer from the muzzle
     if (S.tracer) {
+      const mx = gx + Math.cos(ang) * muzX - Math.sin(ang) * muzY;
+      const my = gy + Math.sin(ang) * muzX + Math.cos(ang) * muzY;
       cx.save();
       cx.globalAlpha = 1 - S.tracer.t;
       cx.strokeStyle = 'rgba(255,230,150,.9)';
       cx.lineWidth = 2;
       cx.beginPath();
-      cx.moveTo(gx + Math.cos(ang) * 135, gy + Math.sin(ang) * 135);
+      cx.moveTo(mx, my);
       cx.lineTo(S.tracer.x, S.tracer.y);
       cx.stroke();
       cx.restore();

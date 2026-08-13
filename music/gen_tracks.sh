@@ -9,20 +9,20 @@ cd "$(dirname "$0")"
 
 typeset -a P
 P=(
-"Bright warm lofi hip hop, lazy ukulele and melodica over a relaxed dusty beat, sunny harbor morning, seagulls-and-rope-creak seaside feeling, nostalgic and adventurous"
-"Breezy lofi hip hop with acoustic guitar and soft accordion, open blue ocean sailing, easy swaying groove, hopeful and free"
-"Moody lofi beat with low piano chords and tape hiss, rolling thunderstorm at sea, heavy swaying rhythm, determined push through rain"
-"Sparse eerie lofi, muted trumpet and soft vibraphone over a slow beat, drifting through thick sea fog, mysterious calm"
-"Upbeat tropical lofi with hand percussion, marimba and flute, jungle island cove, playful adventurous energy"
-"Mellow night-sailing lofi jazz, warm electric piano and soft double bass, moonlit deck, starry calm confidence"
-"Chilly lofi with glassy chimes and soft pads over a crisp beat, sailing an icy sea between glaciers, crystalline and serene"
-"Dark haunted lofi, detuned music box and deep sub bass, a graveyard of ghost ships, spooky but groovy"
-"Intense driving lofi with urgent strings and hard-swung drums, sailing into a giant whirlpool, rising danger and adrenaline"
-"Triumphant adventurous lofi finale, soaring melodica lead, ukulele, big warm chords and confident beat, the last sea before the treasure, victorious spirit"
+"Jaunty instrumental sea shanty, accordion and fiddle over a stomping work-song beat, bright morning sails leaving harbor, adventurous and rousing"
+"Rolling instrumental sea shanty, concertina lead with tin whistle answers, steady heave-away halyard rhythm, wide open blue water"
+"Storm-driven instrumental sea shanty in a minor key, urgent fiddle, pounding stomp-and-clap rhythm, waves crashing over the rail"
+"Slow eerie instrumental sea shanty waltz, lone concertina over a low drone, ship timbers creaking in dead fog, haunting and sparse"
+"Playful tropical instrumental sea shanty, fiddle and mandolin with hand drums, island port celebration, sun-drunk and lively"
+"Dark driving instrumental sea shanty, deep war-drum stomps, menacing minor fiddle riffs, sailing past a burning volcano"
+"Crisp bright instrumental sea shanty, tin whistle and mandolin, glittering icy waters, brisk clean gliding rhythm"
+"Ghostly instrumental sea shanty, detuned accordion and low bowed strings, a funeral-march sway through a fleet of dead ships, spectral"
+"Frantic instrumental sea shanty, racing fiddle reels, relentless accelerating drums, rowing hard against a giant whirlpool"
+"Triumphant epic instrumental sea shanty finale, full folk band — accordion, fiddle, whistle, big drums — the last voyage to the treasure, victorious"
 )
 
 if [[ ! -s lobby.mp3 ]]; then
-  uv run $SKILL "Cozy nostalgic lofi hip hop overture, gentle ukulele, accordion and soft flute melody, a pirate crew resting in port at sunset, warm tape crackle, inviting main menu calm with a spirit of grand adventure" --length 90 --instrumental -o lobby.mp3 || echo "FAILED lobby"
+  uv run $SKILL "Warm gentle instrumental sea shanty, soft concertina and acoustic guitar, quiet swaying tavern-by-the-harbor rhythm at dusk, inviting and nostalgic, calm before the voyage" --length 90 --instrumental -o lobby.mp3 || echo "FAILED lobby"
 else echo "skip lobby.mp3"; fi
 for i in {1..10}; do
   n=$(printf "%02d" $i)
