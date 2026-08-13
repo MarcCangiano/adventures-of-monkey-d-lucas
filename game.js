@@ -232,20 +232,10 @@
         f.pop = Math.min(1, f.pop + dt * 9);
         f.t += dt;
         if (f.t >= f.window) {
-          // he draws first
+          // too slow — he rows off, no harm done, next one up
           f.alive = false;
           f.deadT = 0.0001;
-          f.fired = true;
-          S.hearts--;
-          S.hurtT = 0.45;
-          S.shake = 0.5;
-          SFX.volley();
-          if (S.hearts <= 0) {
-            S.over = true; stopMusic(); SFX.over();
-            document.getElementById('go-line').textContent =
-              'The sea keeps what it takes.';
-            showOverlay('gameover');
-          }
+          S.escaped = (S.escaped || 0) + 1;
         }
       }
       S.foes = S.foes.filter(f => f.alive || f.deadT < 0.32);
@@ -271,20 +261,6 @@
       else B.track = Math.max(0, B.track - dt * 0.45);
       const q = (B.track * 4) | 0;
       if (q > B.ticks && q < 4) { B.ticks = q; SFX.tick(q); }
-      B.volleyT -= dt;
-      if (B.volleyT <= 0) {
-        B.volleyT = d.volleyEvery;
-        S.hearts--;
-        S.hurtT = 0.45;
-        S.shake = 0.5;
-        SFX.volley();
-        if (S.hearts <= 0) {
-          S.over = true; stopMusic(); SFX.over();
-          document.getElementById('go-line').textContent =
-            'The sea keeps what it takes.';
-          showOverlay('gameover');
-        }
-      }
       if (B.track >= 1) {
         B.dead = true;
         B.deadT = 0;
@@ -684,17 +660,6 @@
     }
     cx.restore();
 
-    // muzzle flash toward you when he fires
-    if (!f.alive && f.fired && f.deadT < 0.15) {
-      cx.save();
-      cx.strokeStyle = 'rgba(255,200,90,.8)';
-      cx.lineWidth = 5;
-      cx.beginPath();
-      cx.moveTo(f.x + f.flip * 26 * f.sc, f.y - 10);
-      cx.lineTo(W / 2 + (f.x - W / 2) * 0.2, H - 90);
-      cx.stroke();
-      cx.restore();
-    }
   }
 
   // the enemy captain — bigger, in a sloop, always on the move
@@ -722,22 +687,6 @@
       }
       cx.fillStyle = GR.bossLock;
       cx.beginPath(); cx.arc(0, -10, 130, 0, 7); cx.fill();
-    }
-    // volley warning: the whole sloop glows hot
-    if (!B.dead) {
-      const vfrac = B.volleyT / d.volleyEvery;
-      if (vfrac < 0.25) {
-        if (!GR.bossHot) {
-          GR.bossHot = cx.createRadialGradient(0, -20, 10, 0, -20, 120);
-          GR.bossHot.addColorStop(0, 'rgba(255,90,40,.45)');
-          GR.bossHot.addColorStop(1, 'rgba(255,90,40,0)');
-        }
-        cx.save();
-        cx.globalAlpha = 0.5 + 0.5 * Math.abs(Math.sin(S.t * 12));
-        cx.fillStyle = GR.bossHot;
-        cx.beginPath(); cx.arc(0, -20, 120, 0, 7); cx.fill();
-        cx.restore();
-      }
     }
 
     // sloop
@@ -860,21 +809,6 @@
   }
 
   function drawHud() {
-    // hearts as powder kegs? keep hearts: gold rounds
-    for (let i = 0; i < 3; i++) {
-      cx.save();
-      cx.globalAlpha = i < S.hearts ? 0.95 : 0.18;
-      cx.fillStyle = '#ffc94d';
-      cx.strokeStyle = '#5e3a1e';
-      cx.lineWidth = 2;
-      const hx = 36 + i * 34, hy = 34;
-      cx.beginPath();
-      cx.moveTo(hx, hy + 9);
-      cx.bezierCurveTo(hx - 14, hy - 4, hx - 7, hy - 14, hx, hy - 6);
-      cx.bezierCurveTo(hx + 7, hy - 14, hx + 14, hy - 4, hx, hy + 9);
-      cx.fill(); cx.stroke();
-      cx.restore();
-    }
     // level tag + progress
     cx.save();
     cx.font = '600 13px ui-monospace, Menlo, monospace';
