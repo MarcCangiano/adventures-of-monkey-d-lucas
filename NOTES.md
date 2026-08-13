@@ -66,8 +66,7 @@ start()}. Checks: spawn, click-kill, expiry damage, boss appear/track/
 decay/death, levelup flow, all-10-seas screenshots.
 
 ## Status / pending
-All checks pass 2026-08-13, committed. NOT pushed: Boss creates GitHub
-repos for BOTH games tomorrow (this one + snapclaw). Suggested names:
+LIVE: github.com/MarcCangiano/adventures-of-monkey-d-lucas, playable at marccangiano.github.io/adventures-of-monkey-d-lucas (Pages via Actions workflow .github/workflows/pages.yml). Homepage figure on marccangiano.com links there (thumb media id 98). Suggested names:
 adventures-of-monkey-d-lucas, shrimpys-ocean-odyssey (snapclaw origin
 already preset). After push + Pages: add both thumbnails to
 marccangiano.com linking OUT to the Pages URLs (site stays lightweight —
