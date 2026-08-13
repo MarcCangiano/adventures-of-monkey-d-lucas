@@ -33,9 +33,10 @@ Gullet (maelstrom + spray) / 10 The Last Meridian (gold isle + god rays).
 
 ## Sound
 SFX synthesized (shot/hit/volley/tick/bossShow/bossDown/levelup/win/over).
-MUSIC: 11 produced SEA SHANTY instrumentals via elevenlabs-music skill
-(Boss switched from lofi 2026-08-13; prompts in gen_tracks.sh are
-accordion/fiddle/concertina work-song briefs, one mood per sea)
+MUSIC: 11 produced EPIC ORCHESTRAL pirate scores via elevenlabs-music
+skill (Boss iterated lofi -> shanty -> orchestral same day, wants the
+swashbuckling-movie-score style: driving 6/8 ostinato + soaring heroic
+melodies. Style only — no melodies copied. Prompts in gen_tracks.sh)
 (music/level01..10.mp3 + lobby.mp3, regen: music/gen_tracks.sh). Prompts
 are original "nautical adventure lofi" — deliberately NO franchise names
 (the API rejects copyrighted references and we stay clean). Lobby cues on

@@ -9,16 +9,16 @@ cd "$(dirname "$0")"
 
 typeset -a P
 P=(
-"Jaunty instrumental sea shanty, accordion and fiddle over a stomping work-song beat, bright morning sails leaving harbor, adventurous and rousing"
-"Rolling instrumental sea shanty, concertina lead with tin whistle answers, steady heave-away halyard rhythm, wide open blue water"
-"Storm-driven instrumental sea shanty in a minor key, urgent fiddle, pounding stomp-and-clap rhythm, waves crashing over the rail"
-"Slow eerie instrumental sea shanty waltz, lone concertina over a low drone, ship timbers creaking in dead fog, haunting and sparse"
-"Playful tropical instrumental sea shanty, fiddle and mandolin with hand drums, island port celebration, sun-drunk and lively"
-"Dark driving instrumental sea shanty, deep war-drum stomps, menacing minor fiddle riffs, sailing past a burning volcano"
-"Crisp bright instrumental sea shanty, tin whistle and mandolin, glittering icy waters, brisk clean gliding rhythm"
-"Ghostly instrumental sea shanty, detuned accordion and low bowed strings, a funeral-march sway through a fleet of dead ships, spectral"
-"Frantic instrumental sea shanty, racing fiddle reels, relentless accelerating drums, rowing hard against a giant whirlpool"
-"Triumphant epic instrumental sea shanty finale, full folk band — accordion, fiddle, whistle, big drums — the last voyage to the treasure, victorious"
+"Epic swashbuckling orchestral pirate adventure, bright heroic strings over a driving 6/8 ostinato, bold horns, morning voyage setting out, rousing cinematic score"
+"Fast driving orchestral pirate adventure in 6/8, relentless cello ostinato, soaring heroic string melody, full-sail momentum, daring and free, cinematic"
+"Dark furious orchestral storm battle score, pounding low strings and timpani, brass stabs, driving 6/8 rhythm, waves crashing, dangerous and thrilling"
+"Tense mysterious orchestral piece, quiet tremolo strings and sparse percussion slowly building, drifting through fog, suspenseful cinematic adventure"
+"Playful jaunty orchestral pirate adventure, skipping 6/8 rhythm, light percussion, mischievous woodwind and string melody, tropical island escapade, fun and daring"
+"Menacing epic orchestral score, low brass war theme, thundering drums, urgent string ostinato, sailing past a burning volcano, dark heroic power"
+"Shimmering noble orchestral adventure, brisk glittering strings, proud french horn melody, icy seas sparkling, majestic and swift, cinematic"
+"Eerie ghostly orchestral piece, low mournful strings, funeral-march percussion, haunted grandeur swelling to dark heroic passages, spectral fleet"
+"Frantic epic orchestral battle score, relentless galloping ostinato, huge percussion hits, desperate soaring strings, fighting a whirlpool, climactic intensity"
+"Triumphant epic orchestral pirate finale, soaring heroic theme over driving 6/8 strings, blazing brass, thundering drums, the treasure found, glorious victory"
 )
 
 if [[ ! -s lobby.mp3 ]]; then
