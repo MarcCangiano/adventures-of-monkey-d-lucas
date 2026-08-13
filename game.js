@@ -195,7 +195,6 @@
 
   function shoot(x, y) {
     S.recoil = 1;
-    SFX.shot();
     if (S.bossPhase) return;         // the captain falls to tracking, not lead
     S.shots++;
     let best = null, bd = 1e9;
