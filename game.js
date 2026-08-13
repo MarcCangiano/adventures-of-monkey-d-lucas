@@ -154,7 +154,9 @@
       x = 150 + Math.random() * 980;
       y = 285 + Math.random() * 275;
       tries++;
-    } while (tries < 14 && Math.hypot(x - lastSpawn.x, y - lastSpawn.y) < 300);
+    } while (tries < 14 &&
+      (Math.hypot(x - lastSpawn.x, y - lastSpawn.y) < 260 ||
+       S.foes.some(f => f.alive && Math.hypot(f.x - x, f.y - y) < 200)));
     lastSpawn = { x, y };
     S.foes.push({
       x, y, t: 0, window: S.d.killWindow, alive: true,
@@ -224,7 +226,7 @@
         makeBoss();
         return;
       }
-      if (!S.foes.some(f => f.alive)) spawnFoe();
+      while (S.foes.filter(f => f.alive).length < 3) spawnFoe();
       for (const f of S.foes) {
         if (!f.alive) { f.deadT += dt; continue; }
         f.pop = Math.min(1, f.pop + dt * 9);

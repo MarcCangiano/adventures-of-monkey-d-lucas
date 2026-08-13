@@ -10,9 +10,7 @@ own NOTES history is in git. Do not delete it; it is a portfolio piece.
   (horizon y=230, far foes draw smaller — f.sc). NO timer circles (Boss
   removed them): the telegraph is an ember glow + blink in the last 35%
   of the window; window expires -> he fires -> -1 heart. Click (radius
-  56*sc) to drop him. ONE TARGET AT A TIME (Boss 2026-08-13): the next
-  spawns the frame one drops (kill or expiry), placed >=300px from the
-  last for a real flick. LEVEL = TIMERS not kill counts: 60s pop-up
+  56*sc) to drop him. THREE TARGETS up at all times (Boss iterated 1 -> 3 same day): a replacement spawns the frame one drops, spaced off the others and off the last kill. LEVEL = TIMERS not kill counts: 60s pop-up
   gauntlet (kill as many as you can), then the boss with a 30s limit —
   timeout = run over ("the captain slipped away"). Window 2.4-0.09i,
   pop-in dt*9, corpse gone in 0.32s. HUD shows countdown + kills + LIVE
