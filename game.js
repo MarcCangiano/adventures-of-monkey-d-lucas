@@ -128,7 +128,7 @@
       aim: { x: W / 2, y: H / 2 },
       recoil: 0, hurtT: 0, shake: 0,
       parts: [],                     // weather particles
-      over: false, won: false, levelDone: false,
+      over: false, won: false, levelDone: false, bossWait: false,
       cap: L.name, capT: 3,
       skyG: null, seaG: null,        // cached per level
       lightningT: 5,
@@ -169,8 +169,7 @@
     S.bossPhase = true;
     S.bossT = S.d.bossTime;
     S.boss = { tt: Math.random() * 10, x: 640, y: 400, onT: 0,
-               spd: 1, spdTarget: 1, spdT: 0, laughT: 4 + Math.random() * 5,
-               hop: 0 };
+               spd: 1, spdTarget: 1, spdT: 0 };
     S.cap = 'the captain shows himself — stay on him for the minute';
     S.capT = 3;
     SFX.bossShow();
@@ -223,7 +222,13 @@
       S.phaseT -= dt;
       if (S.phaseT <= 0) {
         S.foes = [];
-        makeBoss();
+        S.bossWait = true;
+        const acc = S.shots ? Math.round(100 * S.hits / S.shots) : 100;
+        document.getElementById('br-line').textContent =
+          `${S.kills} cutthroats down at ${acc}% accuracy. The captain of ` +
+          `${S.pal.name} wants a word — hold your aim on him for a full minute.`;
+        SFX.bossShow();
+        showOverlay('bossready');
         return;
       }
       while (S.foes.filter(f => f.alive).length < 3) spawnFoe();
@@ -281,19 +286,6 @@
       B.y = Math.max(285, Math.min(535, B.y));
       const on = Math.hypot(S.aim.x - B.x, S.aim.y - B.y) < d.bossR;
       if (on) B.onT += dt;
-      // the old sea dog has a laugh at your expense now and then
-      B.laughT -= dt;
-      if (B.laughT <= 0) {
-        B.laughT = 7 + Math.random() * 6;
-        B.hop = 1;
-        try {
-          const la = new Audio('music/boss-laugh.mp3');
-          la.volume = 0.5;
-          const lp = la.play();
-          if (lp && lp.catch) lp.catch(() => {});
-        } catch (e) { /* no audio */ }
-      }
-      B.hop = Math.max(0, B.hop - dt * 0.8);
     }
 
     // fx timers
@@ -651,10 +643,10 @@
     const SP = window.PSPRITES;
     const d = S.d;
     cx.save();
-    cx.translate(B.x, B.y - Math.sin(B.hop * Math.PI) * 16);
+    cx.translate(B.x, B.y);
     const sc = d.bossR / 66;
     cx.scale(sc, sc);
-    cx.rotate(Math.sin(B.tt * 2) * 0.06 + Math.sin(B.hop * Math.PI * 3) * 0.08);
+    cx.rotate(Math.sin(B.tt * 2) * 0.06);
 
     // hover = lock: gold aura says "just hold it here"
     if (Math.hypot(S.aim.x - B.x, S.aim.y - B.y) < d.bossR * sc * (66 / d.bossR)) {
@@ -808,7 +800,7 @@
   // ------------------------------------------------------------- loop
   function showOverlay(id) { document.getElementById(id).classList.remove('hidden'); }
   function hideOverlays() {
-    for (const id of ['title', 'gameover', 'win', 'levelup'])
+    for (const id of ['title', 'gameover', 'win', 'levelup', 'bossready'])
       document.getElementById(id).classList.add('hidden');
   }
 
@@ -816,7 +808,7 @@
   function frame(ts) {
     const dt = Math.min(0.033, (ts - last) / 1000 || 0.016);
     last = ts;
-    if (running && !S.over && !S.won && !S.levelDone) update(dt);
+    if (running && !S.over && !S.won && !S.levelDone && !S.bossWait) update(dt);
     draw();
     requestAnimationFrame(frame);
   }
@@ -832,6 +824,11 @@
     ac();
     hideOverlays(); running = true;
     startMusic(S.level);
+  });
+  document.getElementById('face').addEventListener('click', () => {
+    hideOverlays();
+    S.bossWait = false;
+    makeBoss();
   });
   document.getElementById('next').addEventListener('click', () => {
     reset(S.level + 1); hideOverlays(); running = true;
