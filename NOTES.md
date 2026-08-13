@@ -10,9 +10,13 @@ own NOTES history is in git. Do not delete it; it is a portfolio piece.
   (horizon y=230, far foes draw smaller — f.sc). NO timer circles (Boss
   removed them): the telegraph is an ember glow + blink in the last 35%
   of the window; window expires -> he fires -> -1 heart. Click (radius
-  56*sc) to drop him. GRIDSHOT rule: the target pool is always full —
-  the frame one drops (kill or expiry), the next spawns. Pace: window
-  2.4-0.09i, pop-in dt*9, corpse gone in 0.32s.
+  56*sc) to drop him. ONE TARGET AT A TIME (Boss 2026-08-13): the next
+  spawns the frame one drops (kill or expiry), placed >=300px from the
+  last for a real flick. LEVEL = TIMERS not kill counts: 60s pop-up
+  gauntlet (kill as many as you can), then the boss with a 30s limit —
+  timeout = run over ("the captain slipped away"). Window 2.4-0.09i,
+  pop-in dt*9, corpse gone in 0.32s. HUD shows countdown + kills + LIVE
+  accuracy; bar = time remaining, red under 10s. NO tracer line (cut).
 - Boss per sea: tracked, not clicked. He weaves (dual-sine path, tt
   advanced by speedMul * (1 + track*0.9) — faster each sea AND faster as
   you pin him). Hold aim inside his ring to fill track; off-aim decays

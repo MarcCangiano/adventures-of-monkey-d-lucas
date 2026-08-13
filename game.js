@@ -42,9 +42,8 @@
   ];
   function diff(i) {
     return {
-      killsNeeded: 10 + i * 2,
-      spawnEvery: 1.05 - i * 0.05,
-      maxAlive: 2 + ((i / 2) | 0),
+      phaseTime: 60,               // the pop-up gauntlet: one minute
+      bossTime: 30,                // then 30 seconds to pin the captain
       killWindow: 2.4 - i * 0.09,
       bossSpeed: 1 + i * 0.33,        // path-speed multiplier
       trackNeed: 2.8 + i * 0.35,
@@ -124,10 +123,10 @@
     S = {
       t: 0, level: levelIdx, pal: L, d: diff(levelIdx),
       hearts: 3, kills: 0, hits: 0, shots: 0,
-      foes: [], spawnT: 1.2,
+      foes: [], phaseT: 60, bossT: 30,
       bossPhase: false, boss: null,
       aim: { x: W / 2, y: H / 2 },
-      recoil: 0, tracer: null, hurtT: 0, shake: 0,
+      recoil: 0, hurtT: 0, shake: 0,
       parts: [],                     // weather particles
       over: false, won: false, levelDone: false,
       cap: L.name, capT: 3,
@@ -147,15 +146,16 @@
   }
 
   // ------------------------------------------------------------- foes
+  let lastSpawn = { x: 640, y: 400 };
   function spawnFoe() {
-    // keep new pop-ups out of each other's laps
+    // one at a time — put the next one a real flick away from the last
     let x, y, tries = 0;
     do {
       x = 150 + Math.random() * 980;
       y = 285 + Math.random() * 275;
       tries++;
-    } while (tries < 12 &&
-      S.foes.some(f => Math.abs(f.x - x) < 130 && Math.abs(f.y - y) < 110));
+    } while (tries < 14 && Math.hypot(x - lastSpawn.x, y - lastSpawn.y) < 300);
+    lastSpawn = { x, y };
     S.foes.push({
       x, y, t: 0, window: S.d.killWindow, alive: true,
       kind: (Math.random() * 4) | 0, flip: Math.random() < 0.5 ? -1 : 1,
@@ -165,6 +165,7 @@
 
   function makeBoss() {
     S.bossPhase = true;
+    S.bossT = S.d.bossTime;
     S.boss = { tt: Math.random() * 10, x: 640, y: 400, track: 0,
                volleyT: S.d.volleyEvery, dead: false, deadT: 0, ticks: 0 };
     S.cap = 'the captain shows himself — hold your aim on him';
@@ -191,7 +192,6 @@
 
   function shoot(x, y) {
     S.recoil = 1;
-    S.tracer = { x, y, t: 0 };
     SFX.shot();
     if (S.bossPhase) return;         // the captain falls to tracking, not lead
     S.shots++;
@@ -215,14 +215,16 @@
     S.t += dt;
     const d = S.d;
 
-    // pop-up phase — gridshot style: a full pool of targets at all times,
-    // and the moment one drops the next appears
+    // pop-up phase — 60-second gauntlet, ONE target at a time; the moment
+    // it drops the next appears
     if (!S.bossPhase) {
-      let alive = S.foes.filter(f => f.alive).length;
-      while (alive < d.maxAlive && S.kills + alive < d.killsNeeded) {
-        spawnFoe();
-        alive++;
+      S.phaseT -= dt;
+      if (S.phaseT <= 0) {
+        S.foes = [];
+        makeBoss();
+        return;
       }
+      if (!S.foes.some(f => f.alive)) spawnFoe();
       for (const f of S.foes) {
         if (!f.alive) { f.deadT += dt; continue; }
         f.pop = Math.min(1, f.pop + dt * 9);
@@ -237,14 +239,24 @@
           S.shake = 0.5;
           SFX.volley();
           if (S.hearts <= 0) {
-            S.over = true; stopMusic(); SFX.over(); showOverlay('gameover');
+            S.over = true; stopMusic(); SFX.over();
+            document.getElementById('go-line').textContent =
+              'The sea keeps what it takes.';
+            showOverlay('gameover');
           }
         }
       }
       S.foes = S.foes.filter(f => f.alive || f.deadT < 0.32);
-      if (S.kills >= d.killsNeeded && !S.foes.some(f => f.alive)) makeBoss();
     } else if (S.boss && !S.boss.dead) {
       const B = S.boss;
+      S.bossT -= dt;
+      if (S.bossT <= 0) {
+        S.over = true; stopMusic(); SFX.over();
+        document.getElementById('go-line').textContent =
+          'The captain slipped away — thirty seconds is all you get.';
+        showOverlay('gameover');
+        return;
+      }
       // he sails a weaving course, quicker each sea and quicker still
       // the closer you are to pinning him
       B.tt += dt * d.bossSpeed * (1 + B.track * 0.9);
@@ -265,7 +277,10 @@
         S.shake = 0.5;
         SFX.volley();
         if (S.hearts <= 0) {
-          S.over = true; stopMusic(); SFX.over(); showOverlay('gameover');
+          S.over = true; stopMusic(); SFX.over();
+          document.getElementById('go-line').textContent =
+            'The sea keeps what it takes.';
+          showOverlay('gameover');
         }
       }
       if (B.track >= 1) {
@@ -285,8 +300,8 @@
             S.pal.name.toLowerCase() + ' — cleared';
           const acc = S.shots ? Math.round(100 * S.hits / S.shots) : 100;
           document.getElementById('lv-line').textContent =
-            `${S.kills} cutthroats down at ${acc}% accuracy, captain taken. ` +
-            `Next: ${LEVELS[S.level + 1].name}.`;
+            `${S.kills} cutthroats in the minute at ${acc}% accuracy, ` +
+            `captain taken. Next: ${LEVELS[S.level + 1].name}.`;
           stopMusic();
           SFX.levelup();
           showOverlay('levelup');
@@ -308,7 +323,6 @@
     S.hurtT = Math.max(0, S.hurtT - dt);
     S.shake = Math.max(0, S.shake - dt);
     S.capT = Math.max(0, S.capT - dt);
-    if (S.tracer && (S.tracer.t += dt * 8) > 1) S.tracer = null;
     if (S.pal.part === 'rain') {
       S.lightningT -= dt;
       if (S.lightningT <= 0) { S.flashA = 0.55; S.lightningT = 5 + Math.random() * 5; }
@@ -821,21 +835,6 @@
       cx.beginPath(); cx.arc(muzX, muzY, 9 * S.recoil, 0, 7); cx.fill();
     }
     cx.restore();
-    // tracer from the muzzle
-    if (S.tracer) {
-      const mY = left ? -muzY : muzY;
-      const mx = gx + Math.cos(ang) * muzX - Math.sin(ang) * mY;
-      const my = gy + Math.sin(ang) * muzX + Math.cos(ang) * mY;
-      cx.save();
-      cx.globalAlpha = 1 - S.tracer.t;
-      cx.strokeStyle = 'rgba(255,230,150,.9)';
-      cx.lineWidth = 2;
-      cx.beginPath();
-      cx.moveTo(mx, my);
-      cx.lineTo(S.tracer.x, S.tracer.y);
-      cx.stroke();
-      cx.restore();
-    }
   }
 
   function drawCrosshair() {
@@ -881,19 +880,24 @@
     cx.textAlign = 'right';
     cx.fillText(`${S.level + 1}/${LEVELS.length} · ${S.pal.name}`, W - 24, 56);
     cx.restore();
+    const tLeft = S.bossPhase ? S.bossT : S.phaseT;
+    const tMax = S.bossPhase ? S.d.bossTime : S.d.phaseTime;
     cx.fillStyle = 'rgba(30,18,8,.7)';
     if (cx.roundRect) { cx.beginPath(); cx.roundRect(W - 260, 24, 236, 12, 6); cx.fill(); }
-    cx.fillStyle = '#ffc94d';
-    const pr = S.bossPhase
-      ? (S.boss ? S.boss.track : 0)
-      : Math.min(1, S.kills / S.d.killsNeeded);
+    cx.fillStyle = tLeft < 10 ? '#ff6a4d' : '#ffc94d';
+    const pr = Math.max(0, tLeft / tMax);
     if (cx.roundRect) { cx.beginPath(); cx.roundRect(W - 260, 24, 236 * pr, 12, 6); cx.fill(); }
-    // kill counter / boss label
+    // countdown + kills + live accuracy
     cx.save();
-    cx.font = '600 15px ui-monospace, Menlo, monospace';
-    cx.fillStyle = 'rgba(243,230,207,.85)';
+    cx.font = '600 17px ui-monospace, Menlo, monospace';
+    cx.fillStyle = tLeft < 10 ? 'rgba(255,140,110,.95)' : 'rgba(243,230,207,.9)';
     cx.textAlign = 'center';
-    cx.fillText(S.bossPhase ? 'TRACK THE CAPTAIN' : `${S.kills}/${S.d.killsNeeded}`, W / 2, 34);
+    const secs = Math.max(0, Math.ceil(tLeft));
+    const clock = `${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}`;
+    const acc = S.shots ? Math.round(100 * S.hits / S.shots) : 100;
+    cx.fillText(S.bossPhase
+      ? `TRACK THE CAPTAIN · ${clock}`
+      : `${clock} · ${S.kills} down · ${acc}%`, W / 2, 34);
     cx.restore();
     // caption
     if (S.capT > 0) {
