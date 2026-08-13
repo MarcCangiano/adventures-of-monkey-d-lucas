@@ -4,7 +4,10 @@
 
 html, body {
   height: 100%;
-  background: #120c08;
+  /* warm lantern-lit dark — the letterbox bands on phones read as part of
+     the scene instead of dead black */
+  background: radial-gradient(ellipse at 50% 42%, #33221а 0%, #241710 45%, #140d08 100%);
+  background: radial-gradient(ellipse at 50% 42%, #332218 0%, #241710 45%, #140d08 100%);
   display: grid;
   place-items: center;
   font-family: Georgia, "Iowan Old Style", serif;
