@@ -282,10 +282,7 @@
           document.getElementById('win-line').textContent =
             `${TOT.kills} cutthroats across ten seas · ${tacc}% accuracy · ` +
             `average captain-tracking ${Math.round(TOT.onPct / LEVELS.length)}%.`;
-          const hsBtn = document.getElementById('hs-save');
-          hsBtn.disabled = false;
-          hsBtn.textContent = 'Carve it in';
-          hsRefresh('win');
+          hsAutoSubmit();
           showOverlay('win');
         }
         return;
@@ -931,15 +928,22 @@
     }
   }
   const hsInput = document.getElementById('hs-name');
+  const startBtn = document.getElementById('start');
+  function cleanName() {
+    return hsInput.value.replace(/[^A-Za-z0-9 _\-\.]/g, '').trim().slice(0, 16);
+  }
+  function nameGate() { startBtn.disabled = cleanName() === ''; }
+  hsInput.addEventListener('input', nameGate);
   try { hsInput.value = localStorage.getItem('mdl-name') || ''; } catch (e) {}
+  nameGate();
   hsRefresh('lobby');
-  document.getElementById('hs-save').addEventListener('click', async () => {
-    const name = hsInput.value.replace(/[^A-Za-z0-9 _\-\.]/g, '').trim().slice(0, 16);
-    if (!name) { hsInput.focus(); return; }
+
+  // a finished run carves itself onto both boards under the entered name
+  async function hsAutoSubmit() {
+    const name = cleanName() || 'Nameless Pirate';
     try { localStorage.setItem('mdl-name', name); } catch (e) {}
-    const btn = document.getElementById('hs-save');
-    btn.disabled = true;
-    btn.textContent = 'Carving…';
+    const st = document.getElementById('hs-status');
+    st.textContent = 'carving your score into the board…';
     const acc = TOT.shots ? Math.round(100 * TOT.hits / TOT.shots) : 100;
     const track = Math.max(1, Math.round((TOT.onPct || 0) / LEVELS.length));
     const mine = { kills: { name, value: Math.max(1, TOT.kills), extra: acc },
@@ -947,14 +951,13 @@
     try {
       await hsSubmit('kills', mine.kills);
       await hsSubmit('boss', mine.boss);
-      btn.textContent = 'Carved';
+      st.textContent = 'carved in as ' + name;
     } catch (e) {
-      btn.textContent = 'Board unreachable';
-      btn.disabled = false;
+      st.textContent = 'the board is unreachable — score not saved';
     }
     await hsRefresh('win', mine);
     hsRefresh('lobby');
-  });
+  }
 
   // test hooks  // test hooks
   window.__pirate = {

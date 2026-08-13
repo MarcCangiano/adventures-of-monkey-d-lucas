@@ -23,7 +23,11 @@
     while he runs, until he strikes his colors.</p>
     <p class="keys"><span>mouse</span> aim &nbsp; <span>click</span> shoot
     &nbsp; <span>hold aim</span> on a moving boss to take him down</p>
-    <button id="start">Set sail</button>
+    <div class="hs">
+      <input id="hs-name" maxlength="16" autocomplete="off"
+        placeholder="type your pirate name to sail">
+      <button id="start" disabled>Set sail</button>
+    </div>
     <div class="hs-boards compact">
       <div><p class="hs-h">Cutthroat board</p><ol class="hs-board" id="hs-kills-lobby"></ol></div>
       <div><p class="hs-h">Captain trackers</p><ol class="hs-board" id="hs-boss-lobby"></ol></div>
@@ -54,11 +58,7 @@
     <p class="kicker">ten seas, crossed</p>
     <h1>Pirate King of the Meridian</h1>
     <p class="sub" id="win-line"></p>
-    <div class="hs">
-      <input id="hs-name" maxlength="16" autocomplete="off"
-        placeholder="your pirate name">
-      <button id="hs-save">Carve it in</button>
-    </div>
+    <p class="kicker" id="hs-status"></p>
     <div class="hs-boards">
       <div><p class="hs-h">Cutthroat board</p><ol class="hs-board" id="hs-kills-win"></ol></div>
       <div><p class="hs-h">Captain trackers</p><ol class="hs-board" id="hs-boss-win"></ol></div>

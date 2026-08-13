@@ -155,3 +155,10 @@ button:hover { background: transparent; color: #ffc94d; transform: translateY(-2
 .hs-board li { counter-increment: hs; }
 .hs-board { counter-reset: hs; }
 .hs-board.compact { font-size: 12.5px; max-height: 120px; min-width: 330px; }
+
+button:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+  transform: none;
+}
+button:disabled:hover { background: #ffc94d; color: #241505; transform: none; }
