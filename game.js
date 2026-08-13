@@ -194,11 +194,19 @@
   }
 
   // ------------------------------------------------------------- input
-  function canvasPos(e) {
+  // portrait phones render the stage rotated 90deg; map screen points back
+  const isRot = () => window.matchMedia &&
+    matchMedia('(orientation: portrait) and (pointer: coarse)').matches;
+  function mapPoint(clientX, clientY) {
     const r = cv.getBoundingClientRect();
-    return { x: (e.clientX - r.left) * (W / r.width),
-             y: (e.clientY - r.top) * (H / r.height) };
+    if (isRot()) {
+      return { x: (clientY - r.top) * (W / r.height),
+               y: (r.right - clientX) * (H / r.width) };
+    }
+    return { x: (clientX - r.left) * (W / r.width),
+             y: (clientY - r.top) * (H / r.height) };
   }
+  function canvasPos(e) { return mapPoint(e.clientX, e.clientY); }
   cv.addEventListener('mousemove', (e) => {
     const p = canvasPos(e);
     S.aim.x = p.x; S.aim.y = p.y;
@@ -210,11 +218,7 @@
     S.aim.x = p.x; S.aim.y = p.y;
     shoot(p.x, p.y);
   });
-  function touchPos(t) {
-    const r = cv.getBoundingClientRect();
-    return { x: (t.clientX - r.left) * (W / r.width),
-             y: (t.clientY - r.top) * (H / r.height) };
-  }
+  function touchPos(t) { return mapPoint(t.clientX, t.clientY); }
   cv.addEventListener('touchstart', (e) => {
     e.preventDefault();
     if (S.over || S.won || S.levelDone) return;
