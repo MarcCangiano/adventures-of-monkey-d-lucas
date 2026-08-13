@@ -112,6 +112,20 @@
     musicEl = el;
   }
   const startLobby = () => playTrack('music/lobby.mp3');
+  // boss laugh: plays only if music/boss-laugh.mp3 exists (licensed asset
+  // Boss downloads separately — see NOTES)
+  let laughEl = null, laughOk = true;
+  function playLaugh() {
+    if (!laughOk) return;
+    if (!laughEl) {
+      laughEl = new Audio('music/boss-laugh.mp3');
+      laughEl.volume = 0.5;
+      laughEl.onerror = () => { laughOk = false; };
+    }
+    laughEl.currentTime = 0;
+    const pr = laughEl.play();
+    if (pr && pr.catch) pr.catch(() => {});
+  }
   const startMusic = (li) => playTrack('music/level' + String(li + 1).padStart(2, '0') + '.mp3');
 
   // ------------------------------------------------------------- state
@@ -169,7 +183,7 @@
     S.bossPhase = true;
     S.bossT = S.d.bossTime;
     S.boss = { tt: Math.random() * 10, x: 640, y: 400, onT: 0,
-               spd: 1, spdTarget: 1, spdT: 0 };
+               spd: 1, spdTarget: 1, spdT: 0, laughT: 5 + Math.random() * 5 };
     S.cap = 'the captain shows himself — stay on him for the minute';
     S.capT = 3;
     SFX.bossShow();
@@ -286,6 +300,11 @@
       B.y = Math.max(285, Math.min(535, B.y));
       const on = Math.hypot(S.aim.x - B.x, S.aim.y - B.y) < d.bossR;
       if (on) B.onT += dt;
+      B.laughT -= dt;
+      if (B.laughT <= 0) {
+        B.laughT = 8 + Math.random() * 6;
+        playLaugh();
+      }
     }
 
     // fx timers
