@@ -45,7 +45,7 @@
       phaseTime: 60,               // the pop-up gauntlet: one minute
       bossTime: 30,                // then 30 seconds to pin the captain
       killWindow: 2.4 - i * 0.09,
-      bossSpeed: 1 + i * 0.33,        // path-speed multiplier
+      bossSpeed: 1.5 + i * 0.42,      // path-speed multiplier
       trackNeed: 2.8 + i * 0.35,
       bossR: 66 - i * 2,
       volleyEvery: 6.5 - i * 0.35,
@@ -169,6 +169,7 @@
     S.bossPhase = true;
     S.bossT = S.d.bossTime;
     S.boss = { tt: Math.random() * 10, x: 640, y: 400, track: 0,
+               spd: 1, spdTarget: 1, spdT: 0,
                volleyT: S.d.volleyEvery, dead: false, deadT: 0, ticks: 0 };
     S.cap = 'the captain shows himself — hold your aim on him';
     S.capT = 3;
@@ -231,12 +232,7 @@
         if (!f.alive) { f.deadT += dt; continue; }
         f.pop = Math.min(1, f.pop + dt * 9);
         f.t += dt;
-        if (f.t >= f.window) {
-          // too slow — he rows off, no harm done, next one up
-          f.alive = false;
-          f.deadT = 0.0001;
-          S.escaped = (S.escaped || 0) + 1;
-        }
+
       }
       S.foes = S.foes.filter(f => f.alive || f.deadT < 0.32);
     } else if (S.boss && !S.boss.dead) {
@@ -250,8 +246,15 @@
         return;
       }
       // he sails a weaving course, quicker each sea and quicker still
-      // the closer you are to pinning him
-      B.tt += dt * d.bossSpeed * (1 + B.track * 0.9);
+      // the closer you are to pinning him — and his pace lurches at
+      // random between dead-slow drifts and sudden sprints
+      B.spdT -= dt;
+      if (B.spdT <= 0) {
+        B.spdTarget = 0.35 + Math.random() * 2.15;
+        B.spdT = 0.5 + Math.random() * 1.2;
+      }
+      B.spd += (B.spdTarget - B.spd) * Math.min(1, dt * 4);
+      B.tt += dt * d.bossSpeed * B.spd * (1 + B.track * 0.9);
       B.x = 640 + Math.sin(B.tt * 0.9) * 320 + Math.sin(B.tt * 0.37 + 2) * 140;
       B.y = 390 + Math.sin(B.tt * 0.7 + 1) * 110 + Math.sin(B.tt * 1.31) * 40;
       B.x = Math.max(130, Math.min(1150, B.x));
@@ -602,7 +605,6 @@
   // rasterized. No timer circle: he blinks red-hot just before he fires.
   function drawFoe(f) {
     const SP = window.PSPRITES;
-    const frac = f.alive ? 1 - f.t / f.window : 0;
     cx.save();
     cx.translate(f.x, f.y);
     if (!f.alive) {
@@ -615,21 +617,6 @@
       cx.scale(pop, pop);
     }
     cx.scale(f.sc, f.sc);
-
-    // about to fire: an ember glow builds behind him and he blinks
-    if (f.alive && frac < 0.35) {
-      if (!GR.danger) {
-        GR.danger = cx.createRadialGradient(0, -20, 6, 0, -20, 78);
-        GR.danger.addColorStop(0, 'rgba(255,90,40,.5)');
-        GR.danger.addColorStop(1, 'rgba(255,90,40,0)');
-      }
-      cx.save();
-      cx.globalAlpha = 0.5 + 0.5 * Math.abs(Math.sin(S.t * 14));
-      cx.fillStyle = GR.danger;
-      cx.beginPath(); cx.arc(0, -20, 78, 0, 7); cx.fill();
-      cx.restore();
-      if (Math.floor(S.t * 12) % 2) cx.globalAlpha *= 0.6;
-    }
 
     // rowboat
     if (!GR.boat) {
@@ -809,20 +796,14 @@
   }
 
   function drawHud() {
-    // level tag + progress
+    // sea name only — no counter, no bar (Boss stripped both)
     cx.save();
     cx.font = '600 13px ui-monospace, Menlo, monospace';
     cx.fillStyle = 'rgba(243,230,207,.8)';
     cx.textAlign = 'right';
-    cx.fillText(`${S.level + 1}/${LEVELS.length} · ${S.pal.name}`, W - 24, 56);
+    cx.fillText(S.pal.name, W - 24, 36);
     cx.restore();
     const tLeft = S.bossPhase ? S.bossT : S.phaseT;
-    const tMax = S.bossPhase ? S.d.bossTime : S.d.phaseTime;
-    cx.fillStyle = 'rgba(30,18,8,.7)';
-    if (cx.roundRect) { cx.beginPath(); cx.roundRect(W - 260, 24, 236, 12, 6); cx.fill(); }
-    cx.fillStyle = tLeft < 10 ? '#ff6a4d' : '#ffc94d';
-    const pr = Math.max(0, tLeft / tMax);
-    if (cx.roundRect) { cx.beginPath(); cx.roundRect(W - 260, 24, 236 * pr, 12, 6); cx.fill(); }
     // countdown + kills + live accuracy
     cx.save();
     cx.font = '600 17px ui-monospace, Menlo, monospace';

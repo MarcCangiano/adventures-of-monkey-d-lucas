@@ -10,7 +10,7 @@ own NOTES history is in git. Do not delete it; it is a portfolio piece.
   (horizon y=230, far foes draw smaller — f.sc). NO timer circles (Boss
   removed them): the telegraph is an ember glow + blink in the last 35%
   of the window; window expires -> he fires -> -1 heart. Click (radius
-  56*sc) to drop him. THREE TARGETS up at all times (Boss iterated 1 -> 3 same day): a replacement spawns the frame one drops, spaced off the others and off the last kill. NOBODY ATTACKS (Boss): a missed window = the pirate rows off (S.escaped counts it), boss has no volleys, hearts REMOVED from HUD — the only fail state is the boss 30s timeout. LEVEL = TIMERS not kill counts: 60s pop-up
+  56*sc) to drop him. THREE TARGETS up at all times (Boss iterated 1 -> 3 same day): a replacement spawns the frame one drops, spaced off the others and off the last kill. NOBODY ATTACKS + NOTHING EXPIRES (Boss): pirates persist until SHOT (no windows, no glow telegraph), boss has no volleys, hearts gone — the only fail state is the boss 30s timeout. HUD has no level counter and no top-right bar; boss pace lurches randomly (spdTarget 0.35-2.5 rerolled every 0.5-1.7s, eased) on a higher base (1.5+0.42i). LEVEL = TIMERS not kill counts: 60s pop-up
   gauntlet (kill as many as you can), then the boss with a 30s limit —
   timeout = run over ("the captain slipped away"). Window 2.4-0.09i,
   pop-in dt*9, corpse gone in 0.32s. HUD shows countdown + kills + LIVE
