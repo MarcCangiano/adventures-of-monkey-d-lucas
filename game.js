@@ -108,7 +108,9 @@
     el.loop = true;
     el.volume = 0.12;
     const pr = el.play();
-    if (pr && pr.catch) pr.catch(() => {});
+    // browsers may refuse audio before the first gesture — clear the slot
+    // so armLobby can retry on the first click/key
+    if (pr && pr.catch) pr.catch(() => { if (musicEl === el) musicEl = null; });
     musicEl = el;
   }
   const startLobby = () => playTrack('music/lobby.mp3');
@@ -865,6 +867,7 @@
 
   reset(0);
   requestAnimationFrame(frame);
+  startLobby();   // instant where the browser allows; else first gesture
 
   // test hooks
   window.__pirate = {
