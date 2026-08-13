@@ -833,8 +833,13 @@
 
   // strike your colors: end the run early and take your score to the board
   function quitRun() {
-    if (!running || S.won || S.over || S.levelDone || S.bossWait) return;
-    TOT.hits += S.hits; TOT.shots += S.shots; TOT.kills += S.kills;
+    if (!running || S.won || S.over) return;
+    if (!S.levelDone) {
+      TOT.hits += S.hits; TOT.shots += S.shots; TOT.kills += S.kills;
+    }
+    S.levelDone = false;
+    S.bossWait = false;
+    hideOverlays();
     let seas = TOT.seas || 0;
     if (S.bossPhase && S.boss) {
       const elapsed = S.d.bossTime - S.bossT;
